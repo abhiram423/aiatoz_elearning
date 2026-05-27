@@ -1,0 +1,837 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>About | AI A to Z Academy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/gallery/aiatoz_logo.png' %}">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* ── VARIABLES (matches index.html / courses.html) ── */
+        :root {
+            --bg-deep:      #060e1c;
+            --card-surface: #0a1929;
+            --cse-purple:   #8b5cf6;
+            --cse-teal:     #00b4d8;
+            --cse-border:   rgba(255,255,255,0.09);
+            --text-main:    #ffffff;
+            --text-dim:     #94a3b8;
+            --grad-purple:  linear-gradient(135deg,#7c3aed 0%,#a78bfa 100%);
+            --grad-teal:    linear-gradient(135deg,#023e6d 0%,#0077a3 60%,#00b4d8 100%);
+        }
+
+        *,*::before,*::after { box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
+        body {
+            font-family:'Plus Jakarta Sans',sans-serif;
+            background: linear-gradient(135deg,#060e1c 0%,#08162a 40%,#0a2040 70%,#083348 100%) fixed;
+            background-attachment:fixed;
+            color:var(--text-main);
+            overflow-x:hidden; margin:0; padding:0;
+        }
+
+        /* ── KEYFRAMES ── */
+        @keyframes fadeInUp  { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes shimmer   { 0%{background-position:-200% center} 100%{background-position:200% center} }
+        @keyframes pulseGlow { 0%,100%{box-shadow:0 0 12px rgba(0,180,216,0.3)} 50%{box-shadow:0 0 28px rgba(0,180,216,0.6)} }
+        @keyframes pulseDot  { 0%,100%{box-shadow:0 0 6px rgba(0,180,216,0.6)} 50%{box-shadow:0 0 14px rgba(0,180,216,0.3)} }
+
+        /* ── SCROLL REVEAL ── */
+        .reveal { opacity:0; transform:translateY(32px); transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1); }
+        .reveal.visible { opacity:1; transform:none; }
+        .reveal-left { opacity:0; transform:translateX(-36px); transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1); }
+        .reveal-left.visible { opacity:1; transform:none; }
+        .reveal-right { opacity:0; transform:translateX(36px); transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1); }
+        .reveal-right.visible { opacity:1; transform:none; }
+        .rd1{transition-delay:.08s} .rd2{transition-delay:.16s} .rd3{transition-delay:.24s} .rd4{transition-delay:.32s}
+
+        /* ════════════════════════════════════════
+           NAVBAR — identical to index.html / courses.html
+        ════════════════════════════════════════ */
+         .navbar {
+            background: linear-gradient(90deg, #f0f5fa 0%, #e8f1f8 50%, #f0f5fa 100%);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 2px solid rgba(0,119,163,0.18);
+            padding: 5px 0;
+            transition: all 0.4s ease;
+            box-shadow: 0 2px 16px rgba(0,100,160,0.1), 0 1px 0 rgba(0,180,216,0.1);
+        }
+        .navbar.scrolled {
+            padding: 3px 0;
+            background: linear-gradient(90deg, #e8f1f8 0%, #ddeef7 50%, #e8f1f8 100%);
+            box-shadow: 0 6px 32px rgba(0,100,160,0.18), 0 1px 0 rgba(0,180,216,0.15);
+        }
+        .navbar-brand { font-weight: 900; font-size: 28px; color: #1e1b4b; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .navbar-brand img { height: 60px; width: auto; object-fit: contain; transition: 0.4s; }
+        .navbar-brand:hover img { transform: scale(1.05); filter: drop-shadow(0 4px 12px rgba(0,180,216,0.4)); }
+        .navbar-brand:hover { color: #1e1b4b; }
+
+        .nav-link {
+            font-weight: 700; font-size: 15px; margin: 0 6px;
+            color: #1a3d5c !important; transition: 0.3s;
+            position: relative; padding-bottom: 6px !important;
+        }
+        .nav-link::after {
+            content: "";
+            position: absolute; bottom: 0; left: 50%;
+            width: 0%; height: 2px;
+            background: linear-gradient(90deg, #0077a3, #00b4d8);
+            transition: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        .nav-link:hover { color: #0077a3 !important; }
+        .nav-link:hover::after { width: 100%; }
+
+        /* Courses Dropdown */
+        .dropdown-menu {
+            background: #ffffff;
+            border: 1px solid rgba(0,180,216,0.15);
+            border-top: 3px solid #00b4d8;
+            border-radius: 0 0 18px 18px;
+            box-shadow: 0 20px 50px rgba(0,180,216,0.15), 0 4px 20px rgba(0,0,0,0.08);
+            min-width: 220px;
+            padding: 8px 0;
+            animation: fadeInUp 0.2s ease both;
+        }
+        .dropdown-item {
+            color: #374151 !important;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 600;
+            font-size: 13.5px;
+            padding: 10px 22px;
+            transition: 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .dropdown-item:hover {
+            color: #0077a3 !important;
+            background: rgba(0,180,216,0.06);
+            border-left-color: #00b4d8;
+            padding-left: 28px;
+        }
+        .dropdown-toggle::after { vertical-align: 2px; }
+
+        .btn-login {
+            color: #1e4e72; font-weight: 800; text-decoration: none; margin-right: 16px;
+            border: 1.5px solid rgba(0,119,163,0.35); padding: 8px 20px; border-radius: 10px;
+            transition: 0.3s; opacity: 1;
+        }
+        .btn-login:hover { color: #0077a3; border-color: #00b4d8; background: rgba(0,180,216,0.08); }
+
+        .btn-signup {
+            background: linear-gradient(135deg, #023e6d 0%, #0077a3 50%, #00b4d8 100%); color: #fff !important;
+            padding: 12px 32px; border-radius: 12px; font-weight: 800;
+            box-shadow: 0 8px 25px rgba(0, 180, 216, 0.35);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: none; position: relative; overflow: hidden;
+            text-decoration: none; display: inline-block;
+        }
+        .btn-signup::before {
+            content: "";
+            position: absolute; width: 200%; height: 200%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.25), transparent);
+            top: -50%; left: -200%;
+            transform: rotate(25deg);
+            transition: 0.6s;
+        }
+        .btn-signup:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 16px 40px rgba(0, 180, 216, 0.55);
+        }
+        .btn-signup:hover::before { left: 150%; }
+
+        /* ════════════════════════════════════════
+           PAGE HERO — teal gradient (matches index/courses)
+        ════════════════════════════════════════ */
+        .page-hero {
+            background:linear-gradient(135deg,#023e6d 0%,#025d94 35%,#0077a3 65%,#00b4d8 100%);
+            padding:70px 0 60px;
+            position:relative; overflow:hidden;
+        }
+        .page-hero::before {
+            content:''; position:absolute; inset:0;
+            background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);
+            background-size:40px 40px; pointer-events:none; z-index:0;
+        }
+        .page-hero::after {
+            content:''; position:absolute;
+            width:500px; height:500px;
+            top:-150px; right:-80px;
+            background:radial-gradient(circle,rgba(255,255,255,.12) 0%,transparent 70%);
+            filter:blur(80px); border-radius:50%; pointer-events:none;
+        }
+        .page-hero .container { position:relative; z-index:1; }
+
+        .ph-badge {
+            display:inline-flex; align-items:center; gap:8px;
+            background:rgba(255,255,255,0.15);
+            border:1px solid rgba(255,255,255,0.3);
+            color:#fff; padding:6px 18px; border-radius:100px;
+            font-size:11px; font-weight:800; letter-spacing:1.8px;
+            text-transform:uppercase; margin-bottom:14px;
+            animation:fadeInUp .5s ease both;
+        }
+        .live-dot { width:6px; height:6px; border-radius:50%; background:#fff; display:inline-block; animation:pulseDot 1.8s ease-in-out infinite; }
+        .page-hero h1 { font-size:52px; font-weight:900; letter-spacing:-2.5px; line-height:1.06; color:#fff; margin-bottom:12px; animation:fadeInUp .55s .06s ease both; }
+        .page-hero h1 span { color:rgba(255,255,255,0.75); }
+        .page-hero-sub { color:rgba(255,255,255,0.7); font-size:15px; font-weight:500; margin-bottom:16px; animation:fadeInUp .6s .12s ease both; }
+        .page-hero-bc { display:flex; align-items:center; gap:8px; animation:fadeInUp .6s .18s ease both; }
+        .page-hero-bc a { color:rgba(255,255,255,0.55); font-size:13px; font-weight:600; text-decoration:none; transition:.2s; }
+        .page-hero-bc a:hover { color:#fff; }
+        .page-hero-bc span { color:rgba(255,255,255,0.3); font-size:12px; }
+        .page-hero-bc .active { color:rgba(255,255,255,0.85); font-size:13px; font-weight:700; }
+
+        /* ── SECTION EYEBROW ── */
+        .eyebrow { display:inline-flex; align-items:center; gap:8px; color:var(--cse-teal); font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:2.5px; margin-bottom:12px; }
+        .eyebrow::before { content:''; display:inline-block; width:22px; height:2px; background:var(--grad-teal); border-radius:2px; }
+        .sec-title { font-size:40px; font-weight:900; letter-spacing:-1.8px; color:#fff; line-height:1.1; margin-bottom:16px; }
+        .sec-desc { color:var(--text-dim); font-size:15.5px; line-height:1.75; margin-bottom:0; }
+
+        /* ── MISSION STRIP ── */
+        .mission-strip { background:rgba(10,25,41,0.6); border-top:1px solid var(--cse-border); border-bottom:1px solid var(--cse-border); padding:60px 0; }
+        .mission-card { display:flex; align-items:flex-start; gap:18px; padding:28px; background:var(--card-surface); border:1px solid var(--cse-border); border-radius:18px; transition:all .4s cubic-bezier(.16,1,.3,1); height:100%; }
+        .mission-card:hover { border-color:rgba(0,180,216,0.3); transform:translateY(-8px); box-shadow:0 20px 50px rgba(0,0,0,0.3); }
+        .mission-icon { width:52px; height:52px; min-width:52px; background:rgba(0,180,216,0.1); border:1.5px solid rgba(0,180,216,0.2); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--cse-teal); transition:.4s; }
+        .mission-card:hover .mission-icon { background:var(--cse-teal); color:#fff; transform:rotate(5deg) scale(1.08); border-color:transparent; box-shadow:0 8px 20px rgba(0,180,216,0.35); }
+        .mission-text h4 { font-size:17px; font-weight:800; color:#fff; margin-bottom:6px; }
+        .mission-text p { color:var(--text-dim); font-size:13.5px; line-height:1.65; margin:0; }
+
+        /* ── ABOUT STORY ── */
+        .about-story { padding:90px 0; }
+        .story-img-wrap { position:relative; border-radius:24px; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,0.4); }
+        .story-img-wrap img { width:100%; height:420px; object-fit:cover; display:block; transition:.6s cubic-bezier(.16,1,.3,1); }
+        .story-img-wrap:hover img { transform:scale(1.04); }
+        .story-img-badge { position:absolute; bottom:24px; left:24px; background:rgba(6,14,28,0.88); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:14px 20px; display:flex; align-items:center; gap:12px; }
+        .story-badge-num { font-size:28px; font-weight:900; color:#fff; line-height:1; }
+        .story-badge-num span { color:var(--cse-teal); }
+        .story-badge-lbl { font-size:12px; color:rgba(255,255,255,0.5); font-weight:600; margin-top:2px; }
+        .story-img-badge2 { position:absolute; top:24px; right:24px; background:linear-gradient(135deg,#0077a3,#00b4d8); border-radius:14px; padding:12px 18px; text-align:center; box-shadow:0 8px 24px rgba(0,180,216,0.4); }
+        .story-badge2-num { font-size:22px; font-weight:900; color:#fff; line-height:1; display:block; }
+        .story-badge2-lbl { font-size:11px; color:rgba(255,255,255,0.85); font-weight:700; letter-spacing:.5px; margin-top:3px; display:block; }
+
+        .check-list { list-style:none; padding:0; margin:0; }
+        .check-list li { display:flex; align-items:flex-start; gap:12px; margin-bottom:14px; font-size:14.5px; color:var(--text-dim); line-height:1.65; }
+        .check-list li .ci { width:22px; height:22px; min-width:22px; background:rgba(0,180,216,0.12); border-radius:6px; display:flex; align-items:center; justify-content:center; color:var(--cse-teal); font-size:12px; margin-top:2px; }
+
+        /* ── STATS ROW ── */
+        .stats-row { background:rgba(2,62,109,0.45); border-top:1px solid rgba(0,180,216,0.15); border-bottom:1px solid rgba(0,180,216,0.15); padding:60px 0; }
+        .stat-box { text-align:center; padding:0 20px; }
+        .stat-num { font-size:42px; font-weight:900; color:#fff; line-height:1; }
+        .stat-num span { color:var(--cse-teal); }
+        .stat-lbl { font-size:13px; color:var(--text-dim); font-weight:600; letter-spacing:.5px; margin-top:6px; }
+
+        /* ── VALUES SECTION ── */
+        .values-section { padding:90px 0; }
+        .value-card { background:var(--card-surface); border:1px solid var(--cse-border); border-radius:20px; padding:36px 30px; transition:all .4s cubic-bezier(.16,1,.3,1); position:relative; overflow:hidden; height:100%; }
+        .value-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#0077a3,#00b4d8); transform:scaleX(0); transition:.4s; border-radius:0 0 20px 20px; }
+        .value-card:hover { transform:translateY(-10px); box-shadow:0 24px 60px rgba(0,0,0,0.3); border-color:rgba(0,180,216,0.25); }
+        .value-card:hover::after { transform:scaleX(1); }
+        .value-icon { width:60px; height:60px; background:rgba(0,180,216,0.1); border:1.5px solid rgba(0,180,216,0.2); border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:24px; color:var(--cse-teal); margin-bottom:20px; transition:.4s; }
+        .value-card:hover .value-icon { background:linear-gradient(135deg,#0077a3,#00b4d8); color:#fff; border-color:transparent; box-shadow:0 8px 20px rgba(0,180,216,0.3); transform:rotate(5deg) scale(1.08); }
+        .value-num { position:absolute; top:16px; right:20px; font-size:54px; font-weight:900; color:rgba(255,255,255,0.04); line-height:1; pointer-events:none; }
+        .value-card h4 { font-size:18px; font-weight:800; color:#fff; margin-bottom:10px; }
+        .value-card p { font-size:14px; color:var(--text-dim); line-height:1.7; margin:0; }
+
+        /* ── TEAM SECTION ── */
+        .team-section { padding:90px 0; }
+        .team-card { background:var(--card-surface); border:1px solid var(--cse-border); border-radius:22px; overflow:hidden; text-align:center; transition:all .4s cubic-bezier(.16,1,.3,1); position:relative; }
+        .team-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#0077a3,#00b4d8); transform:scaleX(0); transition:.4s; transform-origin:left; z-index:1; }
+        .team-card:hover { transform:translateY(-12px); box-shadow:0 28px 60px rgba(0,0,0,0.4); border-color:rgba(0,180,216,0.2); }
+        .team-card:hover::before { transform:scaleX(1); }
+        .team-img-wrap { height:200px; overflow:hidden; position:relative; }
+        .team-img-wrap img { width:100%; height:100%; object-fit:cover; transition:.5s; }
+        .team-card:hover .team-img-wrap img { transform:scale(1.06); }
+        .team-img-overlay { position:absolute; inset:0; background:linear-gradient(to bottom,rgba(0,0,0,0) 50%,rgba(6,14,28,0.6) 100%); }
+        .team-body { padding:22px 24px 26px; }
+        .team-body h4 { font-size:17px; font-weight:800; color:#fff; margin-bottom:4px; }
+        .team-role { font-size:12.5px; font-weight:700; color:var(--cse-teal); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+        .team-bio { font-size:13.5px; color:var(--text-dim); line-height:1.65; margin-bottom:16px; }
+        .team-socials { display:flex; justify-content:center; gap:8px; }
+        .team-socials a { width:32px; height:32px; border-radius:8px; background:rgba(0,180,216,0.08); border:1px solid rgba(0,180,216,0.18); display:flex; align-items:center; justify-content:center; color:var(--cse-teal); font-size:13px; text-decoration:none; transition:.3s; }
+        .team-socials a:hover { background:linear-gradient(135deg,#0077a3,#00b4d8); color:#fff; transform:translateY(-2px); box-shadow:0 6px 16px rgba(0,180,216,0.3); }
+
+        /* ── CTA STRIP ── */
+        .cta-strip { background:linear-gradient(135deg,#023e6d 0%,#025d94 35%,#0077a3 65%,#00b4d8 100%); padding:80px 0; position:relative; overflow:hidden; }
+        .cta-strip::before { content:''; position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,.04) 1px,transparent 1px); background-size:32px 32px; }
+        .cta-orb { position:absolute; width:400px; height:400px; top:-100px; right:-50px; background:radial-gradient(circle,rgba(255,255,255,.15) 0%,transparent 70%); filter:blur(70px); border-radius:50%; pointer-events:none; }
+        .cta-strip .container { position:relative; z-index:1; }
+        .cta-strip h2 { font-size:42px; font-weight:900; letter-spacing:-2px; color:#fff; margin-bottom:16px; }
+        .cta-strip h2 span { color:rgba(255,255,255,0.75); }
+        .cta-strip p { color:rgba(255,255,255,0.65); font-size:16px; line-height:1.7; margin-bottom:0; }
+        .cta-btn-main { display:inline-flex; align-items:center; gap:8px; background:#fff; color:#0077a3; font-weight:800; font-size:15px; padding:14px 32px; border-radius:12px; text-decoration:none; box-shadow:0 8px 24px rgba(0,0,0,0.2); transition:all .35s cubic-bezier(.16,1,.3,1); }
+        .cta-btn-main:hover { transform:translateY(-3px); box-shadow:0 14px 36px rgba(0,0,0,0.3); color:#0077a3; }
+        .cta-btn-outline { display:inline-flex; align-items:center; gap:8px; background:transparent; color:#fff; font-weight:700; font-size:15px; padding:13px 28px; border-radius:12px; text-decoration:none; border:1.5px solid rgba(255,255,255,0.35); transition:all .35s; }
+        .cta-btn-outline:hover { border-color:rgba(255,255,255,0.7); background:rgba(255,255,255,0.1); color:#fff; transform:translateY(-2px); }
+
+        /* ════════════════════════════════════════
+           FOOTER — light theme (identical to index/courses)
+        ════════════════════════════════════════ */
+        footer {
+            background:#f0f6ff;
+            padding:70px 0 0;
+            border-top:3px solid #e2e8f0;
+            position:relative;
+        }
+        footer::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:3px;
+            background:linear-gradient(90deg,#7c3aed,#00b4d8,#7c3aed);
+        }
+        .footer-brand img { height:48px; width:auto; object-fit:contain; margin-bottom:14px; }
+        .footer-tagline { color:#475569; font-size:14px; line-height:1.75; max-width:280px; margin-bottom:20px; }
+        .footer-social { display:flex; gap:16px; flex-wrap:wrap; margin-top:8px; }
+        .footer-social a { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; text-decoration:none; transition:all .3s; border:1.5px solid #dee6f0; color:#475569; background:#fff; }
+        .footer-social a:hover { transform:translateY(-4px); }
+        .footer-social a.wa:hover { background:#25d366; border-color:#25d366; color:#fff; }
+        .footer-social a.li:hover { background:#0077b5; border-color:#0077b5; color:#fff; }
+        .footer-social a.ig:hover { background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); border-color:#e1306c; color:#fff; }
+        .footer-social a.yt:hover { background:#ff0000; border-color:#ff0000; color:#fff; }
+        .footer-social a.tw:hover { background:#1da1f2; border-color:#1da1f2; color:#fff; }
+
+        .footer-heading { font-size:15px; font-weight:800; color:#0f172a; margin-bottom:18px; padding-left:10px; border-left:3px solid #0077a3; }
+        .footer-links { list-style:none; padding:0; margin:0; }
+        .footer-links li { margin-bottom:10px; }
+        .footer-links li a { color:#475569; text-decoration:none; font-size:13.5px; font-weight:500; transition:.25s; display:inline-block; }
+        .footer-links li a:hover { color:#0077a3; padding-left:6px; }
+
+        .footer-bottom { background:#e2eaf4; border-top:1px solid #d1dce8; padding:20px 0; margin-top:50px; }
+        .footer-bottom p { color:#64748b; font-size:13px; margin:0; }
+
+        /* ── BACK TO TOP ── */
+        #back-top { position:fixed; bottom:28px; right:28px; z-index:999; }
+        #back-top a { width:44px; height:44px; background:linear-gradient(135deg,#0077a3,#00b4d8); border-radius:12px; display:flex; align-items:center; justify-content:center; color:#fff; text-decoration:none; box-shadow:0 8px 24px rgba(0,119,163,0.4); transition:.3s; }
+        #back-top a:hover { transform:translateY(-4px); box-shadow:0 14px 35px rgba(0,119,163,0.55); }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar { width:5px; }
+        ::-webkit-scrollbar-track { background:#060e1c; }
+        ::-webkit-scrollbar-thumb { background:rgba(0,180,216,0.35); border-radius:5px; }
+        ::-webkit-scrollbar-thumb:hover { background:#00b4d8; }
+        ::selection { background:rgba(0,180,216,0.2); color:#fff; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width:991px) {
+            .page-hero h1 { font-size:36px; }
+            .sec-title { font-size:30px; }
+            .stat-num { font-size:32px; }
+            .cta-strip h2 { font-size:30px; }
+        }
+        @media (max-width:767px) {
+            .row.g-5 > [class*='col-'] { padding-bottom:28px !important; }
+            .row.g-4 > [class*='col-'] { padding-bottom:20px !important; }
+            .row.g-5 { --bs-gutter-y:28px; }
+            .row.g-4 { --bs-gutter-y:20px; }
+        }
+        @media (max-width:575px) {
+            .page-hero h1 { font-size:28px; }
+            .story-img-wrap img { height:280px; }
+            .mission-card, .value-card, .team-card { margin-bottom:20px; }
+            /* CTA buttons — stack with gap on mobile */
+            .cta-btn-main, .cta-btn-outline { width:100%; justify-content:center; }
+            .d-flex.flex-wrap.gap-3 { flex-direction:column !important; gap:14px !important; }
+        }
+        /* Hamburger → X */
+        .navbar-toggler-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='%231a3d5c' stroke-linecap='round' stroke-width='2.2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;transition:all .25s ease;}
+        .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='%230077a3' stroke-linecap='round' stroke-width='2.5' d='M6 6l18 18M24 6L6 24'/%3E%3C/svg%3E") !important;}
+    </style>
+</head>
+<body>
+
+    <!-- ════════════════════════════════════════
+         NAVBAR — identical to index.html / courses.html
+    ════════════════════════════════════════ -->
+    <nav class="navbar navbar-expand-lg sticky-top" id="mainNavbar">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <img src="{% static 'img/gallery/aiatoz_logo.png' %}" alt="AI A TO Z Logo">
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" style="border: 1px solid rgba(0,119,163,0.25) !important; background: rgba(0,119,163,0.06);">
+                <i class="fas fa-bars" style="color:#0077a3;"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="{% url 'courses' %}" id="coursesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Courses</a>
+                        <ul class="dropdown-menu" aria-labelledby="coursesDropdown">
+                            <li><a class="dropdown-item" href="{% url 'courses' %}"><i class="fas fa-th-list me-2" style="color:#00b4d8;"></i> All Courses</a></li>
+                            <li><hr class="dropdown-divider" style="border-color:rgba(0,180,216,0.15);margin:4px 0;"></li>
+                            <li><a class="dropdown-item" href="#"><i class="fab fa-python me-2" style="color:#3b82f6;"></i> Python</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-chat-square-text-fill me-2" style="color:#00b4d8;"></i> Prompt Engineering</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-cpu-fill me-2" style="color:#10b981;"></i> Artificial Intelligence</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-brain me-2" style="color:#f59e0b;"></i> Machine Learning</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-bar-chart-fill me-2" style="color:#ef4444;"></i> Data Science</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'blog' %}">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <a href="{% url 'login' %}" class="btn-login">Log In</a>
+                    <a href="{% url 'register' %}" class="btn-signup">Join Free</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+
+        <!-- ── PAGE HERO ── -->
+        <div class="page-hero" id="pageHeroSection">
+            <canvas id="pageHeroCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-9 col-lg-10">
+                        <div class="ph-badge"><span class="live-dot"></span>AI A TO Z Academy</div>
+                        <h1>About <span>Us</span></h1>
+                        <p class="page-hero-sub">Empowering the next generation of AI practitioners — from zero to expert.</p>
+                        <div class="page-hero-bc">
+                            <a href="{% url 'index' %}">Home</a>
+                            <span>›</span>
+                            <span class="active">About</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── MISSION STRIP ── -->
+        <div class="mission-strip">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6 reveal rd1">
+                        <div class="mission-card">
+                            <div class="mission-icon"><i class="bi bi-bullseye"></i></div>
+                            <div class="mission-text">
+                                <h4>Our Mission</h4>
+                                <p>To deliver high-quality, end-to-end AI education through structured learning, simplified concept delivery, and application-oriented training, enabling learners to build industry-ready skills and create real-world impact.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 reveal rd2">
+                        <div class="mission-card">
+                            <div class="mission-icon"><i class="bi bi-eye-fill"></i></div>
+                            <div class="mission-text">
+                                <h4>Our Vision</h4>
+                                <p>To enable a world where every individual has the capability to understand, apply, and innovate with Artificial Intelligence.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 reveal rd3">
+                        <div class="mission-card">
+                            <div class="mission-icon"><i class="bi bi-trophy-fill"></i></div>
+                            <div class="mission-text">
+                                <h4>Our Promise</h4>
+                                <p>Lifetime access, expert instructors, real projects. We don't just teach AI — we help you build with it.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── STORY SECTION ── -->
+        <div class="about-story">
+            <div class="container">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-6 reveal-left">
+                        <div class="story-img-wrap">
+                            <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=80" alt="About AI A TO Z">
+                            <div class="story-img-badge">
+                                <div>
+                                    <div class="story-badge-num">5<span>k+</span></div>
+                                    <div class="story-badge-lbl">Active Learners</div>
+                                </div>
+                            </div>
+                            <div class="story-img-badge2">
+                                <span class="story-badge2-num">98%</span>
+                                <span class="story-badge2-lbl">Satisfaction</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 reveal-right">
+                        <span class="eyebrow">Our Story</span>
+                        <h2 class="sec-title">Learn new skills with<br>top AI educators</h2>
+                        <p class="sec-desc" style="margin-bottom:28px;">AI A TO Z was founded with a single belief: that Artificial Intelligence should not be a privilege for a few — it should be a skill that anyone can learn, build with, and make a career from. We provide structured, hands-on, expert-led courses that take you from the very basics all the way to production-level AI systems.</p>
+                        <ul class="check-list">
+                            <li><span class="ci"><i class="bi bi-check2"></i></span>Structured curriculum from beginner to advanced, built around real-world use cases.</li>
+                            <li><span class="ci"><i class="bi bi-check2"></i></span>Join thousands of learners across India and beyond, growing together every day.</li>
+                            <li><span class="ci"><i class="bi bi-check2"></i></span>Learn at your own pace with lifetime access — no deadlines, no pressure.</li>
+                            <li><span class="ci"><i class="bi bi-check2"></i></span>Certificate of completion to showcase your AI expertise to employers.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── STATS ROW ── -->
+        <div class="stats-row">
+            <div class="container">
+                <div class="row justify-content-center text-center gy-4">
+                    <div class="col-6 col-md-3 reveal rd1">
+                        <div class="stat-box">
+                            <div class="stat-num">8<span>+</span></div>
+                            <div class="stat-lbl">Expert Courses</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 reveal rd2">
+                        <div class="stat-box">
+                            <div class="stat-num">5<span>k+</span></div>
+                            <div class="stat-lbl">Active Students</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 reveal rd3">
+                        <div class="stat-box">
+                            <div class="stat-num">98<span>%</span></div>
+                            <div class="stat-lbl">Satisfaction Rate</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3 reveal rd4">
+                        <div class="stat-box">
+                            <div class="stat-num">24<span>/7</span></div>
+                            <div class="stat-lbl">Support Access</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── VALUES SECTION ── -->
+        <div class="values-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-6 col-lg-7 text-center reveal" style="margin-bottom:55px;">
+                        <span class="eyebrow">What Drives Us</span>
+                        <h2 class="sec-title">Our Core Values</h2>
+                        <p class="sec-desc">Everything we build, teach and deliver is rooted in these principles.</p>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-6 reveal rd1">
+                        <div class="value-card">
+                            <span class="value-num">01</span>
+                            <div class="value-icon"><i class="bi bi-lightning-charge-fill"></i></div>
+                            <h4>Practical First</h4>
+                            <p>Every concept is backed by a real project. We believe in learning by doing, not just reading.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 reveal rd2">
+                        <div class="value-card">
+                            <span class="value-num">02</span>
+                            <div class="value-icon"><i class="bi bi-people-fill"></i></div>
+                            <h4>Community Led</h4>
+                            <p>Our learner community supports each other. Grow alongside peers who share the same passion.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 reveal rd3">
+                        <div class="value-card">
+                            <span class="value-num">03</span>
+                            <div class="value-icon"><i class="bi bi-infinity"></i></div>
+                            <h4>Always Updated</h4>
+                            <p>AI evolves fast. Our courses are constantly updated to reflect the latest tools, models and methods.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 reveal rd4">
+                        <div class="value-card">
+                            <span class="value-num">04</span>
+                            <div class="value-icon"><i class="bi bi-award-fill"></i></div>
+                            <h4>Excellence</h4>
+                            <p>We hold ourselves to the highest standard — in content quality, instructor expertise, and student outcomes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── TEAM SECTION ── -->
+        <div class="team-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-6 col-lg-7 text-center reveal" style="margin-bottom:55px;">
+                        <span class="eyebrow">The People</span>
+                        <h2 class="sec-title">Meet Our Team</h2>
+                        <p class="sec-desc">Passionate AI practitioners who turned their expertise into world-class education.</p>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6 reveal rd1">
+                        <div class="team-card">
+                            <div class="team-img-wrap">
+                                <img src="" alt="Arjun Sharma">
+                                <div class="team-img-overlay"></div>
+                            </div>
+                            <div class="team-body">
+                                <h4>Arjun Sharma</h4>
+                                <div class="team-role">Lead AI Instructor</div>
+                                <p class="team-bio">10+ years in ML and deep learning. Previously at Google Brain. Passionate about making AI education accessible.</p>
+                                <div class="team-socials">
+                                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                    <a href="#"><i class="fab fa-twitter"></i></a>
+                                    <a href="#"><i class="bi bi-github"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 reveal rd2">
+                        <div class="team-card">
+                            <div class="team-img-wrap">
+                                <img src="" alt="Priya Reddy">
+                                <div class="team-img-overlay"></div>
+                            </div>
+                            <div class="team-body">
+                                <h4>Priya Reddy</h4>
+                                <div class="team-role">Data Science Expert</div>
+                                <p class="team-bio">PhD in Statistics, specializing in Data Science and NLP. Has trained 3,000+ students across India.</p>
+                                <div class="team-socials">
+                                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                    <a href="#"><i class="fab fa-twitter"></i></a>
+                                    <a href="#"><i class="bi bi-github"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 reveal rd3">
+                        <div class="team-card">
+                            <div class="team-img-wrap">
+                                <img src="" alt="Vikram Nair">
+                                <div class="team-img-overlay"></div>
+                            </div>
+                            <div class="team-body">
+                                <h4>Vikram Nair</h4>
+                                <div class="team-role">Python & ML Instructor</div>
+                                <p class="team-bio">Full-stack AI developer with expertise in building production ML pipelines and real-world chatbot systems.</p>
+                                <div class="team-socials">
+                                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                    <a href="#"><i class="fab fa-twitter"></i></a>
+                                    <a href="#"><i class="bi bi-github"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── CTA STRIP ── -->
+        <div class="cta-strip">
+            <div class="cta-orb"></div>
+            <div class="container">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-7 reveal-left">
+                        <span class="eyebrow" style="color:rgba(255,255,255,0.8);">Start Today</span>
+                        <h2>Ready to master <span>Artificial Intelligence?</span></h2>
+                        <p>Join thousands of learners building real skills. Your journey from A to Z in AI starts here.</p>
+                    </div>
+                    <div class="col-lg-5 reveal-right">
+                        <div class="d-flex flex-wrap gap-3 justify-content-lg-end">
+                            <a href="{% url 'register' %}" class="cta-btn-main"><i class="bi bi-rocket-takeoff-fill me-1"></i> Join Free Today</a>
+                            <a href="{% url 'courses' %}" class="cta-btn-outline"><i class="bi bi-collection-play me-1"></i> Browse Courses</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ════════════════════════════════════════
+         FOOTER — light theme (identical to index/courses)
+    ════════════════════════════════════════ -->
+    <footer>
+        <div class="container">
+            <div class="row g-5">
+                <!-- Brand -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand">
+                        <img src="{% static 'img/gallery/aiatoz_logo.png' %}" alt="AI A TO Z">
+                    </div>
+                    <p class="footer-tagline">AI Courses provide structured learning to understand, build, and apply intelligent systems using data, algorithms, and real-world problem-solving techniques.</p>
+                    <div class="footer-social">
+                        <a href="https://wa.me/919989051238" target="_blank" rel="noopener" class="wa" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.linkedin.com/in/aiatoz" target="_blank" rel="noopener" class="li" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.instagram.com/learn_aiatoz?igsh=Ymo5YjdtbjN1eDlq" target="_blank" rel="noopener" class="ig" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://youtube.com/@learn_aiatoz?si=JABSRnfreVzqYTY7" target="_blank" rel="noopener" class="yt" title="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="https://x.com/learn_aiatoz" target="_blank" rel="noopener" class="tw" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-3 col-6">
+                    <h6 class="footer-heading">Quick Links</h6>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'index' %}">Home</a></li>
+                        <li><a href="{% url 'about' %}">About Us</a></li>
+                        <li><a href="{% url 'courses' %}">All Courses</a></li>
+                        <li><a href="{% url 'contact' %}">Contact</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                <!-- Courses -->
+                <div class="col-lg-2 col-md-3 col-6">
+                    <h6 class="footer-heading">Courses</h6>
+                    <ul class="footer-links">
+                        <li><a href="#">Python</a></li>
+                        <li><a href="#">Artificial Intelligence</a></li>
+                        <li><a href="#">Data Science</a></li>
+                        <li><a href="#">Machine Learning</a></li>
+                        <li><a href="#">Prompt Engineering</a></li>
+                        <li><a href="#">AI Chatbots</a></li>
+                    </ul>
+                </div>
+                <!-- Company -->
+                <div class="col-lg-2 col-md-3 col-6">
+                    <h6 class="footer-heading">Company</h6>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'portfolio' %}">Privacy Policy</a></li>
+                        <li><a href="{% url 'portfolio' %}">Terms & Conditions</a></li>
+                        <li><a href="{% url 'portfolio' %}">Careers</a></li>
+                        <li><a href="{% url 'portfolio' %}">Support</a></li>
+                    </ul>
+                </div>
+                <!-- Contact -->
+                <div class="col-lg-2 col-md-3 col-6">
+                    <h6 class="footer-heading">Contact</h6>
+                    <ul class="footer-links">
+                        <li><a href="mailto:aiatozofficial@gmail.com"><i class="bi bi-envelope-fill me-1" style="color:#0077a3;"></i> aiatozofficial@gmail.com</a></li>
+                        <li><a href="https://wa.me/919989051238"><i class="bi bi-whatsapp me-1" style="color:#25d366;"></i> WhatsApp Us</a></li>
+                        <li><a href="#"><i class="bi bi-geo-alt-fill me-1" style="color:#ef4444;"></i>Hyderabad, India</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom mt-5">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-12 text-center">
+                        <p>&copy; 2026 AI A to Z | Excellence in AI Training | All Rights Reserved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="back-top"><a title="Go to Top" href="#"><i class="fas fa-chevron-up"></i></a></div>
+
+    <!-- Bootstrap 5 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /* Navbar scroll effect */
+        const nav = document.getElementById('mainNav');
+        window.addEventListener('scroll', () => {
+            nav && (window.scrollY > 60 ? nav.classList.add('scrolled') : nav.classList.remove('scrolled'));
+        });
+
+        /* Scroll reveal */
+        const ro = new IntersectionObserver((entries) => {
+            entries.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); });
+        }, { threshold: .1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => ro.observe(el));
+    </script>
+
+<!-- ── FLOATING WHATSAPP BUTTON ── -->
+<style>
+    .wa-float-btn{position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;align-items:center;gap:0;background:#25d366;color:#fff;text-decoration:none;width:58px;height:58px;border-radius:50px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;box-shadow:0 8px 28px rgba(37,211,102,0.5),0 4px 16px rgba(0,0,0,0.22);transition:all 0.4s cubic-bezier(0.16,1,0.3,1);overflow:hidden;animation:waPop 0.6s cubic-bezier(0.16,1,0.3,1) 1.2s both,waPulse 2.5s ease-in-out 2s infinite;}
+    @keyframes waPop{from{opacity:0;transform:scale(0.4) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+    @keyframes waPulse{0%,100%{box-shadow:0 8px 28px rgba(37,211,102,0.5),0 4px 16px rgba(0,0,0,0.22)}50%{box-shadow:0 8px 40px rgba(37,211,102,0.75),0 4px 20px rgba(0,0,0,0.28)}}
+    .wa-float-btn:hover{width:178px;background:#1db954;box-shadow:0 14px 40px rgba(37,211,102,0.65),0 6px 20px rgba(0,0,0,0.28);transform:translateY(-5px);color:#fff;animation:none;}
+    .wa-float-icon{font-size:28px;line-height:1;flex-shrink:0;width:58px;height:58px;display:flex;align-items:center;justify-content:center;}
+    .wa-float-label{white-space:nowrap;overflow:hidden;max-width:0;opacity:0;transition:max-width 0.35s ease,opacity 0.25s ease 0.1s;}
+    .wa-float-btn:hover .wa-float-label{max-width:130px;opacity:1;padding-right:18px;}
+    .wa-float-ping{position:absolute;top:4px;right:4px;width:13px;height:13px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px #25d366;animation:waPing 1.8s ease-in-out infinite;}
+    @keyframes waPing{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:0.6}}
+</style>
+<a href="https://wa.me/919989051238" target="_blank" rel="noopener" class="wa-float-btn" title="Chat with us on WhatsApp" aria-label="WhatsApp Chat">
+    <span class="wa-float-icon"><i class="fab fa-whatsapp"></i></span>
+    <span class="wa-float-label">Chat with us</span>
+    <span class="wa-float-ping"></span>
+</a>
+
+<script>
+(function initPageHeroCanvas() {
+    const section = document.getElementById('pageHeroSection');
+    const canvas  = document.getElementById('pageHeroCanvas');
+    if (!section || !canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W, H, particles = [];
+
+    function resize() {
+        W = canvas.width  = section.offsetWidth;
+        H = canvas.height = section.offsetHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const COUNT  = 55;
+    const COLORS = ['rgba(255,255,255,', 'rgba(180,230,255,', 'rgba(120,200,255,'];
+    for (let i = 0; i < COUNT; i++) {
+        particles.push({
+            x: Math.random() * W, y: Math.random() * H,
+            r: Math.random() * 2.5 + 0.8,
+            vx: (Math.random() - 0.5) * 0.7,
+            vy: (Math.random() - 0.5) * 0.7,
+            col: COLORS[Math.floor(Math.random() * COLORS.length)],
+            alpha: Math.random() * 0.45 + 0.2,
+            pulse: Math.random() * Math.PI * 2
+        });
+    }
+
+    const LINK = 115;
+    function draw() {
+        ctx.clearRect(0, 0, W, H);
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const d1 = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
+                if (d1 > LINK) continue;
+                for (let k = j + 1; k < particles.length; k++) {
+                    const d2 = Math.hypot(particles[i].x - particles[k].x, particles[i].y - particles[k].y);
+                    if (d2 > LINK) continue;
+                    const d3 = Math.hypot(particles[j].x - particles[k].x, particles[j].y - particles[k].y);
+                    if (d3 > LINK) continue;
+                    const a = 0.05 * (1 - (d1 + d2 + d3) / (3 * LINK));
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.lineTo(particles[k].x, particles[k].y);
+                    ctx.closePath();
+                    ctx.fillStyle = 'rgba(0,180,216,' + a + ')';
+                    ctx.fill();
+                }
+            }
+        }
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const d = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
+                if (d < LINK) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = 'rgba(255,255,255,' + (0.18 * (1 - d / LINK)) + ')';
+                    ctx.lineWidth = 0.65;
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.stroke();
+                }
+            }
+        }
+        particles.forEach(p => {
+            p.pulse += 0.025;
+            const a = p.alpha * (0.7 + 0.3 * Math.sin(p.pulse));
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = p.col + a + ')';
+            ctx.fill();
+            p.x += p.vx; p.y += p.vy;
+            if (p.x < 0 || p.x > W) p.vx *= -1;
+            if (p.y < 0 || p.y > H) p.vy *= -1;
+        });
+        requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>

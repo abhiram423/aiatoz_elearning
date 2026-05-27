@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Personalization | AI A TO Z Academy</title>
+    
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-deep:    #060e1c;
+            --card-dark:  #0a1929;
+            --cse-teal:   #00b4d8;
+            --cse-blue:   #0077a3;
+            --grad-teal:  linear-gradient(135deg,#023e6d 0%,#0077a3 50%,#00b4d8 100%);
+            --text-dim:   rgba(255,255,255,0.5);
+        }
+
+        *,*::before,*::after { box-sizing:border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg,#060e1c 0%,#08162a 40%,#0a2040 70%,#083348 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 40px 16px;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity:0; transform:translateY(24px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+        @keyframes pulseGlow {
+            0%,100% { box-shadow:0 0 12px rgba(0,180,216,0.4); }
+            50%      { box-shadow:0 0 28px rgba(0,180,216,0.7); }
+        }
+
+        .quiz-card {
+            background: var(--card-dark);
+            border: 1px solid rgba(0,180,216,0.18);
+            border-radius: 32px;
+            padding: 52px 48px;
+            width: 100%;
+            max-width: 620px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 40px rgba(0,180,216,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        .quiz-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: var(--grad-teal);
+        }
+
+        .academy-brand {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .brand-icon {
+            width: 56px; height: 56px;
+            border-radius: 16px;
+            background: var(--grad-teal);
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 24px; color: #fff;
+            box-shadow: 0 8px 24px rgba(0,180,216,0.4);
+            animation: pulseGlow 3s ease-in-out infinite;
+            margin-bottom: 12px;
+        }
+        .brand-title {
+            font-size: 13px; font-weight: 800; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--cse-teal);
+        }
+
+        .step { display: none; }
+        .step.active { display: block; animation: fadeInUp 0.5s ease; }
+
+        h4 {
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 28px;
+            font-size: 22px;
+            line-height: 1.3;
+            letter-spacing: -0.5px;
+        }
+
+        .btn-option {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            width: 100%;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            border: 1.5px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            background: rgba(255,255,255,0.03);
+            text-align: left;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .btn-option:hover {
+            border-color: var(--cse-teal);
+            background: rgba(0,180,216,0.08);
+            color: #fff;
+            transform: translateX(4px);
+        }
+        .opt-circle {
+            width: 18px; height: 18px; min-width: 18px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transition: 0.25s;
+            flex-shrink: 0;
+        }
+        .btn-option:hover .opt-circle {
+            border-color: var(--cse-teal);
+            background: var(--cse-teal);
+            box-shadow: 0 0 8px rgba(0,180,216,0.5);
+        }
+
+        .progress-wrapper {
+            background: rgba(255,255,255,0.06);
+            height: 6px;
+            border-radius: 10px;
+            margin-bottom: 36px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--grad-teal);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .submit-final-btn {
+            background: var(--grad-teal);
+            color: #fff;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            width: 100%;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 800;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 8px 24px rgba(0,119,163,0.4);
+        }
+        .submit-final-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 36px rgba(0,119,163,0.6);
+        }
+
+        select.form-select {
+            border-radius: 14px;
+            border: 1.5px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.04);
+            color: rgba(255,255,255,0.7);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 600;
+            padding: 14px 18px;
+        }
+        select.form-select option { background: #0a1929; color: #fff; }
+        select.form-select:focus { border-color: var(--cse-teal); box-shadow: 0 0 0 3px rgba(0,180,216,0.15); background: rgba(0,180,216,0.05); outline: none; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-card">
+    <div class="academy-brand">
+        <img src="{% static 'img/gallery/aiatoz_logo.png' %}" alt="AI A TO Z" style="height:56px;width:auto;object-fit:contain;margin-bottom:10px;">
+        <div class="brand-title">AI A TO Z — Strategic Onboarding</div>
+    </div>
+
+    <div class="progress-wrapper">
+        <div id="p-bar" class="progress-bar" style="width: 10%;"></div>
+    </div>
+    
+    <form id="quizForm" method="POST" action="{% url 'register_quiz' %}">
+        {% csrf_token %}
+        
+        <input type="hidden" name="experience" id="exp">
+        <input type="hidden" name="interest" id="int">
+        <input type="hidden" name="time_commitment" id="time">
+        <input type="hidden" name="math_level" id="math">
+        <input type="hidden" name="has_gpu" id="gpu">
+        <input type="hidden" name="profession" id="status">
+        <input type="hidden" name="industry" id="ind">
+        <input type="hidden" name="learning_style" id="style">
+        <input type="hidden" name="timeline" id="timeline">
+
+        <div class="step active" id="s1">
+            <h4>Are you Student or Working Professional?</h4>
+            <button type="button" class="btn-option" onclick="ns('exp', 'Under 22', 1)"><div class="opt-circle"></div>Student</button>
+            <button type="button" class="btn-option" onclick="ns('exp', '22-35', 1)"><div class="opt-circle"></div>Working Professional</button>
+        </div>
+
+        <div class="step" id="s2">
+            <h4>Why do you want to learn AI?</h4>
+            <button type="button" class="btn-option" onclick="ns('int', 'Visual', 2)"><div class="opt-circle"></div> To switch job to AI related roles</button>
+            <button type="button" class="btn-option" onclick="ns('int', 'Text', 2)"><div class="opt-circle"></div> Upgrade my knowledge and become market ready</button>
+            <button type="button" class="btn-option" onclick="ns('int', 'Hybrid', 2)"><div class="opt-circle"></div> To do internship which will help in my college placements</button>
+        </div>
+
+        <div class="step" id="s3">
+            <h4>Which describes your current ambition level in AI?</h4>
+            <button type="button" class="btn-option" onclick="ns('time', 'Explorer', 3)"><div class="opt-circle"></div> Explorer - Learning for curiosity</button>
+            <button type="button" class="btn-option" onclick="ns('time', 'Careerist', 3)"><div class="opt-circle"></div> Careerist - Seeking job placement</button>
+            <button type="button" class="btn-option" onclick="ns('time', 'Innovator', 3)"><div class="opt-circle"></div> Innovator - Building my own startup</button>
+        </div>
+
+        <div class="step" id="s4">
+            <h4>When you encounter a coding bug, what is your first reaction?</h4>
+            <button type="button" class="btn-option" onclick="ns('math', 'Research', 4)"><div class="opt-circle"></div> Research documentation & solve it</button>
+            <button type="button" class="btn-option" onclick="ns('math', 'Community', 4)"><div class="opt-circle"></div> Ask AI tools or communities</button>
+            <button type="button" class="btn-option" onclick="ns('math', 'Trial', 4)"><div class="opt-circle"></div> Trial and error until it works</button>
+        </div>
+
+        <div class="step" id="s5">
+            <h4>How disciplined are you with self-paced learning?</h4>
+            <button type="button" class="btn-option" onclick="ns('gpu', 'Highly', 5)"><div class="opt-circle"></div> Highly Disciplined (Daily routines)</button>
+            <button type="button" class="btn-option" onclick="ns('gpu', 'Moderate', 5)"><div class="opt-circle"></div> Moderate (Needs reminders)</button>
+            <button type="button" class="btn-option" onclick="ns('gpu', 'NeedsStructure', 5)"><div class="opt-circle"></div> Needs strict structure & deadlines</button>
+        </div>
+
+        <div class="step" id="s6">
+            <h4>What is your academic/work background?</h4>
+            <button type="button" class="btn-option" onclick="ns('status', 'CS', 6)"><div class="opt-circle"></div> Computer Science / Engineering</button>
+            <button type="button" class="btn-option" onclick="ns('status', 'STEM', 6)"><div class="opt-circle"></div> Other STEM Background</button>
+            <button type="button" class="btn-option" onclick="ns('status', 'NonTech', 6)"><div class="opt-circle"></div> Non-Technical Professional</button>
+        </div>
+
+        <div class="step" id="s7">
+            <h4>What is the primary driver for you to learn AI today?</h4>
+            <button type="button" class="btn-option" onclick="ns('ind', 'HighSalary', 7)"><div class="opt-circle"></div> Future-proofing & High Salary</button>
+            <button type="button" class="btn-option" onclick="ns('ind', 'Creativity', 7)"><div class="opt-circle"></div> AI Creativity & Innovation</button>
+            <button type="button" class="btn-option" onclick="ns('ind', 'Automation', 7)"><div class="opt-circle"></div> Automating Business Processes</button>
+        </div>
+
+        <div class="step" id="s8">
+            <h4>How many hours can you realistically commit weekly?</h4>
+            <button type="button" class="btn-option" onclick="ns('style', '5-10', 8)"><div class="opt-circle"></div> 5 - 10 Hours (Casual)</button>
+            <button type="button" class="btn-option" onclick="ns('style', '15-25', 8)"><div class="opt-circle"></div> 15 - 25 Hours (Professional)</button>
+            <button type="button" class="btn-option" onclick="ns('style', 'FullTime', 8)"><div class="opt-circle"></div> 30+ Hours (Extreme Mastery)</button>
+        </div>
+
+        <div class="step" id="s9">
+            <h4>How can we support you to achieve your Goal?</h4>
+            <button type="button" class="btn-option" onclick="ns('timeline', 'LoveIt', 9)"><div class="opt-circle"></div> Provide High Quality Educative & Practical Content</button>
+            <button type="button" class="btn-option" onclick="ns('timeline', 'Practical', 9)"><div class="opt-circle"></div> Provide Internships</button>
+            <button type="button" class="btn-option" onclick="ns('timeline', 'VisualMath', 9)"><div class="opt-circle"></div> Anything which helps me to learn & Excel in AI</button>
+        </div>
+
+        <div class="step" id="s10">
+            <h4>10. Your Ultimate Goal?</h4>
+            <select name="final_goal" class="form-select mb-4 p-4 rounded-4" required>
+                <option value="" disabled selected>Select your final career objective</option>
+                <option value="Job">Secure a high-paying AI Job</option>
+                <option value="Startup">Launch my own AI Startup</option>
+                <option value="Research">Academic Research / PhD</option>
+                <option value="Freelance">Global AI Freelancing</option>
+            </select>
+            <button type="submit" class="submit-final-btn">COMPLETE REGISTRATION</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Professional navigation logic
+    function ns(field, val, current) {
+        // Set values in hidden inputs
+        document.getElementById(field).value = val;
+        
+        // Handle UI transition
+        const currentStep = document.getElementById('s' + current);
+        const nextStep = document.getElementById('s' + (current + 1));
+        
+        currentStep.style.display = 'none';
+        nextStep.style.display = 'block';
+        
+        // Update Progress bar based on 10 steps
+        document.getElementById('p-bar').style.width = ((current + 1) * 10) + '%';
+    }
+</script>
+
+</body>
+</html>

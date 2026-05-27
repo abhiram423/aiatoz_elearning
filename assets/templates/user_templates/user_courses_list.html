@@ -1,0 +1,738 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/x-icon" href="{% static 'img/gallery/aiatoz_logo.png' %}">
+    <title>My Learning | AI A TO Z Academy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-deep:       #060e1c;
+            --bg-deep2:      #08162a;
+            --card-surface:  #0a1929;
+            --cse-teal:      #00b4d8;
+            --cse-blue:      #0077a3;
+            --cse-navy:      #023e6d;
+            --cse-border:    rgba(255,255,255,0.09);
+            --text-main:     #ffffff;
+            --text-dim:      #94a3b8;
+            --grad-teal:     linear-gradient(135deg, #023e6d 0%, #0077a3 50%, #00b4d8 100%);
+            --sidebar-w:     265px;
+            --transition:    all .35s cubic-bezier(.16,1,.3,1);
+
+            --shadow-sm:     0 4px 24px rgba(0,0,0,.18);
+            --shadow-md:     0 8px 32px rgba(0,0,0,.28);
+            --shadow-lg:     0 24px 60px rgba(0,0,0,.4);
+        }
+
+        *,*::before,*::after { box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
+
+        /* ── DARK BODY — same as dashboard ── */
+        body {
+            font-family:'Plus Jakarta Sans',sans-serif;
+            background:linear-gradient(135deg,#060e1c 0%,#08162a 40%,#0a2040 70%,#083348 100%) fixed;
+            background-attachment:fixed;
+            color:var(--text-main);
+            margin:0; overflow-x:hidden;
+        }
+
+        @keyframes fadeInUp    { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes pulseGlow   { 0%,100%{box-shadow:0 0 12px rgba(0,180,216,0.4)} 50%{box-shadow:0 0 28px rgba(0,180,216,0.7)} }
+        @keyframes pulse       { 0%,100%{box-shadow:0 0 8px rgba(255,107,0,.9)} 50%{box-shadow:0 0 16px rgba(255,107,0,.3)} }
+        @keyframes floatIn     { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes floatGlow   { from{transform:translate(0,0) scale(1)} to{transform:translate(100px,150px) scale(1.2)} }
+
+        /* ── PAGE BACKGROUND LAYERS — same as dashboard ── */
+        .page-bg { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; }
+        .dot-overlay {
+            position:absolute; width:100%; height:100%;
+            background-image:radial-gradient(rgba(255,255,255,0.04) 1.5px,transparent 1.5px);
+            background-size:45px 45px;
+        }
+        .noise-overlay {
+            position:absolute; width:100%; height:100%; opacity:0.025;
+            background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat:repeat; background-size:128px 128px;
+        }
+        .glow-orb {
+            position:absolute; border-radius:50%;
+            background:radial-gradient(circle,rgba(0,180,216,0.18) 0%,transparent 75%);
+            filter:blur(100px); opacity:0.28;
+            animation:floatGlow 20s infinite alternate ease-in-out;
+        }
+        .glow-orb-blue {
+            position:absolute; border-radius:50%;
+            background:radial-gradient(circle,rgba(0,119,163,0.2) 0%,transparent 75%);
+            filter:blur(120px); opacity:0.2;
+            animation:floatGlow 28s infinite alternate-reverse ease-in-out;
+        }
+
+        /* ══════════════════════════════════
+           SIDEBAR — same as dashboard
+        ══════════════════════════════════ */
+        .sidebar {
+            width:var(--sidebar-w);
+            height:100vh;
+            background:rgba(6,14,28,0.98);
+            position:fixed; left:0; top:0;
+            display:flex; flex-direction:column;
+            z-index:1100;
+            border-right:1px solid rgba(0,180,216,0.12);
+            transition:var(--transition);
+            overflow:hidden;
+            backdrop-filter:blur(20px);
+        }
+        .sidebar::before {
+            content:''; position:absolute; inset:0;
+            background-image:radial-gradient(rgba(0,180,216,0.03) 1.5px,transparent 1.5px);
+            background-size:28px 28px; pointer-events:none;
+        }
+        .sidebar::after {
+            content:''; position:absolute; top:0; left:0; right:0; height:2px;
+            background:linear-gradient(90deg,transparent,#00b4d8,transparent); opacity:0.5;
+        }
+        .sidebar-orb {
+            position:absolute; width:300px; height:300px; top:-100px; right:-80px;
+            background:radial-gradient(circle,rgba(0,180,216,0.13) 0%,transparent 65%);
+            filter:blur(70px); border-radius:50%; pointer-events:none;
+        }
+        .sb-brand {
+            padding:26px 22px 20px;
+            display:flex; align-items:center; gap:13px;
+            border-bottom:1px solid rgba(0,180,216,0.1);
+            position:relative; z-index:1; flex-shrink:0;
+        }
+        .sb-brand-icon {
+            width:44px; height:44px; border-radius:14px;
+            background:var(--grad-teal);
+            display:flex; align-items:center; justify-content:center;
+            color:#fff; font-size:20px;
+            box-shadow:0 8px 24px rgba(0,180,216,0.4); flex-shrink:0;
+            animation:pulseGlow 3s ease-in-out infinite;
+        }
+        .sb-brand-text {
+            font-size:17px; font-weight:900;
+            letter-spacing:.8px; text-decoration:none; text-transform:uppercase; line-height:1.1;
+            background:linear-gradient(135deg,#fff 0%,#93c5fd 100%);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+        }
+        .sb-brand-sub {
+            font-size:9px; color:rgba(255,255,255,0.3);
+            font-weight:700; letter-spacing:1.5px; text-transform:uppercase;
+        }
+        .sb-nav { padding:20px 14px 10px; flex:1; overflow-y:auto; position:relative; z-index:1; }
+        .sb-nav::-webkit-scrollbar { width:3px; }
+        .sb-nav::-webkit-scrollbar-thumb { background:rgba(0,180,216,0.25); border-radius:3px; }
+        .sb-label {
+            font-size:9px; font-weight:800; letter-spacing:2px;
+            color:rgba(255,255,255,0.2); text-transform:uppercase;
+            padding:0 8px 12px; display:block;
+        }
+        .sb-link {
+            display:flex; align-items:center; gap:13px;
+            padding:13px 14px; border-radius:14px;
+            color:rgba(255,255,255,0.4); font-size:13.5px; font-weight:700;
+            text-decoration:none; transition:var(--transition);
+            margin-bottom:4px; position:relative; border:1px solid transparent;
+        }
+        .sb-link i { font-size:16px; width:20px; text-align:center; flex-shrink:0; transition:.3s; }
+        .sb-link:hover { background:rgba(0,180,216,0.06); color:rgba(255,255,255,0.85); border-color:rgba(0,180,216,0.12); }
+        .sb-link:hover i { color:var(--cse-teal); }
+        .sb-link.active { background:rgba(0,180,216,0.12); color:#fff; border-color:rgba(0,180,216,0.28); }
+        .sb-link.active i { color:var(--cse-teal); }
+        .sb-link.active::before {
+            content:''; position:absolute; left:0; top:50%; transform:translateY(-50%);
+            width:3px; height:55%; background:var(--grad-teal); border-radius:0 3px 3px 0;
+        }
+        .sb-dot {
+            width:6px; height:6px; border-radius:50%;
+            background:var(--cse-teal); box-shadow:0 0 8px rgba(0,180,216,0.8);
+            margin-left:auto; flex-shrink:0; animation:pulseGlow 2s infinite;
+        }
+        .sb-bottom {
+            padding:16px 14px 24px;
+            position:relative; z-index:1; flex-shrink:0;
+            border-top:1px solid rgba(0,180,216,0.1);
+        }
+        .sb-logout {
+            display:flex; align-items:center; gap:12px;
+            padding:14px 18px; border-radius:14px;
+            color:rgba(248,113,113,0.8); font-size:14px; font-weight:800;
+            text-decoration:none; transition:var(--transition);
+            background:rgba(239,68,68,0.07);
+            border:1.5px solid rgba(239,68,68,0.2);
+            width:100%;
+        }
+        .sb-logout i { font-size:17px; }
+        .sb-logout:hover {
+            background:rgba(239,68,68,0.14); color:#f87171;
+            border-color:rgba(239,68,68,0.4); transform:translateX(4px);
+            box-shadow:0 8px 22px rgba(239,68,68,0.15);
+        }
+
+        /* ══════════════════════════════════
+           MAIN WRAPPER
+        ══════════════════════════════════ */
+        .main-wrapper { margin-left:var(--sidebar-w); min-height:100vh; transition:var(--transition); }
+
+        /* TOP BAR — dark, same as dashboard */
+        .topbar {
+            background:rgba(6,14,28,0.95);
+            border-bottom:1px solid rgba(0,180,216,0.12);
+            padding:0 32px; height:68px;
+            display:flex; align-items:center; justify-content:space-between;
+            position:sticky; top:0; z-index:900;
+            backdrop-filter:blur(24px);
+            box-shadow:0 4px 24px rgba(0,0,0,0.3);
+        }
+        .topbar::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:1px;
+            background:linear-gradient(90deg,transparent,rgba(0,180,216,0.4),transparent);
+        }
+        .topbar-left { display:flex; align-items:center; gap:16px; }
+        .sb-toggle {
+            display:none; background:none; border:none; padding:8px;
+            border-radius:10px; color:var(--text-dim); cursor:pointer; font-size:20px; transition:.25s;
+        }
+        .sb-toggle:hover { background:rgba(0,180,216,0.08); color:var(--cse-teal); }
+        .topbar-right { display:flex; align-items:center; gap:14px; }
+        .topbar-notif {
+            width:40px; height:40px; border-radius:11px;
+            background:rgba(255,255,255,0.04); border:1.5px solid rgba(0,180,216,0.15);
+            display:flex; align-items:center; justify-content:center;
+            color:var(--text-dim); font-size:16px; cursor:pointer; transition:.3s; position:relative;
+        }
+        .topbar-notif:hover { border-color:var(--cse-teal); color:var(--cse-teal); }
+        .notif-dot {
+            position:absolute; top:7px; right:7px; width:8px; height:8px; border-radius:50%;
+            background:var(--cse-teal); border:2px solid var(--bg-deep); animation:pulseGlow 2s infinite;
+        }
+        .topbar-user { display:flex; align-items:center; gap:10px; cursor:pointer; }
+        .topbar-user-info { text-align:right; }
+        .topbar-user-name { font-size:13.5px; font-weight:800; color:#fff; line-height:1.25; }
+        .topbar-user-role {
+            display:inline-flex; font-size:9px; font-weight:800;
+            background:rgba(0,180,216,0.12); color:var(--cse-teal);
+            padding:2px 9px; border-radius:100px; letter-spacing:.8px;
+            border:1px solid rgba(0,180,216,0.2);
+        }
+        .topbar-avatar {
+            width:40px; height:40px; border-radius:12px; object-fit:cover;
+            border:2px solid rgba(0,180,216,0.35); box-shadow:0 4px 14px rgba(0,180,216,0.2);
+        }
+
+        /* PAGE CONTENT */
+        .page-content { padding:32px; }
+
+        /* ══════════════════════════════════
+           PAGE HERO
+        ══════════════════════════════════ */
+        .page-hero {
+            background:linear-gradient(135deg,#023e6d 0%,#025d94 35%,#0077a3 65%,#00b4d8 100%);
+            border-radius:24px; padding:38px 44px;
+            position:relative; overflow:hidden; margin-bottom:30px;
+            border:1px solid rgba(0,180,216,.25);
+            animation:fadeInUp .5s ease both;
+        }
+        .page-hero::before {
+            content:''; position:absolute; inset:0;
+            background-image:radial-gradient(rgba(255,255,255,.025) 1.5px,transparent 1.5px);
+            background-size:30px 30px;
+        }
+        .ph-orb {
+            position:absolute; width:400px; height:400px; top:-140px; right:-60px;
+            background:radial-gradient(circle,rgba(255,255,255,.12) 0%,transparent 65%);
+            filter:blur(70px); border-radius:50%; pointer-events:none;
+        }
+        .page-hero .inner { position:relative; z-index:1; }
+        .ph-badge {
+            display:inline-flex; align-items:center; gap:8px;
+            background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.35);
+            color:#fff; padding:6px 14px; border-radius:100px;
+            font-size:11px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase;
+            margin-bottom:14px;
+        }
+        .live-dot { width:6px; height:6px; border-radius:50%; background:#fff; display:inline-block; animation:pulse 1.8s ease-in-out infinite; }
+        .page-hero h1 { font-size:30px; font-weight:900; letter-spacing:-1.2px; color:#fff; line-height:1.15; margin-bottom:8px; }
+        .page-hero h1 span { background:linear-gradient(135deg,#fff 0%,rgba(180,230,255,.9) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .page-hero p { color:rgba(255,255,255,.65); font-size:14.5px; margin:0; }
+        .ph-bc { display:flex; align-items:center; gap:8px; margin-top:14px; }
+        .ph-bc a { color:rgba(255,255,255,.55); font-size:12.5px; font-weight:600; text-decoration:none; transition:.2s; }
+        .ph-bc a:hover { color:#fff; }
+        .ph-bc .sep { color:rgba(255,255,255,.3); font-size:11px; }
+        .ph-bc .cur { color:rgba(255,255,255,.85); font-size:12.5px; font-weight:600; }
+
+        /* ══════════════════════════════════
+           CONTENT CARDS — dark surface
+        ══════════════════════════════════ */
+        .content-card {
+            background:var(--card-surface);
+            border:1px solid rgba(255,255,255,0.07);
+            border-radius:22px; padding:28px 30px;
+            box-shadow:var(--shadow-sm); margin-bottom:24px;
+            transition:var(--transition); position:relative; overflow:hidden;
+            animation:floatIn .55s ease both;
+        }
+        .content-card::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:3px;
+            background:var(--grad-teal); transform:scaleX(0); transition:.4s; transform-origin:left;
+        }
+        .content-card:hover { border-color:rgba(0,180,216,.2); box-shadow:var(--shadow-md); }
+        .content-card:hover::before { transform:scaleX(1); }
+
+        .card-section-title {
+            display:flex; align-items:center; gap:10px;
+            font-size:17px; font-weight:900; color:#fff;
+            margin-bottom:20px; padding-bottom:14px;
+            border-bottom:1px solid rgba(255,255,255,0.08); position:relative;
+        }
+        .card-section-title::after {
+            content:''; position:absolute; bottom:-1px; left:0;
+            width:38px; height:2px; background:var(--grad-teal);
+        }
+        .card-section-title i { color:var(--cse-teal); font-size:18px; }
+
+        /* Overview list */
+        .ai-material { line-height:1.85; color:var(--text-dim); font-size:15px; }
+        .ai-material ul { padding-left:0; list-style:none; margin-top:16px; }
+        .ai-material ul li {
+            display:flex; align-items:flex-start; gap:12px;
+            padding:11px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:14.5px;
+        }
+        .ai-material ul li:last-child { border-bottom:none; }
+        .ai-material ul li::before {
+            content:''; display:inline-block; min-width:8px; height:8px; border-radius:50%;
+            background:var(--cse-teal); margin-top:7px;
+        }
+        .ai-material strong { color:#fff; font-weight:800; }
+
+        /* Video */
+        .video-container {
+            position:relative; padding-bottom:56.25%; height:0; overflow:hidden;
+            border-radius:18px; background:#000; margin-top:4px;
+            box-shadow:0 12px 40px rgba(0,0,0,.4);
+        }
+        .video-container iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:0; }
+
+        /* Course content safe render */
+        .course-content-body { line-height:1.85; color:var(--text-dim); font-size:15px; }
+        .course-content-body h1,.course-content-body h2,.course-content-body h3 { color:#fff; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; }
+        .course-content-body pre { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:18px; overflow-x:auto; font-size:14px; }
+        .course-content-body code { background:rgba(0,180,216,.1); color:var(--cse-teal); border-radius:6px; padding:2px 6px; font-size:13px; }
+        .course-content-body img { max-width:100%; border-radius:12px; }
+
+        /* ── FREE ACCESS STATUS CARD ── */
+        .status-card {
+            background:var(--card-surface);
+            border:1px solid rgba(255,255,255,0.07);
+            border-radius:20px; padding:24px; box-shadow:var(--shadow-sm);
+            margin-bottom:20px; position:relative; overflow:hidden;
+            animation:floatIn .6s ease both;
+        }
+        .status-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(135deg,#10b981,#059669); }
+        .status-card h5 { font-size:14px; font-weight:800; color:#fff; margin-bottom:16px; text-transform:uppercase; letter-spacing:1px; }
+        .status-badge-free {
+            display:flex; align-items:center; justify-content:center; gap:8px;
+            padding:12px; border-radius:12px; font-size:13px; font-weight:800; width:100%;
+            text-transform:uppercase; letter-spacing:1px;
+            background:rgba(16,185,129,.1); color:#4ade80;
+            border:1.5px solid rgba(16,185,129,.25);
+        }
+
+        /* Back button */
+        .back-btn {
+            display:inline-flex; align-items:center; gap:8px;
+            font-size:13px; font-weight:800; color:var(--cse-teal);
+            background:rgba(0,180,216,.07); border:1px solid rgba(0,180,216,.2);
+            padding:8px 18px; border-radius:100px; text-decoration:none; transition:.3s;
+        }
+        .back-btn:hover { background:var(--cse-teal); color:#fff; border-color:var(--cse-teal); }
+        .back-btn i { transition:transform .3s; }
+        .back-btn:hover i { transform:translateX(-4px); }
+
+        /* ══════════════════════════════════
+           LIBRARY CARDS — dark surface
+        ══════════════════════════════════ */
+        .lib-card {
+            background:var(--card-surface);
+            border:1px solid rgba(255,255,255,0.07);
+            border-radius:20px; overflow:hidden;
+            box-shadow:var(--shadow-sm); transition:var(--transition);
+            display:flex; flex-direction:column; height:100%;
+            animation:floatIn .6s ease both; position:relative;
+        }
+        .lib-card::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:3px;
+            background:var(--grad-teal); transform:scaleX(0); transition:.4s; transform-origin:left; z-index:1;
+        }
+        .lib-card:hover { transform:translateY(-10px); box-shadow:var(--shadow-lg); border-color:rgba(0,180,216,.25); }
+        .lib-card:hover::before { transform:scaleX(1); }
+
+        .lib-thumb {
+            height:140px; position:relative;
+            background:linear-gradient(135deg,#060e1c 0%,#08162a 100%);
+            display:flex; align-items:center; justify-content:center; overflow:hidden;
+        }
+        .lib-thumb::before {
+            content:''; position:absolute; inset:0;
+            background-image:radial-gradient(rgba(255,255,255,.03) 1px,transparent 1px);
+            background-size:18px 18px;
+        }
+        .lib-thumb-orb {
+            position:absolute; width:180px; height:180px; top:-50px; right:-30px;
+            background:radial-gradient(circle,rgba(0,180,216,.2) 0%,transparent 65%);
+            filter:blur(35px); border-radius:50%;
+        }
+        .lib-thumb i { font-size:40px; color:rgba(0,180,216,.75); position:relative; z-index:1; }
+        .lib-free-tag {
+            position:absolute; top:12px; right:12px; z-index:2;
+            background:linear-gradient(135deg,#10b981,#059669); color:#fff;
+            font-size:9px; font-weight:800; letter-spacing:1px; text-transform:uppercase;
+            padding:4px 10px; border-radius:100px;
+            box-shadow:0 4px 12px rgba(16,185,129,.4);
+        }
+        .lib-body { padding:20px 22px 22px; flex:1; display:flex; flex-direction:column; }
+        .lib-body h5 { font-size:16px; font-weight:800; color:#fff; margin-bottom:8px; line-height:1.35; }
+        .lib-body p { font-size:13px; color:var(--text-dim); line-height:1.6; margin-bottom:18px; flex:1; }
+        .lib-btn {
+            display:flex; align-items:center; justify-content:center; gap:7px;
+            background:rgba(255,255,255,0.06); color:#fff;
+            border:1px solid rgba(255,255,255,0.1);
+            font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:13px;
+            padding:11px; border-radius:12px; text-decoration:none; transition:var(--transition);
+        }
+        .lib-btn:hover { background:var(--grad-teal); color:#fff; border-color:transparent; box-shadow:0 8px 22px rgba(0,180,216,.3); transform:translateY(-2px); }
+
+        /* Empty state */
+        .empty-state {
+            text-align:center; padding:70px 20px;
+            background:rgba(255,255,255,0.02); border-radius:24px;
+            border:1.5px dashed rgba(0,180,216,0.2);
+        }
+        .empty-icon { font-size:52px; color:rgba(0,180,216,0.3); margin-bottom:18px; }
+        .empty-state h4 { font-size:18px; font-weight:800; color:#fff; margin-bottom:8px; }
+        .empty-state p { font-size:14px; color:var(--text-dim); }
+
+        /* Mobile overlay */
+        .sb-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:1050; backdrop-filter:blur(6px); }
+        .sb-overlay.active { display:block; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width:6px; }
+        ::-webkit-scrollbar-track { background:var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background:rgba(0,180,216,0.4); border-radius:6px; }
+        ::-webkit-scrollbar-thumb:hover { background:var(--cse-teal); }
+        ::selection { background:rgba(0,180,216,0.3); color:#fff; }
+
+        /* ══════════════════════════════════
+           RESPONSIVE
+        ══════════════════════════════════ */
+        @media(max-width:991px) {
+            .sidebar { transform:translateX(-100%); box-shadow:none; }
+            .sidebar.open { transform:translateX(0); box-shadow:20px 0 60px rgba(0,0,0,.5); }
+            .main-wrapper { margin-left:0; }
+            .sb-toggle { display:flex; align-items:center; justify-content:center; }
+            .page-content { padding:20px; }
+            .topbar { padding:0 16px; }
+        }
+        @media(max-width:768px) {
+            .topbar { height:60px; }
+            .topbar-user-info { display:none; }
+            .page-hero { padding:24px 22px; }
+            .page-hero h1 { font-size:22px; }
+            .content-card { padding:20px; }
+        }
+        @media(max-width:575px) {
+            .page-content { padding:14px; }
+            .content-card { border-radius:16px; padding:18px; }
+            .lib-thumb { height:110px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PAGE BACKGROUND — same as dashboard -->
+    <div class="page-bg">
+        <div class="dot-overlay"></div>
+        <div class="noise-overlay"></div>
+        <div class="glow-orb" style="width:700px;height:700px;top:-200px;left:-100px;"></div>
+        <div class="glow-orb" style="width:450px;height:450px;bottom:10%;right:-50px;animation-delay:-5s;"></div>
+        <div class="glow-orb-blue" style="width:550px;height:550px;top:40%;left:30%;"></div>
+    </div>
+
+    <!-- Mobile overlay -->
+    <div class="sb-overlay" id="sbOverlay" onclick="closeSidebar()"></div>
+
+    <!-- ══ SIDEBAR — same dark teal as dashboard ══ -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-orb"></div>
+
+        <!-- Brand -->
+        <div class="sb-brand">
+            <div>
+                <a href="{% url 'index' %}" class="sb-brand-text">AI A TO Z</a>
+                <div class="sb-brand-sub">Academy Portal</div>
+            </div>
+        </div>
+
+        <!-- 4 nav links -->
+        <nav class="sb-nav">
+            <span class="sb-label">Menu</span>
+
+            <a href="{% url 'dashboard' %}" class="sb-link">
+                <i class="bi bi-grid-fill"></i>
+                Dashboard
+            </a>
+
+            <a href="{% url 'user_courses_list' %}" class="sb-link active">
+                <i class="bi bi-collection-play-fill"></i>
+                My Learning
+                <span class="sb-dot"></span>
+            </a>
+
+            <a href="#" class="sb-link">
+                <i class="bi bi-patch-check-fill"></i>
+                Certifications
+            </a>
+
+            <a href="{% url 'feedback' %}" class="sb-link">
+                <i class="bi bi-chat-heart-fill"></i>
+                Feedback
+            </a>
+        </nav>
+
+        <!-- Logout -->
+        <div class="sb-bottom">
+            <a href="{% url 'login' %}" class="sb-logout">
+                <i class="bi bi-box-arrow-left"></i>
+                Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- ══ MAIN WRAPPER ══ -->
+    <div class="main-wrapper">
+
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="sb-toggle" id="sbToggle" onclick="toggleSidebar()">
+                    <i class="bi bi-list"></i>
+                </button>
+                <img src="{% static 'img/gallery/aiatoz_logo.png' %}" alt="AI A TO Z" style="height:36px;width:auto;object-fit:contain;">
+            </div>
+            <div class="topbar-right">
+                <div class="topbar-notif">
+                    <i class="bi bi-bell-fill"></i>
+                    <span class="notif-dot"></span>
+                </div>
+                <div class="topbar-user">
+                <div class="topbar-user-info">
+                    <div class="topbar-user-name">
+                        Hello, {{ user_profile.user|default:"Learner"|upper }}
+                    </div>
+                    <span class="topbar-user-role">STUDENT</span>
+                </div>
+                <img src="https://ui-avatars.com/api/?name={{ user_profile.user }}&background=0077a3&color=fff&bold=true&format=svg" class="topbar-avatar" alt="User">
+            </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="page-content">
+
+            {% if selected_course %}
+
+                <!-- ══ COURSE DETAIL VIEW ══ -->
+
+                <!-- Page Hero -->
+                <div class="page-hero" style="margin-bottom:28px;">
+                    <div class="ph-orb"></div>
+                    <div class="inner">
+                        <div class="ph-badge"><span class="live-dot"></span> Now Learning</div>
+                        <h1>{{ selected_course.title }}</h1>
+                        <p>Explore the curriculum below — full access included.</p>
+                        <div class="ph-bc">
+                            <a href="{% url 'dashboard' %}">Dashboard</a>
+                            <span class="sep">›</span>
+                            <a href="{% url 'user_courses_list' %}">My Learning</a>
+                            <span class="sep">›</span>
+                            <span class="cur">{{ selected_course.title }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Back button row -->
+                <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+                    <a href="{% url 'user_courses_list' %}" class="back-btn">
+                        <i class="bi bi-arrow-left"></i> Back to Library
+                    </a>
+                </div>
+
+                <div class="row g-4">
+
+                    <!-- LEFT: main content -->
+                    <div class="col-lg-8">
+
+                        <!-- Course Overview -->
+                        <div class="content-card">
+                            <div class="card-section-title">
+                                <i class="bi bi-info-circle-fill"></i> Course Overview
+                            </div>
+                            <div class="ai-material">
+                                <p>In this course, we cover the essential components of <strong>{{ selected_course.title }}</strong>. This module is designed for both beginners and professionals looking to sharpen their skills.</p>
+                                <ul>
+                                    <li><strong>Expert Modules:</strong> Step-by-step guidance from industry mentors.</li>
+                                    <li><strong>Practical Implementation:</strong> Real-world use cases and tools.</li>
+                                    <li><strong>Certification:</strong> Earn a valid certificate upon 100% completion.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Lecture Video — always visible (free access) -->
+                        <div class="content-card">
+                            <div class="card-section-title">
+                                <i class="bi bi-play-circle-fill" style="color:#ef4444"></i> Lecture Video
+                            </div>
+                            <div class="video-container">
+                                <iframe src="{{ selected_course.video_url }}" allowfullscreen></iframe>
+                            </div>
+                        </div>
+
+                        <!-- Full Study Material — always visible (free access) -->
+                        <div class="content-card">
+                            <div class="card-section-title">
+                                <i class="bi bi-book-fill"></i> Full Study Material
+                            </div>
+                            <div class="course-content-body ai-material">
+                                {{ selected_course.course_content|safe }}
+                            </div>
+                        </div>
+
+                        {% if selected_course.course_pdf %}
+                        <div class="content-card">
+                            <div class="card-section-title">
+                                <i class="bi bi-file-earmark-pdf-fill" style="color: #ff4d4d;"></i> Study Resources
+                            </div>
+                            <div class="ai-material">
+                                <p>Download the official PDF guide for this course to study offline.</p>
+                                
+                                <a href="{{ selected_course.course_pdf.url }}" 
+                                   download="{{ selected_course.title }}.pdf" 
+                                   class="lib-btn" 
+                                   style="background: rgba(255, 77, 77, 0.1); border-color: rgba(255, 77, 77, 0.2); color: #ff4d4d;">
+                                    <i class="bi bi-cloud-arrow-down-fill"></i> Download Course PDF
+                                </a>
+                            </div>
+                        </div>
+
+                        
+                        {% endif %}
+
+                    </div><!-- /col-lg-8 -->
+
+                    <!-- RIGHT: status -->
+                    <div class="col-lg-4">
+                        <div class="status-card">
+                            <h5>Enrollment Status</h5>
+                            <div class="status-badge-free">
+                                <i class="bi bi-unlock-fill"></i> Free Access
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            {% else %}
+
+                <!-- ══ LIBRARY VIEW ══ -->
+
+                <!-- Page Hero -->
+                <div class="page-hero">
+                    <div class="ph-orb"></div>
+                    <div class="inner">
+                        <div class="ph-badge"><span class="live-dot"></span> AI A TO Z Academy</div>
+                        <h1>Your <span>Learning</span> Library</h1>
+                        <p>All your free AI courses in one place — start learning right away.</p>
+                        <div class="ph-bc">
+                            <a href="{% url 'dashboard' %}">Dashboard</a>
+                            <span class="sep">›</span>
+                            <span class="cur">My Learning</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Grid -->
+                <div class="row g-4">
+                    {% for course in all_courses %}
+                    <div class="col-12 col-sm-6 col-xl-4" style="animation-delay:{{ forloop.counter0|add:1 }}00ms">
+                        <div class="lib-card">
+                            <div class="lib-thumb">
+                                <div class="lib-thumb-orb"></div>
+                                <i class="bi bi-book-fill"></i>
+                                <span class="lib-free-tag">Free</span>
+                            </div>
+                            <div class="lib-body">
+                                <h5>{{ course.title }}</h5>
+                                <p>{{ course.description|truncatewords:12 }}</p>
+                                <a href="?id={{ course.id }}" class="lib-btn">
+                                    <i class="bi bi-play-fill"></i> View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12">
+                        <div class="empty-state">
+                            <div class="empty-icon"><i class="bi bi-collection-play"></i></div>
+                            <h4>No Courses Found</h4>
+                            <p>Add some from the Admin panel to get started!</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            {% endif %}
+
+        </div><!-- /page-content -->
+    </div><!-- /main-wrapper -->
+
+    {% if selected_course and selected_course.course_pdf %}
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('download') === 'true') {
+            var link = document.createElement('a');
+            link.href = "{{ selected_course.course_pdf.url }}";
+            link.download = "{{ selected_course.title }}.pdf";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+    {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sbOverlay').classList.toggle('active');
+        }
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sbOverlay').classList.remove('active');
+        }
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 991) closeSidebar();
+        });
+    </script>
+</body>
+</html>

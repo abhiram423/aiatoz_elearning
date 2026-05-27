@@ -1,0 +1,886 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/x-icon" href="{% static 'img/gallery/aiatoz_logo.png' %}">
+    <title>Dashboard | AI A TO Z Academy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-deep:       #060e1c;
+            --bg-deep2:      #08162a;
+            --card-surface:  #0a1929;
+            --cse-teal:      #00b4d8;
+            --cse-blue:      #0077a3;
+            --cse-navy:      #023e6d;
+            --cse-border:    rgba(255,255,255,0.09);
+            --text-main:     #ffffff;
+            --text-dim:      #94a3b8;
+            --grad-teal:     linear-gradient(135deg, #023e6d 0%, #0077a3 50%, #00b4d8 100%);
+            --sidebar-w:     265px;
+            --transition:    all .35s cubic-bezier(.16,1,.3,1);
+        }
+
+        *,*::before,*::after { box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
+        body {
+            font-family:'Plus Jakarta Sans',sans-serif;
+            background:linear-gradient(135deg,#060e1c 0%,#08162a 40%,#0a2040 70%,#083348 100%) fixed;
+            background-attachment:fixed;
+            color:var(--text-main);
+            margin:0; overflow-x:hidden;
+        }
+
+        @keyframes fadeInUp    { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes pulseGlow   { 0%,100%{box-shadow:0 0 12px rgba(0,180,216,0.4)} 50%{box-shadow:0 0 28px rgba(0,180,216,0.7)} }
+        @keyframes floatGlow   { from{transform:translate(0,0) scale(1)} to{transform:translate(100px,150px) scale(1.2)} }
+        @keyframes floatIn     { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes gradientShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+        /* ── PAGE BACKGROUND ── */
+        .page-bg { position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; }
+        .dot-overlay {
+            position:absolute; width:100%; height:100%;
+            background-image:radial-gradient(rgba(255,255,255,0.04) 1.5px,transparent 1.5px);
+            background-size:45px 45px;
+        }
+        .noise-overlay {
+            position:absolute; width:100%; height:100%; opacity:0.025;
+            background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat:repeat; background-size:128px 128px;
+        }
+        .glow-orb {
+            position:absolute; border-radius:50%;
+            background:radial-gradient(circle,rgba(0,180,216,0.18) 0%,transparent 75%);
+            filter:blur(100px); opacity:0.28;
+            animation:floatGlow 20s infinite alternate ease-in-out;
+        }
+        .glow-orb-blue {
+            position:absolute; border-radius:50%;
+            background:radial-gradient(circle,rgba(0,119,163,0.2) 0%,transparent 75%);
+            filter:blur(120px); opacity:0.2;
+            animation:floatGlow 28s infinite alternate-reverse ease-in-out;
+        }
+
+        /* ══════════════════════════════════
+           SIDEBAR — 4 links + visible logout
+        ══════════════════════════════════ */
+        .sidebar {
+            width:var(--sidebar-w);
+            height:100vh;
+            background:rgba(6,14,28,0.98);
+            position:fixed; left:0; top:0;
+            display:flex; flex-direction:column;
+            z-index:1100;
+            border-right:1px solid rgba(0,180,216,0.12);
+            transition:var(--transition);
+            overflow:hidden;
+            backdrop-filter:blur(20px);
+        }
+        .sidebar::before {
+            content:''; position:absolute; inset:0;
+            background-image:radial-gradient(rgba(0,180,216,0.03) 1.5px,transparent 1.5px);
+            background-size:28px 28px; pointer-events:none;
+        }
+        .sidebar::after {
+            content:''; position:absolute; top:0; left:0; right:0; height:2px;
+            background:linear-gradient(90deg,transparent,#00b4d8,transparent); opacity:0.5;
+        }
+        .sidebar-orb {
+            position:absolute; width:300px; height:300px; top:-100px; right:-80px;
+            background:radial-gradient(circle,rgba(0,180,216,0.13) 0%,transparent 65%);
+            filter:blur(70px); border-radius:50%; pointer-events:none;
+        }
+
+        /* Brand */
+        .sb-brand {
+            padding:26px 22px 20px;
+            display:flex; align-items:center; gap:13px;
+            border-bottom:1px solid rgba(0,180,216,0.1);
+            position:relative; z-index:1; flex-shrink:0;
+        }
+        .sb-brand-icon {
+            width:44px; height:44px; border-radius:14px;
+            background:var(--grad-teal);
+            display:flex; align-items:center; justify-content:center;
+            color:#fff; font-size:20px;
+            box-shadow:0 8px 24px rgba(0,180,216,0.4); flex-shrink:0;
+            animation:pulseGlow 3s ease-in-out infinite;
+        }
+        .sb-brand-text {
+            font-size:17px; font-weight:900;
+            letter-spacing:.8px; text-decoration:none; text-transform:uppercase; line-height:1.1;
+            background:linear-gradient(135deg,#fff 0%,#93c5fd 100%);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+        }
+        .sb-brand-sub {
+            font-size:9px; color:rgba(255,255,255,0.3);
+            font-weight:700; letter-spacing:1.5px; text-transform:uppercase;
+        }
+
+        /* Nav */
+        .sb-nav { padding:20px 14px 10px; flex:1; overflow-y:auto; position:relative; z-index:1; }
+        .sb-nav::-webkit-scrollbar { width:3px; }
+        .sb-nav::-webkit-scrollbar-thumb { background:rgba(0,180,216,0.25); border-radius:3px; }
+
+        .sb-label {
+            font-size:9px; font-weight:800; letter-spacing:2px;
+            color:rgba(255,255,255,0.2); text-transform:uppercase;
+            padding:0 8px 12px; display:block;
+        }
+
+        .sb-link {
+            display:flex; align-items:center; gap:13px;
+            padding:13px 14px; border-radius:14px;
+            color:rgba(255,255,255,0.4); font-size:13.5px; font-weight:700;
+            text-decoration:none; transition:var(--transition);
+            margin-bottom:4px; position:relative; border:1px solid transparent;
+        }
+        .sb-link i { font-size:16px; width:20px; text-align:center; flex-shrink:0; transition:.3s; }
+        .sb-link:hover { background:rgba(0,180,216,0.06); color:rgba(255,255,255,0.85); border-color:rgba(0,180,216,0.12); }
+        .sb-link:hover i { color:var(--cse-teal); }
+        .sb-link.active { background:rgba(0,180,216,0.12); color:#fff; border-color:rgba(0,180,216,0.28); }
+        .sb-link.active i { color:var(--cse-teal); }
+        .sb-link.active::before {
+            content:''; position:absolute; left:0; top:50%; transform:translateY(-50%);
+            width:3px; height:55%; background:var(--grad-teal); border-radius:0 3px 3px 0;
+        }
+        .sb-dot {
+            width:6px; height:6px; border-radius:50%;
+            background:var(--cse-teal); box-shadow:0 0 8px rgba(0,180,216,0.8);
+            margin-left:auto; flex-shrink:0; animation:pulseGlow 2s infinite;
+        }
+
+        /* Logout — prominent, clearly visible */
+        .sb-bottom {
+            padding:16px 14px 24px;
+            position:relative; z-index:1; flex-shrink:0;
+            border-top:1px solid rgba(0,180,216,0.1);
+        }
+        .sb-logout {
+            display:flex; align-items:center; gap:12px;
+            padding:14px 18px; border-radius:14px;
+            color:rgba(248,113,113,0.8); font-size:14px; font-weight:800;
+            text-decoration:none; transition:var(--transition);
+            background:rgba(239,68,68,0.07);
+            border:1.5px solid rgba(239,68,68,0.2);
+            width:100%;
+        }
+        .sb-logout i { font-size:17px; }
+        .sb-logout:hover {
+            background:rgba(239,68,68,0.14);
+            color:#f87171;
+            border-color:rgba(239,68,68,0.4);
+            transform:translateX(4px);
+            box-shadow:0 8px 22px rgba(239,68,68,0.15);
+        }
+
+        /* ══════════════════════════════════
+           MAIN WRAPPER
+        ══════════════════════════════════ */
+        .main-wrapper { margin-left:var(--sidebar-w); min-height:100vh; transition:var(--transition); }
+
+        /* ── TOP BAR ── */
+        .topbar {
+            background:rgba(6,14,28,0.95);
+            border-bottom:1px solid rgba(0,180,216,0.12);
+            padding:0 32px; height:68px;
+            display:flex; align-items:center; justify-content:space-between;
+            position:sticky; top:0; z-index:900;
+            backdrop-filter:blur(24px);
+            box-shadow:0 4px 24px rgba(0,0,0,0.3);
+        }
+        .topbar::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:1px;
+            background:linear-gradient(90deg,transparent,rgba(0,180,216,0.4),transparent);
+        }
+        .topbar-left { display:flex; align-items:center; gap:16px; }
+        .sb-toggle {
+            display:none; background:none; border:none; padding:8px;
+            border-radius:10px; color:var(--text-dim); cursor:pointer; font-size:20px; transition:.25s;
+        }
+        .sb-toggle:hover { background:rgba(0,180,216,0.08); color:var(--cse-teal); }
+        .topbar-search {
+            display:flex; align-items:center; gap:10px;
+            background:rgba(255,255,255,0.04);
+            border:1.5px solid rgba(0,180,216,0.15);
+            border-radius:12px; padding:9px 16px; width:360px; transition:.3s;
+        }
+        .topbar-search:focus-within { border-color:var(--cse-teal); box-shadow:0 0 0 3px rgba(0,180,216,0.1); background:rgba(0,180,216,0.05); }
+        .topbar-search i { color:var(--text-dim); font-size:14px; flex-shrink:0; }
+        .topbar-search input {
+            border:none; outline:none; background:transparent;
+            font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; color:#fff; width:100%;
+        }
+        .topbar-search input::placeholder { color:rgba(255,255,255,0.25); }
+        .topbar-right { display:flex; align-items:center; gap:14px; }
+        .topbar-notif {
+            width:40px; height:40px; border-radius:11px;
+            background:rgba(255,255,255,0.04); border:1.5px solid rgba(0,180,216,0.15);
+            display:flex; align-items:center; justify-content:center;
+            color:var(--text-dim); font-size:16px; cursor:pointer; transition:.3s; position:relative;
+        }
+        .topbar-notif:hover { border-color:var(--cse-teal); color:var(--cse-teal); }
+        .notif-dot {
+            position:absolute; top:7px; right:7px; width:8px; height:8px; border-radius:50%;
+            background:var(--cse-teal); border:2px solid var(--bg-deep); animation:pulseGlow 2s infinite;
+        }
+        .topbar-user { display:flex; align-items:center; gap:10px; cursor:pointer; }
+        .topbar-user-info { text-align:right; }
+        .topbar-user-name { font-size:13.5px; font-weight:800; color:#fff; line-height:1.25; }
+        .topbar-user-role {
+            display:inline-flex; font-size:9px; font-weight:800;
+            background:rgba(0,180,216,0.12); color:var(--cse-teal);
+            padding:2px 9px; border-radius:100px; letter-spacing:.8px;
+            border:1px solid rgba(0,180,216,0.2);
+        }
+        .topbar-avatar {
+            width:40px; height:40px; border-radius:12px; object-fit:cover;
+            border:2px solid rgba(0,180,216,0.35); box-shadow:0 4px 14px rgba(0,180,216,0.2);
+        }
+
+        /* ── PAGE CONTENT ── */
+        .page-content { padding:32px; }
+
+        /* ══════════════════════════════════════════════════
+           HERO BANNER
+           Layout: LEFT col (text+CTA) | RIGHT col (4 stat cards)
+           Stats cards sit INSIDE the hero on the right side
+        ══════════════════════════════════════════════════ */
+        .hero-banner {
+            background:linear-gradient(135deg,#023e6d 0%,#025d94 35%,#0077a3 65%,#00b4d8 100%);
+            background-size:200% 200%;
+            border-radius:30px; padding:50px 52px;
+            position:relative; overflow:hidden; margin-bottom:36px;
+            border:1px solid rgba(0,180,216,0.25);
+            animation:fadeInUp .5s ease both, gradientShift 8s ease infinite;
+            box-shadow:0 24px 70px rgba(0,0,0,0.5),0 0 50px rgba(0,180,216,0.1);
+        }
+        .hero-banner::before {
+            content:''; position:absolute; inset:0;
+            background-image:radial-gradient(rgba(255,255,255,0.05) 1px,transparent 1px);
+            background-size:38px 38px; pointer-events:none; z-index:0;
+        }
+        .hero-orb {
+            position:absolute; width:500px; height:500px; top:-180px; right:-100px;
+            background:radial-gradient(circle,rgba(255,255,255,0.12) 0%,transparent 65%);
+            filter:blur(80px); border-radius:50%; pointer-events:none; z-index:0;
+        }
+
+        /* Two-column flex inside banner */
+        .hero-inner {
+            position:relative; z-index:1;
+            display:flex; align-items:center; gap:44px;
+        }
+
+        /* Left col — text */
+        .hero-left { flex:1; min-width:0; }
+
+        .hero-eyebrow {
+            display:inline-flex; align-items:center; gap:10px;
+            background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.35);
+            color:#fff; padding:7px 18px; border-radius:100px;
+            font-size:11px; font-weight:800; letter-spacing:1.8px;
+            text-transform:uppercase; margin-bottom:20px;
+        }
+        .hero-eyebrow .dot {
+            width:7px; height:7px; border-radius:50%; background:#fff;
+            box-shadow:0 0 10px rgba(255,255,255,0.8); animation:pulseGlow 2s infinite;
+        }
+        .free-badge {
+            display:inline-flex; align-items:center; gap:6px;
+            background:rgba(34,197,94,0.18); border:1px solid rgba(34,197,94,0.4);
+            color:#4ade80; padding:5px 14px; border-radius:100px;
+            font-size:10px; font-weight:800; letter-spacing:1.2px;
+            text-transform:uppercase; margin-left:10px;
+        }
+        .hero-banner h1 {
+            font-size:36px; font-weight:900; letter-spacing:-2px;
+            color:#fff; line-height:1.1; margin-bottom:12px;
+        }
+        .hero-banner h1 span {
+            background:linear-gradient(135deg,#fff 0%,rgba(180,230,255,0.9) 100%);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+        }
+        .hero-banner p {
+            color:rgba(255,255,255,0.65); font-size:14.5px;
+            margin-bottom:26px; line-height:1.7; max-width:400px;
+        }
+        .hero-cta {
+            display:inline-flex; align-items:center; gap:9px;
+            background:#fff; color:#0077a3;
+            font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:13.5px;
+            padding:13px 30px; border-radius:12px; text-decoration:none;
+            box-shadow:0 8px 28px rgba(0,0,0,0.25);
+            transition:.4s cubic-bezier(.16,1,.3,1);
+            position:relative; overflow:hidden;
+        }
+        .hero-cta::before {
+            content:''; position:absolute; inset:0;
+            background:linear-gradient(120deg,transparent,rgba(0,180,216,0.12),transparent);
+            transform:translateX(-100%); transition:.5s;
+        }
+        .hero-cta:hover { transform:translateY(-3px); box-shadow:0 16px 40px rgba(0,0,0,0.3); color:#023e6d; }
+        .hero-cta:hover::before { transform:translateX(100%); }
+
+        /* Right col — 4 stat cards grid inside hero */
+        .hero-stats-col {
+            display:grid; grid-template-columns:1fr 1fr; gap:14px;
+            flex-shrink:0; width:290px;
+        }
+        .h-stat-card {
+            background:rgba(255,255,255,0.11);
+            border:1px solid rgba(255,255,255,0.22);
+            border-radius:18px; padding:20px 16px;
+            backdrop-filter:blur(10px);
+            transition:var(--transition);
+            position:relative; overflow:hidden;
+        }
+        .h-stat-card::after {
+            content:''; position:absolute; bottom:-20px; right:-20px;
+            width:70px; height:70px;
+            background:radial-gradient(circle,rgba(255,255,255,0.12),transparent);
+            border-radius:50%;
+        }
+        .h-stat-card:hover {
+            background:rgba(255,255,255,0.18);
+            border-color:rgba(255,255,255,0.38);
+            transform:translateY(-5px);
+            box-shadow:0 14px 32px rgba(0,0,0,0.2);
+        }
+        .h-stat-icon {
+            width:36px; height:36px; border-radius:10px;
+            background:rgba(255,255,255,0.18);
+            display:flex; align-items:center; justify-content:center;
+            font-size:16px; color:#fff; margin-bottom:12px;
+        }
+        .h-stat-num { font-size:28px; font-weight:900; color:#fff; line-height:1; margin-bottom:4px; }
+        .h-stat-label { font-size:10.5px; color:rgba(255,255,255,0.6); font-weight:700; letter-spacing:.3px; }
+
+        /* ══ SECTION HEADER ══ */
+        .sec-header {
+            display:flex; align-items:center; justify-content:space-between;
+            margin-bottom:24px; flex-wrap:wrap; gap:12px;
+        }
+        .sec-eyebrow {
+            display:inline-flex; align-items:center; gap:8px;
+            color:var(--cse-teal); font-size:10px; font-weight:800;
+            text-transform:uppercase; letter-spacing:2.5px; margin-bottom:5px;
+        }
+        .sec-eyebrow::before { content:''; display:inline-block; width:20px; height:2px; background:var(--grad-teal); border-radius:2px; }
+        .sec-title {
+            font-size:22px; font-weight:900; letter-spacing:-.6px;
+            background:linear-gradient(180deg,#fff 0%,#c8d0e0 100%);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+            margin:0;
+        }
+        .sec-action {
+            display:inline-flex; align-items:center; gap:7px;
+            font-size:12.5px; font-weight:800; color:var(--cse-teal);
+            background:rgba(0,180,216,0.08); border:1.5px solid rgba(0,180,216,0.2);
+            padding:8px 18px; border-radius:100px; text-decoration:none; transition:.3s;
+        }
+        .sec-action:hover { background:var(--cse-teal); color:#fff; border-color:transparent; }
+
+        /* ══ COURSE CARDS ══ */
+        .course-card {
+            background:var(--card-surface);
+            border:1px solid var(--cse-border);
+            border-radius:28px; overflow:hidden;
+            box-shadow:0 4px 30px rgba(0,0,0,0.3);
+            transition:all .45s cubic-bezier(.16,1,.3,1);
+            display:flex; flex-direction:column; height:100%;
+            text-decoration:none; position:relative;
+            animation:floatIn .6s ease both;
+        }
+        .course-card::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:3px;
+            background:var(--grad-teal);
+            transform:scaleX(0); transition:.4s cubic-bezier(.16,1,.3,1);
+            transform-origin:left; z-index:2;
+        }
+        .course-card::after {
+            content:''; position:absolute; inset:0;
+            background:linear-gradient(135deg,rgba(0,180,216,0.05),transparent 60%);
+            opacity:0; transition:.4s; border-radius:28px;
+        }
+        .course-card:hover { border-color:rgba(0,180,216,0.4); transform:translateY(-14px) scale(1.02); box-shadow:0 40px 80px rgba(0,0,0,0.5),0 0 40px rgba(0,180,216,0.1); }
+        .course-card:hover::before { transform:scaleX(1); }
+        .course-card:hover::after { opacity:1; }
+
+        .cc-thumb {
+            height:175px; position:relative;
+            background:linear-gradient(135deg,rgba(0,0,0,0.4),rgba(255,255,255,0.02));
+            display:flex; align-items:center; justify-content:center; overflow:hidden;
+        }
+        .cc-thumb::before {
+            content:''; position:absolute; inset:0;
+            background-image:radial-gradient(rgba(0,180,216,0.06) 1px,transparent 1px);
+            background-size:20px 20px;
+        }
+        .cc-thumb-orb {
+            position:absolute; width:200px; height:200px; top:-60px; right:-40px;
+            background:radial-gradient(circle,rgba(0,180,216,0.2) 0%,transparent 65%);
+            filter:blur(40px); border-radius:50%;
+        }
+        .cc-thumb-icon {
+            font-size:52px;
+            filter:drop-shadow(0 0 18px rgba(0,180,216,0.5));
+            position:relative; z-index:1;
+            transition:1s cubic-bezier(0.175,0.885,0.32,1.275);
+        }
+        .course-card:hover .cc-thumb-icon { transform:rotateY(360deg) scale(1.15); }
+        .cc-badge {
+            position:absolute; top:12px; right:12px; z-index:3;
+            background:linear-gradient(135deg,#22c55e,#16a34a);
+            color:#fff; font-size:9px; font-weight:800; letter-spacing:.8px;
+            text-transform:uppercase; padding:4px 12px; border-radius:100px;
+            box-shadow:0 4px 12px rgba(34,197,94,0.4);
+        }
+        .cc-level-tag {
+            position:absolute; top:12px; left:12px; z-index:3;
+            background:rgba(6,14,28,0.75); backdrop-filter:blur(8px);
+            border:1px solid rgba(255,255,255,0.12); color:rgba(255,255,255,0.85);
+            font-size:9.5px; font-weight:800; letter-spacing:1px;
+            text-transform:uppercase; padding:4px 12px; border-radius:100px;
+        }
+        .cc-body { padding:22px 24px 24px; flex:1; display:flex; flex-direction:column; }
+        .cc-body h3 { font-size:16.5px; font-weight:800; color:#fff; margin-bottom:8px; line-height:1.35; transition:.25s; }
+        .course-card:hover .cc-body h3 { color:var(--cse-teal); }
+        .cc-body p { color:var(--text-dim); font-size:13px; line-height:1.65; margin-bottom:16px; flex:1; }
+        .cc-meta {
+            display:flex; align-items:center; gap:12px; margin-bottom:18px;
+            padding-bottom:16px; border-bottom:1px solid var(--cse-border); flex-wrap:wrap;
+        }
+        .cc-meta-item { display:flex; align-items:center; gap:5px; color:var(--text-dim); font-size:11.5px; font-weight:600; }
+        .cc-meta-item i { color:var(--cse-teal); font-size:11px; }
+
+        /* View Course CTA — full width teal */
+        .cc-btn {
+            display:flex; align-items:center; justify-content:center; gap:8px;
+            background:var(--grad-teal); color:#fff;
+            font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:13.5px;
+            padding:12px; border-radius:14px; text-decoration:none;
+            transition:var(--transition); position:relative; overflow:hidden;
+            box-shadow:0 6px 20px rgba(0,180,216,0.3);
+            border:none; width:100%; text-align:center;
+        }
+        .cc-btn::before {
+            content:''; position:absolute; inset:0;
+            background:linear-gradient(120deg,transparent,rgba(255,255,255,0.15),transparent);
+            transform:translateX(-100%); transition:.5s;
+        }
+        .cc-btn:hover { transform:translateY(-3px); box-shadow:0 12px 35px rgba(0,180,216,0.5); color:#fff; }
+        .cc-btn:hover::before { transform:translateX(100%); }
+
+        /* Empty state */
+        .empty-state {
+            text-align:center; padding:70px 20px;
+            background:rgba(255,255,255,0.02); border-radius:24px;
+            border:1.5px dashed rgba(0,180,216,0.2);
+        }
+        .empty-icon { font-size:52px; color:rgba(0,180,216,0.3); margin-bottom:18px; }
+        .empty-state h4 { font-size:18px; font-weight:800; color:#fff; margin-bottom:8px; }
+        .empty-state p { font-size:14px; color:var(--text-dim); }
+
+        /* Quick access dropdown */
+        .qa-btn {
+            display:inline-flex; align-items:center; gap:8px;
+            background:rgba(255,255,255,0.04); border:1.5px solid rgba(0,180,216,0.2);
+            color:rgba(255,255,255,0.7); font-family:'Plus Jakarta Sans',sans-serif;
+            font-weight:700; font-size:13px; padding:9px 18px; border-radius:12px; cursor:pointer; transition:.3s;
+        }
+        .qa-btn:hover { border-color:var(--cse-teal); color:var(--cse-teal); background:rgba(0,180,216,0.06); }
+        .dropdown-menu {
+            background:var(--card-surface) !important;
+            border:1px solid rgba(0,180,216,0.2) !important;
+            border-top:3px solid var(--cse-teal) !important;
+            border-radius:0 0 18px 18px !important;
+            box-shadow:0 20px 50px rgba(0,0,0,0.5) !important;
+            padding:8px !important;
+        }
+        .dropdown-item {
+            border-radius:10px !important; padding:10px 14px !important;
+            font-family:'Plus Jakarta Sans',sans-serif; font-weight:600 !important;
+            font-size:13.5px !important; color:var(--text-dim) !important; transition:.2s !important;
+        }
+        .dropdown-item:hover { background:rgba(0,180,216,0.08) !important; color:var(--cse-teal) !important; padding-left:18px !important; }
+
+        /* Mobile overlay */
+        .sb-overlay {
+            display:none; position:fixed; inset:0;
+            background:rgba(0,0,0,0.7); z-index:1050; backdrop-filter:blur(6px);
+        }
+        .sb-overlay.active { display:block; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width:6px; }
+        ::-webkit-scrollbar-track { background:var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background:rgba(0,180,216,0.4); border-radius:6px; }
+        ::-webkit-scrollbar-thumb:hover { background:var(--cse-teal); }
+        ::selection { background:rgba(0,180,216,0.3); color:#fff; }
+
+        /* ── RESPONSIVE ── */
+        @media(max-width:1200px) {
+            .hero-banner { padding:40px 38px; }
+            .hero-stats-col { width:250px; }
+            .h-stat-num { font-size:24px; }
+        }
+        @media(max-width:991px) {
+            .sidebar { transform:translateX(-100%); }
+            .sidebar.open { transform:translateX(0); box-shadow:20px 0 60px rgba(0,0,0,0.5); }
+            .main-wrapper { margin-left:0; }
+            .sb-toggle { display:flex; align-items:center; justify-content:center; }
+            .topbar-search { width:240px; }
+            .hero-inner { flex-direction:column; gap:28px; }
+            .hero-stats-col { width:100%; grid-template-columns:repeat(4,1fr); }
+            .hero-banner { padding:32px 28px; }
+            .hero-banner h1 { font-size:28px; }
+            .page-content { padding:20px; }
+        }
+        @media(max-width:768px) {
+            .topbar { padding:0 16px; height:60px; }
+            .topbar-search { width:180px; }
+            .topbar-user-info { display:none; }
+            .hero-stats-col { grid-template-columns:repeat(2,1fr); }
+            .hero-banner h1 { font-size:22px; }
+            .page-content { padding:14px; }
+            .sec-header { flex-direction:column; align-items:flex-start; }
+        }
+        @media(max-width:575px) {
+            .topbar-search { display:none; }
+            .free-badge { display:none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PAGE BACKGROUND -->
+    <div class="page-bg">
+        <div class="dot-overlay"></div>
+        <div class="noise-overlay"></div>
+        <div class="glow-orb" style="width:700px;height:700px;top:-200px;left:-100px;"></div>
+        <div class="glow-orb" style="width:450px;height:450px;bottom:10%;right:-50px;animation-delay:-5s;"></div>
+        <div class="glow-orb-blue" style="width:550px;height:550px;top:40%;left:30%;"></div>
+    </div>
+
+    <!-- MOBILE OVERLAY -->
+    <div class="sb-overlay" id="sbOverlay" onclick="closeSidebar()"></div>
+
+    <!-- ══════════════════════════════════════
+         SIDEBAR — Dashboard, My Learning,
+                    Certifications, Settings
+                    + Logout clearly visible
+    ══════════════════════════════════════ -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-orb"></div>
+
+        <!-- Brand -->
+        <div class="sb-brand">
+            <div>
+                <a href="{% url 'index' %}" class="sb-brand-text">AI A TO Z</a>
+                <div class="sb-brand-sub">Academy Portal</div>
+            </div>
+        </div>
+
+        <!-- 4 nav links only -->
+        <nav class="sb-nav">
+            <span class="sb-label">Menu</span>
+
+            <a href="{% url 'dashboard' %}" class="sb-link active">
+                <i class="bi bi-grid-fill"></i>
+                Dashboard
+                <span class="sb-dot"></span>
+            </a>
+
+            <a href="{% url 'user_courses_list' %}" class="sb-link">
+                <i class="bi bi-collection-play-fill"></i>
+                My Learning
+            </a>
+
+            <a href="#" class="sb-link">
+                <i class="bi bi-patch-check-fill"></i>
+                Certifications
+            </a>
+
+            <a href="{% url 'feedback' %}" class="sb-link">
+                <i class="bi bi-chat-heart-fill"></i>
+                Feedback
+            </a>
+        </nav>
+
+        <!-- Logout — big, visible, at the bottom -->
+        <div class="sb-bottom">
+            <a href="{% url 'login' %}" class="sb-logout">
+                <i class="bi bi-box-arrow-left"></i>
+                Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- ══════════════════════════════════════
+         MAIN WRAPPER
+    ══════════════════════════════════════ -->
+    <div class="main-wrapper">
+
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="sb-toggle" id="sbToggle" onclick="toggleSidebar()">
+                    <i class="bi bi-list"></i>
+                </button>
+                <img src="{% static 'img/gallery/aiatoz_logo.png' %}" alt="AI A TO Z" style="height:36px;width:auto;object-fit:contain;">
+                <div class="topbar-search">
+                    <i class="bi bi-search"></i>
+                    <input type="text" id="courseSearch" onkeyup="filterCourses()" placeholder="Search Python, AI, ML, Data Science...">
+                </div>
+            </div>
+            <div class="topbar-right">
+                <div class="topbar-notif">
+                    <i class="bi bi-bell-fill"></i>
+                    <span class="notif-dot"></span>
+                </div>
+                <div class="topbar-user">
+                <div class="topbar-user-info">
+                    <div class="topbar-user-name">
+                        Hello, {{ user_profile.user|default:"Learner"|upper }}
+                    </div>
+                    <span class="topbar-user-role">STUDENT</span>
+                </div>
+                <img src="https://ui-avatars.com/api/?name={{ user_profile.user }}&background=0077a3&color=fff&bold=true&format=svg" class="topbar-avatar" alt="User">
+            </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="page-content">
+
+            <!-- ══════════════════════════════════════
+                 HERO BANNER — two columns
+                 LEFT: welcome text + CTA
+                 RIGHT (inside hero): 4 stat cards
+            ══════════════════════════════════════ -->
+            <div class="hero-banner">
+                <div class="hero-orb"></div>
+                <div class="hero-inner">
+
+                    <!-- LEFT column -->
+                    <div class="hero-left">
+                        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:18px;">
+                            <div class="hero-eyebrow">
+                                <span class="dot"></span> Welcome Back
+                            </div>
+                            <div class="free-badge"><i class="bi bi-unlock-fill"></i> Free Access</div>
+                        </div>
+                        <h1>Master the World of<br><span>Artificial Intelligence</span></h1>
+                        <p>Your free courses are ready and waiting. Dive into structured PDF modules and interactive quizzes — start building real AI skills today.</p>
+                        <a href="{% url 'user_courses_list' %}" class="hero-cta">
+                            <i class="bi bi-play-circle-fill"></i> Start Learning Now
+                        </a>
+                    </div>
+
+                    <!-- RIGHT column — 4 stat cards inside hero -->
+                    <div class="hero-stats-col">
+                        <div class="h-stat-card">
+                            <div class="h-stat-icon"><i class="bi bi-collection-play-fill"></i></div>
+                            <div class="h-stat-num">{{ all_courses_list|length }}+</div>
+                            <div class="h-stat-label">Courses</div>
+                        </div>
+                        <div class="h-stat-card">
+                            <div class="h-stat-icon"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+                            <div class="h-stat-num">450+</div>
+                            <div class="h-stat-label">PDF Modules</div>
+                        </div>
+                        <div class="h-stat-card">
+                            <div class="h-stat-icon"><i class="bi bi-people-fill"></i></div>
+                            <div class="h-stat-num">12k+</div>
+                            <div class="h-stat-label">Students</div>
+                        </div>
+                        <div class="h-stat-card">
+                            <div class="h-stat-icon"><i class="bi bi-award-fill"></i></div>
+                            <div class="h-stat-num">98%</div>
+                            <div class="h-stat-label">Success Rate</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════
+                 FREE COURSE ACCESS — Course Grid
+                 "View Course" links to My Learning page
+            ══════════════════════════════════════ -->
+            <div id="searchTitle" class="mb-3 d-none">
+                <h4 class="fw-bold" style="color:#fff;">Search Results</h4>
+            </div>
+
+            <div class="sec-header">
+                <div>
+                    <span class="sec-eyebrow">Free Course Access</span>
+                    <h2 class="sec-title">Your Courses</h2>
+                </div>
+                <div class="dropdown">
+                    <button class="qa-btn dropdown-toggle" type="button" id="courseDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-lightning-fill" style="color:var(--cse-teal)"></i> Quick Access
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="courseDropdown">
+                        {% for c in all_courses_list %}
+                        <li>
+                            <a class="dropdown-item" href="{% url 'user_courses_list' %}?id={{ c.id }}">
+                                <i class="bi bi-play-circle me-2" style="color:var(--cse-teal)"></i>{{ c.title }}
+                            </a>
+                        </li>
+                        {% empty %}
+                        <li><span class="dropdown-item" style="color:var(--text-dim)">No courses yet</span></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Course Grid -->
+            <div class="row g-4" id="courseGrid">
+                {% for course in all_courses_list %}
+                <div class="col-12 col-sm-6 col-xl-4 course-item"
+                     data-title="{{ course.title|lower }}"
+                     style="animation-delay:{{ forloop.counter0|add:1 }}00ms">
+                    <div class="course-card">
+                        <div class="cc-thumb">
+                            <div class="cc-thumb-orb"></div>
+                            <i class="bi bi-book-fill cc-thumb-icon" style="color:rgba(0,180,216,0.75);"></i>
+                            <span class="cc-badge">Free</span>
+                            <span class="cc-level-tag">Course</span>
+                        </div>
+                        <div class="cc-body">
+                            <h3>{{ course.title }}</h3>
+                            <p>{{ course.description|truncatewords:12 }}</p>
+                            <div class="cc-meta">
+                                <span class="cc-meta-item"><i class="bi bi-clock-fill"></i> Self-Paced</span>
+                                <span class="cc-meta-item"><i class="bi bi-file-earmark-pdf-fill"></i> PDF Modules</span>
+                                <span class="cc-meta-item"><i class="bi bi-star-fill" style="color:#fbbf24;"></i> 4.9</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="bi bi-collection-play"></i></div>
+                        <h4>No Courses Yet</h4>
+                        <p>Go to Admin panel to add your AI courses!</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- ══ UPCOMING COURSES ══ -->
+            <div class="sec-header" style="margin-top:44px;">
+                <div>
+                    <span class="sec-eyebrow">Coming Soon</span>
+                    <h2 class="sec-title">Upcoming Courses</h2>
+                </div>
+            </div>
+            <div class="row g-4">
+                <!-- Vibe Coding -->
+                <div class="col-12 col-sm-6 col-xl-4">
+                    <div class="course-card" style="opacity:0.7;pointer-events:none;">
+                        <div class="cc-thumb">
+                            <div class="cc-thumb-orb"></div>
+                            <i class="bi bi-code-slash cc-thumb-icon" style="color:rgba(0,180,216,0.75);"></i>
+                            <span class="cc-badge" style="background:linear-gradient(135deg,#6366f1,#4338ca);">Upcoming</span>
+                            <span class="cc-level-tag">Course</span>
+                        </div>
+                        <div class="cc-body">
+                            <h3>Vibe Coding</h3>
+                            <p>Build creative, interactive projects using AI-powered coding tools and modern development techniques.</p>
+                            <div class="cc-meta">
+                                <span class="cc-meta-item"><i class="bi bi-clock-fill"></i> Self-Paced</span>
+                                <span class="cc-meta-item"><i class="bi bi-file-earmark-pdf-fill"></i> PDF Modules</span>
+                            </div>
+                            <div style="display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(99,102,241,0.12);border:1.5px solid rgba(99,102,241,0.3);color:#a5b4fc;font-weight:800;font-size:13px;padding:12px;border-radius:14px;">
+                                <i class="bi bi-hourglass-split"></i> Coming Soon
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Machine Learning -->
+                <div class="col-12 col-sm-6 col-xl-4">
+                    <div class="course-card" style="opacity:0.7;pointer-events:none;">
+                        <div class="cc-thumb">
+                            <div class="cc-thumb-orb"></div>
+                            <i class="bi bi-graph-up cc-thumb-icon" style="color:rgba(0,180,216,0.75);"></i>
+                            <span class="cc-badge" style="background:linear-gradient(135deg,#6366f1,#4338ca);">Upcoming</span>
+                            <span class="cc-level-tag">Course</span>
+                        </div>
+                        <div class="cc-body">
+                            <h3>Machine Learning</h3>
+                            <p>Dive deep into ML algorithms, model training, evaluation and real-world applications with hands-on examples.</p>
+                            <div class="cc-meta">
+                                <span class="cc-meta-item"><i class="bi bi-clock-fill"></i> Self-Paced</span>
+                                <span class="cc-meta-item"><i class="bi bi-file-earmark-pdf-fill"></i> PDF Modules</span>
+                            </div>
+                            <div style="display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(99,102,241,0.12);border:1.5px solid rgba(99,102,241,0.3);color:#a5b4fc;font-weight:800;font-size:13px;padding:12px;border-radius:14px;">
+                                <i class="bi bi-hourglass-split"></i> Coming Soon
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- NLP & Chatbots -->
+                <div class="col-12 col-sm-6 col-xl-4">
+                    <div class="course-card" style="opacity:0.7;pointer-events:none;">
+                        <div class="cc-thumb">
+                            <div class="cc-thumb-orb"></div>
+                            <i class="bi bi-chat-dots-fill cc-thumb-icon" style="color:rgba(0,180,216,0.75);"></i>
+                            <span class="cc-badge" style="background:linear-gradient(135deg,#6366f1,#4338ca);">Upcoming</span>
+                            <span class="cc-level-tag">Course</span>
+                        </div>
+                        <div class="cc-body">
+                            <h3>NLP & Chatbots</h3>
+                            <p>Master Natural Language Processing and build intelligent chatbot systems using modern AI frameworks.</p>
+                            <div class="cc-meta">
+                                <span class="cc-meta-item"><i class="bi bi-clock-fill"></i> Self-Paced</span>
+                                <span class="cc-meta-item"><i class="bi bi-file-earmark-pdf-fill"></i> PDF Modules</span>
+                            </div>
+                            <div style="display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(99,102,241,0.12);border:1.5px solid rgba(99,102,241,0.3);color:#a5b4fc;font-weight:800;font-size:13px;padding:12px;border-radius:14px;">
+                                <i class="bi bi-hourglass-split"></i> Coming Soon
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /page-content -->
+    </div><!-- /main-wrapper -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+        function filterCourses() {
+            const input = document.getElementById('courseSearch').value.toLowerCase();
+            const cards = document.getElementsByClassName('course-item');
+            const title = document.getElementById('searchTitle');
+            title.classList.toggle('d-none', input.length === 0);
+            for (let c of cards) {
+                c.style.display = c.getAttribute('data-title').includes(input) ? '' : 'none';
+            }
+        }
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sbOverlay').classList.toggle('active');
+        }
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sbOverlay').classList.remove('active');
+        }
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 991) closeSidebar();
+        });
+    </script>
+</body>
+</html>

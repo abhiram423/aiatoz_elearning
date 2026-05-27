@@ -1,0 +1,1440 @@
+<!doctype html>
+
+{% load static %}
+
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <title>Contact | AI A to Z Academy</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/gallery/aiatoz_logo.png' %}">
+
+
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+
+
+    <style>
+
+        /* ── VARIABLES (matches index / courses / about / blog) ── */
+
+        :root {
+
+            --bg-deep:      #060e1c;
+
+            --card-surface: #0a1929;
+
+            --cse-teal:     #00b4d8;
+
+            --cse-border:   rgba(255,255,255,0.09);
+
+            --text-main:    #ffffff;
+
+            --text-dim:     #94a3b8;
+
+            --grad-teal:    linear-gradient(135deg,#023e6d 0%,#0077a3 60%,#00b4d8 100%);
+
+        }
+
+
+
+        *,*::before,*::after { box-sizing:border-box; }
+
+        html { scroll-behavior:smooth; }
+
+        body {
+
+            font-family:'Plus Jakarta Sans',sans-serif;
+
+            background: linear-gradient(135deg,#060e1c 0%,#08162a 40%,#0a2040 70%,#083348 100%) fixed;
+
+            background-attachment:fixed;
+
+            color:var(--text-main);
+
+            overflow-x:hidden; margin:0; padding:0;
+
+        }
+
+
+
+        /* ── KEYFRAMES ── */
+
+        @keyframes fadeInUp  { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+
+        @keyframes pulseDot  { 0%,100%{box-shadow:0 0 6px rgba(0,180,216,0.6)} 50%{box-shadow:0 0 14px rgba(0,180,216,0.3)} }
+
+
+
+        /* ── SCROLL REVEAL ── */
+
+        .reveal       { opacity:0; transform:translateY(32px);  transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1); }
+
+        .reveal-left  { opacity:0; transform:translateX(-44px); transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1); }
+
+        .reveal-right { opacity:0; transform:translateX(44px);  transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1); }
+
+        .reveal.visible,.reveal-left.visible,.reveal-right.visible { opacity:1; transform:none; }
+
+        .rd1{transition-delay:.1s} .rd2{transition-delay:.2s} .rd3{transition-delay:.3s} .rd4{transition-delay:.4s}
+
+
+
+        /* ════════════════════════════════════════
+
+           NAVBAR — identical to index / courses / about / blog
+
+        ════════════════════════════════════════ */
+
+        .navbar {
+
+            background: linear-gradient(90deg, #f0f5fa 0%, #e8f1f8 50%, #f0f5fa 100%);
+
+            backdrop-filter: blur(24px);
+
+            -webkit-backdrop-filter: blur(24px);
+
+            border-bottom: 2px solid rgba(0,119,163,0.18);
+
+            padding: 5px 0;
+
+            transition: all 0.4s ease;
+
+            box-shadow: 0 2px 16px rgba(0,100,160,0.1), 0 1px 0 rgba(0,180,216,0.1);
+
+        }
+
+        .navbar.scrolled {
+
+            padding: 3px 0;
+
+            background: linear-gradient(90deg, #e8f1f8 0%, #ddeef7 50%, #e8f1f8 100%);
+
+            box-shadow: 0 6px 32px rgba(0,100,160,0.18), 0 1px 0 rgba(0,180,216,0.15);
+
+        }
+
+        .navbar-brand { font-weight: 900; font-size: 28px; color: #1e1b4b; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+
+        .navbar-brand img { height: 60px; width: auto; object-fit: contain; transition: 0.4s; }
+
+        .navbar-brand:hover img { transform: scale(1.05); filter: drop-shadow(0 4px 12px rgba(0,180,216,0.4)); }
+
+        .navbar-brand:hover { color: #1e1b4b; }
+
+
+
+        .nav-link {
+
+            font-weight: 700; font-size: 15px; margin: 0 6px;
+
+            color: #1a3d5c !important; transition: 0.3s;
+
+            position: relative; padding-bottom: 6px !important;
+
+        }
+
+        .nav-link::after {
+
+            content: "";
+
+            position: absolute; bottom: 0; left: 50%;
+
+            width: 0%; height: 2px;
+
+            background: linear-gradient(90deg, #0077a3, #00b4d8);
+
+            transition: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+
+            transform: translateX(-50%);
+
+            border-radius: 2px;
+
+        }
+
+        .nav-link:hover { color: #0077a3 !important; }
+
+        .nav-link:hover::after { width: 100%; }
+
+
+
+        /* Courses Dropdown */
+
+        .dropdown-menu {
+
+            background: #ffffff;
+
+            border: 1px solid rgba(0,180,216,0.15);
+
+            border-top: 3px solid #00b4d8;
+
+            border-radius: 0 0 18px 18px;
+
+            box-shadow: 0 20px 50px rgba(0,180,216,0.15), 0 4px 20px rgba(0,0,0,0.08);
+
+            min-width: 220px;
+
+            padding: 8px 0;
+
+            animation: fadeInUp 0.2s ease both;
+
+        }
+
+        .dropdown-item {
+
+            color: #374151 !important;
+
+            font-family: 'Plus Jakarta Sans', sans-serif;
+
+            font-weight: 600;
+
+            font-size: 13.5px;
+
+            padding: 10px 22px;
+
+            transition: 0.2s;
+
+            border-left: 3px solid transparent;
+
+        }
+
+        .dropdown-item:hover {
+
+            color: #0077a3 !important;
+
+            background: rgba(0,180,216,0.06);
+
+            border-left-color: #00b4d8;
+
+            padding-left: 28px;
+
+        }
+
+        .dropdown-toggle::after { vertical-align: 2px; }
+
+
+
+        .btn-login {
+
+            color: #1e4e72; font-weight: 800; text-decoration: none; margin-right: 16px;
+
+            border: 1.5px solid rgba(0,119,163,0.35); padding: 8px 20px; border-radius: 10px;
+
+            transition: 0.3s; opacity: 1;
+
+        }
+
+        .btn-login:hover { color: #0077a3; border-color: #00b4d8; background: rgba(0,180,216,0.08); }
+
+
+
+        .btn-signup {
+
+            background: linear-gradient(135deg, #023e6d 0%, #0077a3 50%, #00b4d8 100%); color: #fff !important;
+
+            padding: 12px 32px; border-radius: 12px; font-weight: 800;
+
+            box-shadow: 0 8px 25px rgba(0, 180, 216, 0.35);
+
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+            border: none; position: relative; overflow: hidden;
+
+            text-decoration: none; display: inline-block;
+
+        }
+
+        .btn-signup::before {
+
+            content: "";
+
+            position: absolute; width: 200%; height: 200%;
+
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.25), transparent);
+
+            top: -50%; left: -200%;
+
+            transform: rotate(25deg);
+
+            transition: 0.6s;
+
+        }
+
+        .btn-signup:hover {
+
+            transform: translateY(-3px) scale(1.03);
+
+            box-shadow: 0 16px 40px rgba(0, 180, 216, 0.55);
+
+        }
+
+        .btn-signup:hover::before { left: 150%; }
+
+
+
+        /* ════════════════════════════════════════
+
+           PAGE HERO — teal gradient (matches index/courses/about/blog)
+
+        ════════════════════════════════════════ */
+
+        .page-hero {
+
+            background:linear-gradient(135deg,#023e6d 0%,#025d94 35%,#0077a3 65%,#00b4d8 100%);
+
+            padding:70px 0 60px; position:relative; overflow:hidden;
+
+        }
+
+        .page-hero::before { content:''; position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px); background-size:40px 40px; pointer-events:none; z-index:0; }
+
+        .page-hero::after { content:''; position:absolute; width:500px; height:500px; top:-150px; right:-80px; background:radial-gradient(circle,rgba(255,255,255,.12) 0%,transparent 70%); filter:blur(80px); border-radius:50%; pointer-events:none; }
+
+        .page-hero .container { position:relative; z-index:1; }
+
+        .ph-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:#fff; padding:6px 18px; border-radius:100px; font-size:11px; font-weight:800; letter-spacing:1.8px; text-transform:uppercase; margin-bottom:14px; animation:fadeInUp .5s ease both; }
+
+        .live-dot { width:6px; height:6px; border-radius:50%; background:#fff; display:inline-block; animation:pulseDot 1.8s ease-in-out infinite; }
+
+        .page-hero h1 { font-size:52px; font-weight:900; letter-spacing:-2.5px; line-height:1.06; color:#fff; margin-bottom:12px; animation:fadeInUp .55s .06s ease both; }
+
+        .page-hero h1 span { color:rgba(255,255,255,0.75); }
+
+        .ph-sub { color:rgba(255,255,255,0.7); font-size:15px; font-weight:500; margin-bottom:16px; animation:fadeInUp .6s .12s ease both; }
+
+        .ph-bc { display:flex; align-items:center; gap:8px; animation:fadeInUp .6s .18s ease both; }
+
+        .ph-bc a { color:rgba(255,255,255,0.55); font-size:13px; font-weight:600; text-decoration:none; transition:.2s; }
+
+        .ph-bc a:hover { color:#fff; }
+
+        .ph-bc .sep { color:rgba(255,255,255,0.3); font-size:12px; }
+
+        .ph-bc .cur { color:rgba(255,255,255,0.85); font-size:13px; font-weight:700; }
+
+
+
+        /* ── CONTACT SECTION ── */
+
+        .contact-section { padding:80px 0 0; }
+
+
+
+        /* Map */
+
+        .map-wrapper { border-radius:24px; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,0.4); margin-bottom:70px; border:1px solid var(--cse-border); }
+
+        .map-wrapper iframe { width:100%; height:420px; border:none; display:block; }
+
+
+
+        /* Section heading */
+
+        .section-heading { margin-bottom:48px; }
+
+        .section-heading h2 { font-size:36px; font-weight:900; letter-spacing:-1.5px; color:#fff; margin-bottom:10px; position:relative; display:inline-block; }
+
+        .section-heading h2::after { content:''; display:block; width:50px; height:3px; background:linear-gradient(90deg,#0077a3,#00b4d8); border-radius:3px; margin-top:12px; }
+
+        .section-heading p { color:var(--text-dim); font-size:15.5px; margin-top:20px; }
+
+
+
+        /* ── CONTACT FORM CARD ── */
+
+        .contact-form-card { background:var(--card-surface); border:1px solid var(--cse-border); border-radius:24px; padding:44px 48px; transition:.4s; position:relative; overflow:hidden; }
+
+        .contact-form-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#0077a3,#00b4d8); }
+
+        .contact-form-card:hover { border-color:rgba(0,180,216,0.2); box-shadow:0 24px 60px rgba(0,0,0,0.3); }
+
+        .cf-label { font-size:12px; font-weight:800; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.2px; margin-bottom:7px; display:block; }
+
+        .cf-input { width:100%; font-family:'Plus Jakarta Sans',sans-serif; border:1.5px solid var(--cse-border); border-radius:14px; padding:13px 18px; font-size:14.5px; background:rgba(255,255,255,0.04); color:#fff; outline:none; transition:.3s; display:block; }
+
+        .cf-input:focus { border-color:var(--cse-teal); box-shadow:0 0 0 4px rgba(0,180,216,0.12); background:rgba(255,255,255,0.06); }
+
+        .cf-input::placeholder { color:var(--text-dim); }
+
+        textarea.cf-input { min-height:160px; resize:vertical; }
+
+        .input-wrap { position:relative; }
+
+        .input-wrap .cf-input { padding-left:48px; }
+
+        .input-wrap .iw-icon { position:absolute; left:16px; top:50%; transform:translateY(-50%); color:var(--text-dim); font-size:14px; pointer-events:none; transition:.3s; }
+
+        .input-wrap:focus-within .iw-icon { color:var(--cse-teal); }
+
+        .btn-send { display:inline-flex; align-items:center; gap:9px; background:linear-gradient(135deg,#023e6d,#0077a3,#00b4d8); border:none; border-radius:14px; padding:15px 40px; color:#fff; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:15px; cursor:pointer; transition:.35s; box-shadow:0 8px 25px rgba(0,180,216,0.3); }
+
+        .btn-send i { transition:transform .3s; }
+
+        .btn-send:hover { transform:translateY(-3px); box-shadow:0 14px 38px rgba(0,180,216,0.45); }
+
+        .btn-send:hover i { transform:translateX(5px); }
+
+
+
+        /* ── CONTACT INFO CARDS ── */
+
+        .info-card { background:var(--card-surface); border:1px solid var(--cse-border); border-radius:20px; padding:24px 22px; display:flex; align-items:center; gap:18px; transition:all .4s cubic-bezier(.16,1,.3,1); margin-bottom:16px; }
+
+        .info-card:last-child { margin-bottom:0; }
+
+        .info-card:hover { border-color:rgba(0,180,216,0.3); transform:translateY(-5px) translateX(4px); box-shadow:0 20px 50px rgba(0,0,0,0.3); }
+
+        .info-icon { width:54px; height:54px; min-width:54px; border-radius:16px; background:rgba(0,180,216,0.1); border:1.5px solid rgba(0,180,216,0.2); display:flex; align-items:center; justify-content:center; font-size:20px; color:var(--cse-teal); transition:.4s; }
+
+        .info-card:hover .info-icon { background:linear-gradient(135deg,#0077a3,#00b4d8); color:#fff; border-color:transparent; transform:rotate(6deg) scale(1.1); box-shadow:0 8px 20px rgba(0,180,216,0.35); }
+
+        .info-body h4 { font-size:15px; font-weight:800; color:#fff; margin-bottom:3px; }
+
+        .info-body p { font-size:13px; color:var(--text-dim); margin:0; font-weight:500; }
+
+
+
+        /* Social links in info column */
+
+        .info-social-row { margin-top:28px; }
+
+        .info-social-row .sl-label { font-size:12px; font-weight:800; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.2px; margin-bottom:12px; }
+
+        .info-socials { display:flex; gap:10px; flex-wrap:wrap; }
+
+        .info-socials a { width:40px; height:40px; border-radius:12px; background:rgba(255,255,255,0.04); border:1.5px solid var(--cse-border); display:flex; align-items:center; justify-content:center; color:var(--text-dim); font-size:15px; text-decoration:none; transition:.3s; }
+
+        .info-socials a:hover { transform:translateY(-3px); }
+
+        .info-socials a.wa:hover { background:#25d366; border-color:#25d366; color:#fff; }
+
+        .info-socials a.li:hover { background:#0077b5; border-color:#0077b5; color:#fff; }
+
+        .info-socials a.ig:hover { background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); border-color:#e1306c; color:#fff; }
+
+        .info-socials a.yt:hover { background:#ff0000; border-color:#ff0000; color:#fff; }
+
+        .info-socials a.tw:hover { background:#1da1f2; border-color:#1da1f2; color:#fff; }
+
+
+
+        /* ── STATS STRIP ── */
+
+        .stats-strip { background:rgba(2,62,109,0.45); border-top:1px solid rgba(0,180,216,0.15); border-bottom:1px solid rgba(0,180,216,0.15); padding:60px 0; margin-top:80px; position:relative; overflow:hidden; }
+
+        .stats-strip::before { content:''; position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,.025) 1.5px,transparent 1.5px); background-size:32px 32px; }
+
+        .stats-strip .container { position:relative; z-index:1; }
+
+        .stat-item { text-align:center; }
+
+        .stat-number { font-size:46px; font-weight:900; color:#fff; letter-spacing:-2px; line-height:1; margin-bottom:6px; }
+
+        .stat-number span { color:var(--cse-teal); }
+
+        .stat-label { font-size:12px; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.8px; }
+
+        .stat-divider { width:1px; background:rgba(255,255,255,.08); align-self:stretch; }
+
+
+
+        /* ── FAQ SECTION ── */
+
+        .faq-section { border-top:1px solid var(--cse-border); padding:90px 0; }
+
+        .faq-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(0,180,216,0.1); border:1px solid rgba(0,180,216,0.25); color:var(--cse-teal); padding:6px 16px; border-radius:100px; font-size:11px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:14px; }
+
+        .faq-heading { font-size:38px; font-weight:900; letter-spacing:-1.5px; color:#fff; margin-bottom:10px; }
+
+        .faq-sub { color:var(--text-dim); font-size:15px; margin-bottom:0; }
+
+        .faq-item { background:var(--card-surface); border:1px solid var(--cse-border); border-radius:16px; margin-bottom:12px; overflow:hidden; transition:.3s; }
+
+        .faq-item:hover { border-color:rgba(0,180,216,0.25); }
+
+        .faq-question { width:100%; background:none; border:none; padding:20px 24px; display:flex; justify-content:space-between; align-items:center; font-family:'Plus Jakarta Sans',sans-serif; font-size:15px; font-weight:700; color:#e2e8f0; cursor:pointer; text-align:left; transition:.3s; gap:16px; }
+
+        .faq-question:hover { color:var(--cse-teal); }
+
+        .faq-icon { width:32px; height:32px; min-width:32px; border-radius:9px; background:rgba(0,180,216,0.1); border:1px solid rgba(0,180,216,0.2); display:flex; align-items:center; justify-content:center; font-size:18px; color:var(--cse-teal); transition:.35s; }
+
+        .faq-item.open .faq-question { color:var(--cse-teal); }
+
+        .faq-item.open .faq-icon { background:linear-gradient(135deg,#0077a3,#00b4d8); color:#fff; transform:rotate(45deg); border-color:transparent; }
+
+        .faq-answer { max-height:0; overflow:hidden; transition:max-height .45s cubic-bezier(.16,1,.3,1); font-size:14.5px; color:var(--text-dim); line-height:1.8; }
+
+        .faq-item.open .faq-answer { max-height:220px; }
+
+        .faq-answer-inner { padding:0 24px 22px; }
+
+
+
+        /* ════════════════════════════════════════
+
+           FOOTER — light theme (identical to index/courses/about/blog)
+
+        ════════════════════════════════════════ */
+
+        footer { background:#f0f6ff; padding:70px 0 0; border-top:3px solid #e2e8f0; position:relative; }
+
+        footer::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#7c3aed,#00b4d8,#7c3aed); }
+
+        .footer-brand img { height:48px; width:auto; object-fit:contain; margin-bottom:14px; }
+
+        .footer-tagline { color:#475569; font-size:14px; line-height:1.75; max-width:280px; margin-bottom:20px; }
+
+        .footer-social { display:flex; gap:16px; flex-wrap:wrap; margin-top:8px; }
+
+        .footer-social a { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; text-decoration:none; transition:all .3s; border:1.5px solid #dee6f0; color:#475569; background:#fff; }
+
+        .footer-social a:hover { transform:translateY(-4px); }
+
+        .footer-social a.wa:hover { background:#25d366; border-color:#25d366; color:#fff; }
+
+        .footer-social a.li:hover { background:#0077b5; border-color:#0077b5; color:#fff; }
+
+        .footer-social a.ig:hover { background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); border-color:#e1306c; color:#fff; }
+
+        .footer-social a.yt:hover { background:#ff0000; border-color:#ff0000; color:#fff; }
+
+        .footer-social a.tw:hover { background:#1da1f2; border-color:#1da1f2; color:#fff; }
+
+        .footer-heading { font-size:15px; font-weight:800; color:#0f172a; margin-bottom:18px; padding-left:10px; border-left:3px solid #0077a3; }
+
+        .footer-links { list-style:none; padding:0; margin:0; }
+
+        .footer-links li { margin-bottom:10px; }
+
+        .footer-links li a { color:#475569; text-decoration:none; font-size:13.5px; font-weight:500; transition:.25s; display:inline-block; }
+
+        .footer-links li a:hover { color:#0077a3; padding-left:6px; }
+
+        .footer-bottom { background:#e2eaf4; border-top:1px solid #d1dce8; padding:20px 0; margin-top:50px; }
+
+        .footer-bottom p { color:#64748b; font-size:13px; margin:0; }
+
+
+
+        /* ── BACK TO TOP ── */
+
+        #back-top { position:fixed; bottom:28px; right:28px; z-index:999; }
+
+        #back-top a { width:44px; height:44px; background:linear-gradient(135deg,#0077a3,#00b4d8); border-radius:12px; display:flex; align-items:center; justify-content:center; color:#fff; text-decoration:none; box-shadow:0 8px 24px rgba(0,119,163,0.4); transition:.3s; }
+
+        #back-top a:hover { transform:translateY(-4px); box-shadow:0 14px 35px rgba(0,119,163,0.55); }
+
+
+
+        /* ── SCROLLBAR ── */
+
+        ::-webkit-scrollbar { width:5px; }
+
+        ::-webkit-scrollbar-track { background:#060e1c; }
+
+        ::-webkit-scrollbar-thumb { background:rgba(0,180,216,0.35); border-radius:5px; }
+
+        ::-webkit-scrollbar-thumb:hover { background:#00b4d8; }
+
+        ::selection { background:rgba(0,180,216,0.2); color:#fff; }
+
+
+
+        /* ── RESPONSIVE ── */
+
+        @media (max-width:991px) {
+
+            .page-hero h1 { font-size:34px; }
+
+            .contact-form-card { padding:28px 22px !important; }
+
+            .info-cards-col { margin-top:40px; }
+
+            .stats-strip .d-flex { flex-wrap:wrap; gap:36px; }
+
+            .stat-divider { display:none; }
+
+        }
+
+        @media (max-width:767px) {
+
+            .row.g-5 > [class*='col-'] { padding-bottom:28px !important; }
+
+            .row.g-5 { --bs-gutter-y:28px; }
+
+        }
+
+        @media (max-width:575px) {
+
+            .page-hero h1 { font-size:26px; }
+
+            .faq-heading { font-size:26px !important; }
+
+        }
+        /* Hamburger → X */
+        .navbar-toggler-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='%231a3d5c' stroke-linecap='round' stroke-width='2.2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;transition:all .25s ease;}
+        .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='%230077a3' stroke-linecap='round' stroke-width='2.5' d='M6 6l18 18M24 6L6 24'/%3E%3C/svg%3E") !important;}
+        .email-link{
+            color:#fff;
+            text-decoration:none;
+            transition:0.3s;
+        }
+
+        .email-link:hover{
+            color:#00b4d8;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <!-- ════════════════════════════════════════
+
+         NAVBAR — identical to index / courses / about / blog
+
+    ════════════════════════════════════════ -->
+
+    <nav class="navbar navbar-expand-lg sticky-top" id="mainNavbar">
+
+        <div class="container">
+
+            <a class="navbar-brand" href="{% url 'index' %}">
+
+                <img src="{% static 'img/gallery/aiatoz_logo.png' %}" alt="AI A TO Z Logo">
+
+            </a>
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" style="border: 1px solid rgba(0,119,163,0.25) !important; background: rgba(0,119,163,0.06);">
+
+                <i class="fas fa-bars" style="color:#0077a3;"></i>
+
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+
+                <ul class="navbar-nav mx-auto">
+
+                    <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+
+                    <li class="nav-item dropdown">
+
+                        <a class="nav-link dropdown-toggle" href="{% url 'courses' %}" id="coursesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Courses</a>
+
+                        <ul class="dropdown-menu" aria-labelledby="coursesDropdown">
+
+                            <li><a class="dropdown-item" href="{% url 'courses' %}"><i class="fas fa-th-list me-2" style="color:#00b4d8;"></i> All Courses</a></li>
+
+                            <li><hr class="dropdown-divider" style="border-color:rgba(0,180,216,0.15);margin:4px 0;"></li>
+
+                            <li><a class="dropdown-item" href="#"><i class="fab fa-python me-2" style="color:#3b82f6;"></i> Python</a></li>
+
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-chat-square-text-fill me-2" style="color:#00b4d8;"></i> Prompt Engineering</a></li>
+
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-cpu-fill me-2" style="color:#10b981;"></i> Artificial Intelligence</a></li>
+
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-brain me-2" style="color:#f59e0b;"></i> Machine Learning</a></li>
+
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-bar-chart-fill me-2" style="color:#ef4444;"></i> Data Science</a></li>
+
+                        </ul>
+
+                    </li>
+
+                    <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+
+                    <li class="nav-item"><a class="nav-link" href="{% url 'blog' %}">Blog</a></li>
+
+                    <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
+
+                </ul>
+
+                <div class="d-flex align-items-center">
+
+                    <a href="{% url 'login' %}" class="btn-login">Log In</a>
+
+                    <a href="{% url 'register' %}" class="btn-signup">Join Free</a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+
+    <main>
+
+
+
+        <!-- ── PAGE HERO ── -->
+
+        <div class="page-hero" id="pageHeroSection">
+            <canvas id="pageHeroCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+
+            <div class="container">
+
+                <div class="row">
+
+                    <div class="col-xl-9 col-lg-10">
+
+                        <div class="ph-badge"><span class="live-dot"></span>AI A TO Z Academy</div>
+
+                        <h1>Contact <span>Us</span></h1>
+
+                        <p class="ph-sub">Have a question, want to enroll, or just say hello? We'd love to hear from you.</p>
+
+                        <div class="ph-bc">
+
+                            <a href="{% url 'index' %}">Home</a>
+
+                            <span class="sep">›</span>
+
+                            <span class="cur">Contact</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ── CONTACT SECTION ── -->
+
+        <section class="contact-section">
+
+            <div class="container">
+
+
+
+                <!-- Map -->
+
+                <div class="map-wrapper d-none d-sm-block reveal">
+
+                    <iframe
+                        src="https://www.google.com/maps?q=Manjeera%20Trinity%20Corporate,%20KPHB%20Colony,%20Hyderabad,%20Telangana&output=embed"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+
+                </div>
+
+
+
+                <!-- Section heading -->
+
+                <div class="row reveal">
+
+                    <div class="col-12">
+
+                        <div class="section-heading">
+
+                            <h2>Get in Touch</h2>
+
+                            <p>Fill in the form and our team will respond within 24 hours on working days.</p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Form + Info -->
+
+                <div class="row align-items-start pb-5 g-5">
+
+
+
+                    <!-- Contact Form -->
+
+                    <div class="col-lg-8 reveal-left">
+
+                        <div class="contact-form-card">
+
+                            <form action="" method="post" id="contactForm" novalidate>
+
+                                <div class="mb-3">
+
+                                    <label class="cf-label">Your Message</label>
+
+                                    <textarea class="cf-input" name="message" rows="7" placeholder="Write your message here..."></textarea>
+
+                                </div>
+
+                                <div class="row g-3 mb-3">
+
+                                    <div class="col-sm-6">
+
+                                        <label class="cf-label">Full Name</label>
+
+                                        <div class="input-wrap">
+
+                                            <i class="fas fa-user iw-icon"></i>
+
+                                            <input class="cf-input" name="name" type="text" placeholder="Enter your name">
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-sm-6">
+
+                                        <label class="cf-label">Email Address</label>
+
+                                        <div class="input-wrap">
+
+                                            <i class="fas fa-envelope iw-icon"></i>
+
+                                            <input class="cf-input" name="email" type="email" placeholder="your@email.com">
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="mb-4">
+
+                                    <label class="cf-label">Subject</label>
+
+                                    <div class="input-wrap">
+
+                                        <i class="fas fa-pen iw-icon"></i>
+
+                                        <input class="cf-input" name="subject" type="text" placeholder="What is this about?">
+
+                                    </div>
+
+                                </div>
+
+                                <button type="submit" class="btn-send">
+
+                                    Send Message <i class="bi bi-send-fill"></i>
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Contact Info -->
+
+                    <div class="col-lg-4 reveal-right info-cards-col">
+
+
+
+                        <div class="info-card">
+
+                            <div class="info-icon"><i class="bi bi-geo-alt-fill"></i></div>
+
+                            <div class="info-body">
+
+                                <h4>Our Location</h4>
+
+                                <p>Manjeera Trinity Corporate, KPHB Colony, Hyderabad, Telangana</p>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="info-card">
+
+                            <div class="info-icon"><i class="bi bi-telephone-fill"></i></div>
+
+                            <div class="info-body">
+
+                                <h4>+91 9989051238</h4>
+
+                                <p>Mon – Fri, 9am to 6pm</p>
+
+                            </div>
+
+                        </div>
+
+
+                            <div class="info-card">
+
+                                <div class="info-icon">
+                                    <i class="bi bi-envelope-fill"></i>
+                                </div>
+
+                                <div class="info-body">
+
+                                    <h4>
+                                        <a href="mailto:aiatozofficial@gmail.com?subject=AI A TO Z Inquiry"
+                                        class="email-link">
+                                        aiatozofficial@gmail.com
+                                        </a>
+                                    </h4>
+
+                                    <p>Send us your query anytime!</p>
+
+                                </div>
+
+                            </div>
+
+
+
+                        <div class="info-social-row">
+
+                            <div class="sl-label">Follow Us</div>
+
+                            <div class="info-socials">
+
+                                <a href="https://wa.me/919989051238" target="_blank" class="wa" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+
+                                <a href="https://www.linkedin.com/in/aiatoz" target="_blank" class="li" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+
+                                <a href="https://www.instagram.com/learn_aiatoz?igsh=Ymo5YjdtbjN1eDlq" target="_blank" class="ig" title="Instagram"><i class="fab fa-instagram"></i></a>
+
+                                <a href="https://youtube.com/@learn_aiatoz?si=JABSRnfreVzqYTY7" target="_blank" class="yt" title="YouTube"><i class="fab fa-youtube"></i></a>
+
+                                <a href="https://x.com/learn_aiatoz" target="_blank" class="tw" title="Twitter"><i class="fab fa-twitter"></i></a>
+
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Stats Strip -->
+
+            <div class="stats-strip">
+
+                <div class="container">
+
+                    <div class="d-flex justify-content-around align-items-center">
+
+                        <div class="stat-item reveal rd1">
+
+                            <div class="stat-number">12<span>K+</span></div>
+
+                            <div class="stat-label">Students Enrolled</div>
+
+                        </div>
+
+                        <div class="stat-divider"></div>
+
+                        <div class="stat-item reveal rd2">
+
+                            <div class="stat-number">40<span>+</span></div>
+
+                            <div class="stat-label">AI Courses</div>
+
+                        </div>
+
+                        <div class="stat-divider"></div>
+
+                        <div class="stat-item reveal rd3">
+
+                            <div class="stat-number">98<span>%</span></div>
+
+                            <div class="stat-label">Satisfaction Rate</div>
+
+                        </div>
+
+                        <div class="stat-divider"></div>
+
+                        <div class="stat-item reveal rd4">
+
+                            <div class="stat-number">24<span>h</span></div>
+
+                            <div class="stat-label">Support Response</div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- FAQ Section -->
+
+            <div class="faq-section">
+
+                <div class="container">
+
+                    <div class="row justify-content-center">
+
+                        <div class="col-lg-7 text-center reveal">
+
+                            <div class="faq-badge">✦ Help Centre</div>
+
+                            <h2 class="faq-heading">Frequently Asked Questions</h2>
+
+                            <p class="faq-sub" style="margin-bottom:44px;">Can't find your answer? Reach out via the form above — we reply within 24 hours.</p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row justify-content-center">
+
+                        <div class="col-lg-8">
+
+
+
+                            <div class="faq-item reveal rd1">
+
+                                <button class="faq-question" onclick="toggleFaq(this)">
+
+                                    How do I enroll in a course?
+
+                                    <span class="faq-icon">+</span>
+
+                                </button>
+
+                                <div class="faq-answer">
+
+                                    <div class="faq-answer-inner">Click the "Join Free" button in the navigation, create your free account, and you'll have instant access to all available courses. No prior experience is required to get started.</div>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="faq-item reveal rd2">
+
+                                <button class="faq-question" onclick="toggleFaq(this)">
+
+                                    Are the courses beginner-friendly?
+
+                                    <span class="faq-icon">+</span>
+
+                                </button>
+
+                                <div class="faq-answer">
+
+                                    <div class="faq-answer-inner">Yes! Our courses are structured from the ground up. Whether you are completely new to AI or an experienced developer looking to upskill, we have a learning path suited for you.</div>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="faq-item reveal rd3">
+
+                                <button class="faq-question" onclick="toggleFaq(this)">
+
+                                    Do I get a certificate after completing a course?
+
+                                    <span class="faq-icon">+</span>
+
+                                </button>
+
+                                <div class="faq-answer">
+
+                                    <div class="faq-answer-inner">Absolutely. Upon successful completion of any course, you will receive a verified certificate from AI A to Z that you can share on LinkedIn or add to your resume.</div>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="faq-item reveal rd1">
+
+                                <button class="faq-question" onclick="toggleFaq(this)">
+
+                                    What is the response time for support queries?
+
+                                    <span class="faq-icon">+</span>
+
+                                </button>
+
+                                <div class="faq-answer">
+
+                                    <div class="faq-answer-inner">Our support team typically responds within 24 hours on working days. For urgent queries you can also reach us via WhatsApp or call during business hours (Mon–Fri 9am–6pm).</div>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="faq-item reveal rd2">
+
+                                <button class="faq-question" onclick="toggleFaq(this)">
+
+                                    Can I access the courses on mobile devices?
+
+                                    <span class="faq-icon">+</span>
+
+                                </button>
+
+                                <div class="faq-answer">
+
+                                    <div class="faq-answer-inner">Yes, our platform is fully responsive and works seamlessly on all devices — phones, tablets, laptops, and desktops. Learn wherever you are, whenever you want.</div>
+
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+        </section>
+
+    </main>
+
+
+
+    <!-- ════════════════════════════════════════
+
+         FOOTER — light theme (identical to index/courses/about/blog)
+
+    ════════════════════════════════════════ -->
+
+    <footer>
+
+        <div class="container">
+
+            <div class="row g-5">
+
+                <!-- Brand -->
+
+                <div class="col-lg-4 col-md-6">
+
+                    <div class="footer-brand">
+
+                        <img src="{% static 'img/gallery/aiatoz_logo.png' %}" alt="AI A TO Z">
+
+                    </div>
+
+                    <p class="footer-tagline">AI Courses provide structured learning to understand, build, and apply intelligent systems using data, algorithms, and real-world problem-solving techniques.</p>
+
+                    <div class="footer-social">
+
+                        <a href="https://wa.me/919989051238" target="_blank" rel="noopener" class="wa" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+
+                        <a href="https://www.linkedin.com/in/aiatoz" target="_blank" rel="noopener" class="li" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+
+                        <a href="https://www.instagram.com/learn_aiatoz?igsh=Ymo5YjdtbjN1eDlq" target="_blank" rel="noopener" class="ig" title="Instagram"><i class="fab fa-instagram"></i></a>
+
+                        <a href="https://youtube.com/@learn_aiatoz?si=JABSRnfreVzqYTY7" target="_blank" rel="noopener" class="yt" title="YouTube"><i class="fab fa-youtube"></i></a>
+
+                        <a href="https://x.com/learn_aiatoz" target="_blank" rel="noopener" class="tw" title="Twitter"><i class="fab fa-twitter"></i></a>
+
+                    </div>
+
+                </div>
+
+                <!-- Quick Links -->
+
+                <div class="col-lg-2 col-md-3 col-6">
+
+                    <h6 class="footer-heading">Quick Links</h6>
+
+                    <ul class="footer-links">
+
+                        <li><a href="{% url 'index' %}">Home</a></li>
+
+                        <li><a href="{% url 'about' %}">About Us</a></li>
+
+                        <li><a href="{% url 'courses' %}">All Courses</a></li>
+
+                        <li><a href="{% url 'contact' %}">Contact</a></li>
+
+                        <li><a href="{% url 'blog' %}">Blog</a></li>
+
+                    </ul>
+
+                </div>
+
+                <!-- Courses -->
+
+                <div class="col-lg-2 col-md-3 col-6">
+
+                    <h6 class="footer-heading">Courses</h6>
+
+                    <ul class="footer-links">
+
+                        <li><a href="#">Python</a></li>
+
+                        <li><a href="#">Artificial Intelligence</a></li>
+
+                        <li><a href="#">Data Science</a></li>
+
+                        <li><a href="#">Machine Learning</a></li>
+
+                        <li><a href="#">Prompt Engineering</a></li>
+
+                        <li><a href="#">AI Chatbots</a></li>
+
+                    </ul>
+
+                </div>
+
+                <!-- Company -->
+
+                <div class="col-lg-2 col-md-3 col-6">
+
+                    <h6 class="footer-heading">Company</h6>
+
+                    <ul class="footer-links">
+
+                        <li><a href="#">Privacy Policy</a></li>
+
+                        <li><a href="#">Terms of Service</a></li>
+
+                        <li><a href="#">Refund Policy</a></li>
+
+                        <li><a href="#">Careers</a></li>
+
+                        <li><a href="#">Support</a></li>
+
+                    </ul>
+
+                </div>
+
+                <!-- Contact -->
+
+                <div class="col-lg-2 col-md-3 col-6">
+
+                    <h6 class="footer-heading">Contact</h6>
+
+                    <ul class="footer-links">
+
+                        <li><a href="mailto:aiatozofficial@gmail.com"><i class="bi bi-envelope-fill me-1" style="color:#0077a3;"></i> aiatozofficial@gmail.com</a></li>
+
+                        <li><a href="https://wa.me/919989051238"><i class="bi bi-whatsapp me-1" style="color:#25d366;"></i> WhatsApp Us</a></li>
+
+                        <li><a href="#"><i class="bi bi-geo-alt-fill me-1" style="color:#ef4444;"></i> Hyderabad, India</a></li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="footer-bottom mt-5">
+
+            <div class="container">
+
+                <div class="row align-items-center">
+
+                    <div class="col-12 text-center">
+
+                        <p>&copy; 2026 AI A to Z | Excellence in AI Training | All Rights Reserved</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+
+    <div id="back-top"><a title="Go to Top" href="#"><i class="fas fa-chevron-up"></i></a></div>
+
+
+
+    <!-- Bootstrap 5 -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+
+        /* Navbar scroll effect */
+
+        const nav = document.getElementById('mainNav');
+
+        window.addEventListener('scroll', () => {
+
+            nav && (window.scrollY > 60 ? nav.classList.add('scrolled') : nav.classList.remove('scrolled'));
+
+        });
+
+
+
+        /* Scroll reveal */
+
+        const ro = new IntersectionObserver((entries) => {
+
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+
+        }, { threshold:.1, rootMargin:'0px 0px -50px 0px' });
+
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => ro.observe(el));
+
+
+
+        /* FAQ toggle */
+
+        function toggleFaq(btn) {
+
+            const item = btn.closest('.faq-item');
+
+            const isOpen = item.classList.contains('open');
+
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+
+            if (!isOpen) item.classList.add('open');
+
+        }
+
+    </script>
+
+<!-- ── FLOATING WHATSAPP BUTTON ── -->
+<style>
+    .wa-float-btn{position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;align-items:center;gap:0;background:#25d366;color:#fff;text-decoration:none;width:58px;height:58px;border-radius:50px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;box-shadow:0 8px 28px rgba(37,211,102,0.5),0 4px 16px rgba(0,0,0,0.22);transition:all 0.4s cubic-bezier(0.16,1,0.3,1);overflow:hidden;animation:waPop 0.6s cubic-bezier(0.16,1,0.3,1) 1.2s both,waPulse 2.5s ease-in-out 2s infinite;}
+    @keyframes waPop{from{opacity:0;transform:scale(0.4) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+    @keyframes waPulse{0%,100%{box-shadow:0 8px 28px rgba(37,211,102,0.5),0 4px 16px rgba(0,0,0,0.22)}50%{box-shadow:0 8px 40px rgba(37,211,102,0.75),0 4px 20px rgba(0,0,0,0.28)}}
+    .wa-float-btn:hover{width:178px;background:#1db954;box-shadow:0 14px 40px rgba(37,211,102,0.65),0 6px 20px rgba(0,0,0,0.28);transform:translateY(-5px);color:#fff;animation:none;}
+    .wa-float-icon{font-size:28px;line-height:1;flex-shrink:0;width:58px;height:58px;display:flex;align-items:center;justify-content:center;}
+    .wa-float-label{white-space:nowrap;overflow:hidden;max-width:0;opacity:0;transition:max-width 0.35s ease,opacity 0.25s ease 0.1s;}
+    .wa-float-btn:hover .wa-float-label{max-width:130px;opacity:1;padding-right:18px;}
+    .wa-float-ping{position:absolute;top:4px;right:4px;width:13px;height:13px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px #25d366;animation:waPing 1.8s ease-in-out infinite;}
+    @keyframes waPing{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:0.6}}
+</style>
+<a href="https://wa.me/919989051238" target="_blank" rel="noopener" class="wa-float-btn" title="Chat with us on WhatsApp" aria-label="WhatsApp Chat">
+    <span class="wa-float-icon"><i class="fab fa-whatsapp"></i></span>
+    <span class="wa-float-label">Chat with us</span>
+    <span class="wa-float-ping"></span>
+</a>
+
+<script>
+(function initPageHeroCanvas() {
+    const section = document.getElementById('pageHeroSection');
+    const canvas  = document.getElementById('pageHeroCanvas');
+    if (!section || !canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W, H, particles = [];
+
+    function resize() {
+        W = canvas.width  = section.offsetWidth;
+        H = canvas.height = section.offsetHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const COUNT  = 55;
+    const COLORS = ['rgba(255,255,255,', 'rgba(180,230,255,', 'rgba(120,200,255,'];
+    for (let i = 0; i < COUNT; i++) {
+        particles.push({
+            x: Math.random() * W, y: Math.random() * H,
+            r: Math.random() * 2.5 + 0.8,
+            vx: (Math.random() - 0.5) * 0.7,
+            vy: (Math.random() - 0.5) * 0.7,
+            col: COLORS[Math.floor(Math.random() * COLORS.length)],
+            alpha: Math.random() * 0.45 + 0.2,
+            pulse: Math.random() * Math.PI * 2
+        });
+    }
+
+    const LINK = 115;
+    function draw() {
+        ctx.clearRect(0, 0, W, H);
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const d1 = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
+                if (d1 > LINK) continue;
+                for (let k = j + 1; k < particles.length; k++) {
+                    const d2 = Math.hypot(particles[i].x - particles[k].x, particles[i].y - particles[k].y);
+                    if (d2 > LINK) continue;
+                    const d3 = Math.hypot(particles[j].x - particles[k].x, particles[j].y - particles[k].y);
+                    if (d3 > LINK) continue;
+                    const a = 0.05 * (1 - (d1 + d2 + d3) / (3 * LINK));
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.lineTo(particles[k].x, particles[k].y);
+                    ctx.closePath();
+                    ctx.fillStyle = 'rgba(0,180,216,' + a + ')';
+                    ctx.fill();
+                }
+            }
+        }
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const d = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
+                if (d < LINK) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = 'rgba(255,255,255,' + (0.18 * (1 - d / LINK)) + ')';
+                    ctx.lineWidth = 0.65;
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.stroke();
+                }
+            }
+        }
+        particles.forEach(p => {
+            p.pulse += 0.025;
+            const a = p.alpha * (0.7 + 0.3 * Math.sin(p.pulse));
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = p.col + a + ')';
+            ctx.fill();
+            p.x += p.vx; p.y += p.vy;
+            if (p.x < 0 || p.x > W) p.vx *= -1;
+            if (p.y < 0 || p.y > H) p.vy *= -1;
+        });
+        requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+})();
+</script>
+
+</body>
+
+</html>

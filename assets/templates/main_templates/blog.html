@@ -1,0 +1,929 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Blog | AI A to Z Academy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/gallery/aiatoz_logo.png' %}">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* ── VARIABLES (matches index / courses / about) ── */
+        :root {
+            --bg-deep:      #060e1c;
+            --card-surface: #0a1929;
+            --cse-purple:   #8b5cf6;
+            --cse-teal:     #00b4d8;
+            --cse-border:   rgba(255,255,255,0.09);
+            --text-main:    #ffffff;
+            --text-dim:     #94a3b8;
+            --grad-teal:    linear-gradient(135deg,#023e6d 0%,#0077a3 60%,#00b4d8 100%);
+        }
+
+        *,*::before,*::after { box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
+        body {
+            font-family:'Plus Jakarta Sans',sans-serif;
+            background: linear-gradient(135deg,#060e1c 0%,#08162a 40%,#0a2040 70%,#083348 100%) fixed;
+            background-attachment:fixed;
+            color:var(--text-main);
+            overflow-x:hidden; margin:0; padding:0;
+        }
+
+        /* ── KEYFRAMES ── */
+        @keyframes fadeInUp  { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes pulseDot  { 0%,100%{box-shadow:0 0 6px rgba(0,180,216,0.6)} 50%{box-shadow:0 0 14px rgba(0,180,216,0.3)} }
+
+        /* ── SCROLL REVEAL ── */
+        .reveal { opacity:0; transform:translateY(32px); transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1); }
+        .reveal.visible { opacity:1; transform:none; }
+        .rd1{transition-delay:.08s} .rd2{transition-delay:.16s} .rd3{transition-delay:.24s}
+        .rd4{transition-delay:.32s} .rd5{transition-delay:.40s}
+
+        /* ════════════════════════════════════════
+           NAVBAR — identical to index / courses / about
+        ════════════════════════════════════════ */
+         .navbar {
+            background: linear-gradient(90deg, #f0f5fa 0%, #e8f1f8 50%, #f0f5fa 100%);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 2px solid rgba(0,119,163,0.18);
+            padding: 5px 0;
+            transition: all 0.4s ease;
+            box-shadow: 0 2px 16px rgba(0,100,160,0.1), 0 1px 0 rgba(0,180,216,0.1);
+        }
+        .navbar.scrolled {
+            padding: 3px 0;
+            background: linear-gradient(90deg, #e8f1f8 0%, #ddeef7 50%, #e8f1f8 100%);
+            box-shadow: 0 6px 32px rgba(0,100,160,0.18), 0 1px 0 rgba(0,180,216,0.15);
+        }
+        .navbar-brand { font-weight: 900; font-size: 28px; color: #1e1b4b; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .navbar-brand img { height: 60px; width: auto; object-fit: contain; transition: 0.4s; }
+        .navbar-brand:hover img { transform: scale(1.05); filter: drop-shadow(0 4px 12px rgba(0,180,216,0.4)); }
+        .navbar-brand:hover { color: #1e1b4b; }
+
+        .nav-link {
+            font-weight: 700; font-size: 15px; margin: 0 6px;
+            color: #1a3d5c !important; transition: 0.3s;
+            position: relative; padding-bottom: 6px !important;
+        }
+        .nav-link::after {
+            content: "";
+            position: absolute; bottom: 0; left: 50%;
+            width: 0%; height: 2px;
+            background: linear-gradient(90deg, #0077a3, #00b4d8);
+            transition: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        .nav-link:hover { color: #0077a3 !important; }
+        .nav-link:hover::after { width: 100%; }
+
+        /* Courses Dropdown */
+        .dropdown-menu {
+            background: #ffffff;
+            border: 1px solid rgba(0,180,216,0.15);
+            border-top: 3px solid #00b4d8;
+            border-radius: 0 0 18px 18px;
+            box-shadow: 0 20px 50px rgba(0,180,216,0.15), 0 4px 20px rgba(0,0,0,0.08);
+            min-width: 220px;
+            padding: 8px 0;
+            animation: fadeInUp 0.2s ease both;
+        }
+        .dropdown-item {
+            color: #374151 !important;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 600;
+            font-size: 13.5px;
+            padding: 10px 22px;
+            transition: 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .dropdown-item:hover {
+            color: #0077a3 !important;
+            background: rgba(0,180,216,0.06);
+            border-left-color: #00b4d8;
+            padding-left: 28px;
+        }
+        .dropdown-toggle::after { vertical-align: 2px; }
+
+        .btn-login {
+            color: #1e4e72; font-weight: 800; text-decoration: none; margin-right: 16px;
+            border: 1.5px solid rgba(0,119,163,0.35); padding: 8px 20px; border-radius: 10px;
+            transition: 0.3s; opacity: 1;
+        }
+        .btn-login:hover { color: #0077a3; border-color: #00b4d8; background: rgba(0,180,216,0.08); }
+
+        .btn-signup {
+            background: linear-gradient(135deg, #023e6d 0%, #0077a3 50%, #00b4d8 100%); color: #fff !important;
+            padding: 12px 32px; border-radius: 12px; font-weight: 800;
+            box-shadow: 0 8px 25px rgba(0, 180, 216, 0.35);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: none; position: relative; overflow: hidden;
+            text-decoration: none; display: inline-block;
+        }
+        .btn-signup::before {
+            content: "";
+            position: absolute; width: 200%; height: 200%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.25), transparent);
+            top: -50%; left: -200%;
+            transform: rotate(25deg);
+            transition: 0.6s;
+        }
+        .btn-signup:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 16px 40px rgba(0, 180, 216, 0.55);
+        }
+        .btn-signup:hover::before { left: 150%; }
+
+        /* ════════════════════════════════════════
+           PAGE HERO — teal gradient (matches index/courses/about)
+        ════════════════════════════════════════ */
+        .page-hero {
+            background:linear-gradient(135deg,#023e6d 0%,#025d94 35%,#0077a3 65%,#00b4d8 100%);
+            padding:70px 0 60px; position:relative; overflow:hidden;
+        }
+        .page-hero::before { content:''; position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px); background-size:40px 40px; pointer-events:none; z-index:0; }
+        .page-hero::after { content:''; position:absolute; width:500px; height:500px; top:-150px; right:-80px; background:radial-gradient(circle,rgba(255,255,255,.12) 0%,transparent 70%); filter:blur(80px); border-radius:50%; pointer-events:none; }
+        .page-hero .container { position:relative; z-index:1; }
+        .ph-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:#fff; padding:6px 18px; border-radius:100px; font-size:11px; font-weight:800; letter-spacing:1.8px; text-transform:uppercase; margin-bottom:14px; animation:fadeInUp .5s ease both; }
+        .live-dot { width:6px; height:6px; border-radius:50%; background:#fff; display:inline-block; animation:pulseDot 1.8s ease-in-out infinite; }
+        .page-hero h1 { font-size:52px; font-weight:900; letter-spacing:-2.5px; line-height:1.06; color:#fff; margin-bottom:12px; animation:fadeInUp .55s .06s ease both; }
+        .page-hero h1 span { color:rgba(255,255,255,0.75); }
+        .ph-sub { color:rgba(255,255,255,0.7); font-size:15px; font-weight:500; margin-bottom:16px; animation:fadeInUp .6s .12s ease both; }
+        .ph-bc { display:flex; align-items:center; gap:8px; animation:fadeInUp .6s .18s ease both; }
+        .ph-bc a { color:rgba(255,255,255,0.55); font-size:13px; font-weight:600; text-decoration:none; transition:.2s; }
+        .ph-bc a:hover { color:#fff; }
+        .ph-bc .sep { color:rgba(255,255,255,0.3); font-size:12px; }
+        .ph-bc .cur { color:rgba(255,255,255,0.85); font-size:13px; font-weight:700; }
+
+        /* Blog typewriter cursor */
+        .blog-cursor {
+            display:inline-block; width:3px; height:.9em;
+            background:#fff; margin-left:3px;
+            vertical-align:text-bottom;
+            animation:blogBlink .8s steps(1) infinite;
+        }
+        @keyframes blogBlink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+        /* ── BLOG SECTION ── */
+        .blog-section { padding:80px 0 90px; }
+
+        /* ── EDITOR STRIP ── */
+        .editor-strip { background:var(--card-surface); border:1px solid var(--cse-border); border-left:4px solid var(--cse-teal); border-radius:20px; padding:28px 30px; margin-bottom:38px; display:flex; align-items:center; gap:22px; transition:all .4s cubic-bezier(.16,1,.3,1); }
+        .editor-strip:hover { border-color:rgba(0,180,216,0.35); box-shadow:0 20px 50px rgba(0,0,0,0.3); transform:translateY(-6px); }
+        .ed-icon { width:72px; height:72px; min-width:72px; background:rgba(0,180,216,0.1); border:1.5px solid rgba(0,180,216,0.2); border-radius:18px; display:flex; align-items:center; justify-content:center; font-size:32px; transition:.4s; }
+        .editor-strip:hover .ed-icon { background:linear-gradient(135deg,#0077a3,#00b4d8); transform:rotate(5deg) scale(1.08); box-shadow:0 10px 24px rgba(0,180,216,0.35); }
+        .ed-label { display:inline-block; background:linear-gradient(135deg,#0077a3,#00b4d8); color:#fff; font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:4px 12px; border-radius:100px; margin-bottom:8px; }
+        .editor-strip h3 { font-size:19px; font-weight:800; color:#fff; margin-bottom:6px; line-height:1.35; }
+        .editor-strip p { font-size:14px; color:var(--text-dim); margin:0; line-height:1.65; }
+
+        /* ── POST CARD ── */
+        .post-card { background:var(--card-surface); border:1px solid var(--cse-border); border-radius:22px; overflow:hidden; margin-bottom:36px; transition:all .45s cubic-bezier(.16,1,.3,1); position:relative; }
+        .post-card::before { content:''; position:absolute; top:0; left:0; bottom:0; width:3px; background:linear-gradient(180deg,#0077a3,#00b4d8); transform:scaleY(0); transition:.4s cubic-bezier(.16,1,.3,1); transform-origin:bottom; z-index:2; }
+        .post-card:hover { transform:translateY(-12px); box-shadow:0 28px 60px rgba(0,0,0,0.4); border-color:rgba(0,180,216,0.2); }
+        .post-card:hover::before { transform:scaleY(1); }
+        .post-img { position:relative; overflow:hidden; height:270px; }
+        .post-img img { width:100%; height:100%; object-fit:cover; display:block; transition:.55s cubic-bezier(.16,1,.3,1); }
+        .post-card:hover .post-img img { transform:scale(1.06); }
+        .post-overlay { position:absolute; inset:0; background:linear-gradient(to bottom,rgba(0,0,0,0) 45%,rgba(6,14,28,.65) 100%); pointer-events:none; transition:.4s; }
+        .post-card:hover .post-overlay { background:linear-gradient(to bottom,rgba(0,0,0,0) 35%,rgba(0,119,163,0.35) 100%); }
+        .post-cat { position:absolute; top:16px; left:16px; z-index:3; display:inline-flex; align-items:center; gap:5px; background:rgba(6,14,28,.8); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.12); color:#fff; font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:1.2px; padding:5px 13px; border-radius:100px; }
+        .post-date { position:absolute; bottom:0; right:28px; z-index:3; background:linear-gradient(135deg,#0077a3,#00b4d8); padding:12px 18px; border-radius:14px 14px 0 0; text-align:center; box-shadow:0 -4px 18px rgba(0,180,216,0.3); transition:.3s; }
+        .post-card:hover .post-date { transform:translateY(-4px); }
+        .post-date .day { font-size:26px; font-weight:900; color:#fff; line-height:1; display:block; }
+        .post-date .mon { font-size:11px; font-weight:800; color:rgba(255,255,255,.85); text-transform:uppercase; letter-spacing:1.5px; display:block; margin-top:2px; }
+        .post-body { padding:28px 32px 32px; }
+        .post-body h2 { font-size:22px; font-weight:800; color:#fff; margin-bottom:12px; line-height:1.35; transition:color .25s; }
+        .post-body a { text-decoration:none; }
+        .post-body a:hover h2 { color:var(--cse-teal); }
+        .post-body p { color:var(--text-dim); font-size:14.5px; line-height:1.75; margin-bottom:22px; }
+        .post-meta { display:flex; align-items:center; gap:20px; flex-wrap:wrap; padding-top:16px; border-top:1px solid var(--cse-border); }
+        .post-meta a { display:flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; font-weight:600; text-decoration:none; transition:.25s; }
+        .post-meta a i { color:var(--cse-teal); font-size:12px; }
+        .post-meta a:hover { color:var(--cse-teal); }
+        .read-link { display:inline-flex; align-items:center; gap:8px; color:var(--cse-teal); font-size:13.5px; font-weight:800; text-decoration:none; margin-top:16px; transition:.3s; }
+        .read-link i { font-size:12px; transition:transform .3s; }
+        .read-link:hover { color:#00d0f5; }
+        .read-link:hover i { transform:translateX(5px); }
+
+        /* ── PAGINATION ── */
+        .pagination .page-link { font-family:'Plus Jakarta Sans',sans-serif !important; font-weight:700 !important; font-size:14px !important; color:var(--text-dim) !important; border:1px solid var(--cse-border) !important; border-radius:10px !important; margin:0 4px; padding:10px 18px; background:var(--card-surface) !important; transition:all .3s !important; }
+        .pagination .page-item.active .page-link, .pagination .page-link:hover { background:linear-gradient(135deg,#0077a3,#00b4d8) !important; border-color:#0077a3 !important; color:#fff !important; box-shadow:0 6px 18px rgba(0,180,216,0.3) !important; }
+
+        /* ── SIDEBAR ── */
+        .sidebar { position:sticky; top:100px; }
+        .s-widget { background:var(--card-surface); border:1px solid var(--cse-border); border-radius:20px; padding:26px; margin-bottom:26px; transition:.35s; }
+        .s-widget:hover { border-color:rgba(0,180,216,0.2); box-shadow:0 12px 40px rgba(0,0,0,0.25); }
+        .s-title { font-size:16px !important; font-weight:800 !important; color:#fff !important; margin-bottom:18px !important; padding-bottom:14px !important; border-bottom:2px solid var(--cse-border) !important; position:relative; }
+        .s-title::after { content:''; position:absolute; bottom:-2px; left:0; width:38px; height:2px; background:linear-gradient(90deg,#0077a3,#00b4d8); }
+        .s-search { display:flex; }
+        .s-search input { flex:1; font-family:'Plus Jakarta Sans',sans-serif !important; border:1px solid var(--cse-border); border-right:none; border-radius:12px 0 0 12px; padding:11px 15px; font-size:14px; background:rgba(255,255,255,0.04); color:#fff; outline:none; transition:.3s; }
+        .s-search input::placeholder { color:var(--text-dim); }
+        .s-search input:focus { border-color:var(--cse-teal); }
+        .s-search button { background:linear-gradient(135deg,#0077a3,#00b4d8); border:none; border-radius:0 12px 12px 0; padding:0 17px; color:#fff; font-size:15px; cursor:pointer; transition:.3s; }
+        .s-search button:hover { background:linear-gradient(135deg,#005f85,#0099bb); }
+        .s-cats { list-style:none; padding:0; margin:0; }
+        .s-cats li { border-bottom:1px solid var(--cse-border); transition:padding .25s; }
+        .s-cats li:last-child { border-bottom:none; }
+        .s-cats li a { display:flex; justify-content:space-between; align-items:center; padding:11px 0; text-decoration:none; }
+        .s-cats li a .cn { font-size:14px; font-weight:600; color:var(--text-dim); transition:.25s; }
+        .s-cats li a .cc { font-size:12px; background:rgba(0,180,216,0.08); border:1px solid rgba(0,180,216,0.18); color:var(--cse-teal); padding:2px 10px; border-radius:100px; font-weight:700; transition:.25s; }
+        .s-cats li:hover { padding-left:8px; }
+        .s-cats li:hover a .cn { color:var(--cse-teal); }
+        .rp-item { display:flex; gap:14px; align-items:flex-start; padding:12px 0; border-bottom:1px solid var(--cse-border); transition:padding .25s; }
+        .rp-item:last-child { border-bottom:none; padding-bottom:0; }
+        .rp-item:hover { padding-left:6px; }
+        .rp-thumb { width:58px; height:58px; min-width:58px; border-radius:10px; overflow:hidden; }
+        .rp-thumb img { width:100%; height:100%; object-fit:cover; transition:.3s; }
+        .rp-item:hover .rp-thumb img { transform:scale(1.08); }
+        .rp-info a { text-decoration:none; }
+        .rp-info h5 { font-size:13.5px; font-weight:700; color:#e2e8f0; margin-bottom:5px; line-height:1.4; transition:.25s; }
+        .rp-info a:hover h5 { color:var(--cse-teal); }
+        .rp-info span { font-size:12px; color:var(--text-dim); font-weight:600; }
+        .tag-wrap { display:flex; flex-wrap:wrap; gap:8px; }
+        .tag-wrap a { font-size:12px; font-weight:700; color:var(--text-dim); background:rgba(0,180,216,0.06); border:1px solid rgba(0,180,216,0.15); padding:6px 14px; border-radius:100px; text-decoration:none; transition:.3s; }
+        .tag-wrap a:hover { background:linear-gradient(135deg,#0077a3,#00b4d8); border-color:transparent; color:#fff; transform:translateY(-2px); }
+        .nl-desc { font-size:13.5px; color:var(--text-dim); line-height:1.65; margin-bottom:14px; }
+        .nl-inp { width:100%; font-family:'Plus Jakarta Sans',sans-serif; border:1px solid var(--cse-border); border-radius:12px; padding:12px 15px; font-size:14px; background:rgba(255,255,255,0.04); color:#fff; margin-bottom:10px; outline:none; display:block; transition:.3s; }
+        .nl-inp::placeholder { color:var(--text-dim); }
+        .nl-inp:focus { border-color:var(--cse-teal); box-shadow:0 0 0 3px rgba(0,180,216,0.12); }
+        .nl-btn { width:100%; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; background:linear-gradient(135deg,#023e6d,#0077a3,#00b4d8); border:none; border-radius:12px; padding:13px; color:#fff; font-size:14px; cursor:pointer; transition:.3s; box-shadow:0 6px 18px rgba(0,180,216,0.25); }
+        .nl-btn:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(0,180,216,0.4); }
+        .follow-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .follow-btn { display:flex; align-items:center; gap:9px; padding:10px 13px; border-radius:12px; border:1px solid var(--cse-border); text-decoration:none; font-size:13px; font-weight:700; color:var(--text-dim); background:rgba(255,255,255,0.03); transition:.3s; }
+        .follow-btn:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(0,0,0,0.25); }
+        .follow-btn.tw:hover { background:#1da1f2; border-color:#1da1f2; color:#fff; }
+        .follow-btn.fb:hover { background:#1877f2; border-color:#1877f2; color:#fff; }
+        .follow-btn.li:hover { background:#0a66c2; border-color:#0a66c2; color:#fff; }
+        .follow-btn.yt:hover { background:#ff0000; border-color:#ff0000; color:#fff; }
+
+        /* ════════════════════════════════════════
+           FOOTER — light theme (identical to index/courses/about)
+        ════════════════════════════════════════ */
+        footer { background:#f0f6ff; padding:70px 0 0; border-top:3px solid #e2e8f0; position:relative; }
+        footer::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#7c3aed,#00b4d8,#7c3aed); }
+        .footer-brand img { height:48px; width:auto; object-fit:contain; margin-bottom:14px; }
+        .footer-tagline { color:#475569; font-size:14px; line-height:1.75; max-width:280px; margin-bottom:20px; }
+        .footer-social { display:flex; gap:16px; flex-wrap:wrap; margin-top:8px; }
+        .footer-social a { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; text-decoration:none; transition:all .3s; border:1.5px solid #dee6f0; color:#475569; background:#fff; }
+        .footer-social a:hover { transform:translateY(-4px); }
+        .footer-social a.wa:hover { background:#25d366; border-color:#25d366; color:#fff; }
+        .footer-social a.li:hover { background:#0077b5; border-color:#0077b5; color:#fff; }
+        .footer-social a.ig:hover { background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); border-color:#e1306c; color:#fff; }
+        .footer-social a.yt:hover { background:#ff0000; border-color:#ff0000; color:#fff; }
+        .footer-social a.tw:hover { background:#1da1f2; border-color:#1da1f2; color:#fff; }
+        .footer-heading { font-size:15px; font-weight:800; color:#0f172a; margin-bottom:18px; padding-left:10px; border-left:3px solid #0077a3; }
+        .footer-links { list-style:none; padding:0; margin:0; }
+        .footer-links li { margin-bottom:10px; }
+        .footer-links li a { color:#475569; text-decoration:none; font-size:13.5px; font-weight:500; transition:.25s; display:inline-block; }
+        .footer-links li a:hover { color:#0077a3; padding-left:6px; }
+        .footer-bottom { background:#e2eaf4; border-top:1px solid #d1dce8; padding:20px 0; margin-top:50px; }
+        .footer-bottom p { color:#64748b; font-size:13px; margin:0; }
+
+        /* ── BACK TO TOP ── */
+        #back-top { position:fixed; bottom:28px; right:28px; z-index:999; }
+        #back-top a { width:44px; height:44px; background:linear-gradient(135deg,#0077a3,#00b4d8); border-radius:12px; display:flex; align-items:center; justify-content:center; color:#fff; text-decoration:none; box-shadow:0 8px 24px rgba(0,119,163,0.4); transition:.3s; }
+        #back-top a:hover { transform:translateY(-4px); box-shadow:0 14px 35px rgba(0,119,163,0.55); }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar { width:5px; }
+        ::-webkit-scrollbar-track { background:#060e1c; }
+        ::-webkit-scrollbar-thumb { background:rgba(0,180,216,0.35); border-radius:5px; }
+        ::-webkit-scrollbar-thumb:hover { background:#00b4d8; }
+        ::selection { background:rgba(0,180,216,0.2); color:#fff; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width:991px) {
+            .page-hero h1 { font-size:36px; }
+            .sidebar { position:static; margin-top:50px; }
+            .editor-strip { flex-direction:column; gap:14px; }
+        }
+        @media (max-width:767px) {
+            .row.g-5 > [class*='col-'] { padding-bottom:28px !important; }
+            .row.g-5 { --bs-gutter-y:28px; }
+        }
+        @media (max-width:575px) {
+            .page-hero h1 { font-size:28px; }
+            .post-body { padding:20px 18px 24px !important; }
+        }
+        /* Hamburger → X */
+        .navbar-toggler-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='%231a3d5c' stroke-linecap='round' stroke-width='2.2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;transition:all .25s ease;}
+        .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='%230077a3' stroke-linecap='round' stroke-width='2.5' d='M6 6l18 18M24 6L6 24'/%3E%3C/svg%3E") !important;}
+        /* Add this inside your <style> block */
+        .nl-btn {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nl-btn:disabled {
+            cursor: not-allowed;
+            opacity: 1;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ════════════════════════════════════════
+         NAVBAR — identical to index / courses / about
+    ════════════════════════════════════════ -->
+    <nav class="navbar navbar-expand-lg sticky-top" id="mainNavbar">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <img src="{% static 'img/gallery/aiatoz_logo.png' %}" alt="AI A TO Z Logo">
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" style="border: 1px solid rgba(0,119,163,0.25) !important; background: rgba(0,119,163,0.06);">
+                <i class="fas fa-bars" style="color:#0077a3;"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="{% url 'courses' %}" id="coursesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Courses</a>
+                        <ul class="dropdown-menu" aria-labelledby="coursesDropdown">
+                            <li><a class="dropdown-item" href="{% url 'courses' %}"><i class="fas fa-th-list me-2" style="color:#00b4d8;"></i> All Courses</a></li>
+                            <li><hr class="dropdown-divider" style="border-color:rgba(0,180,216,0.15);margin:4px 0;"></li>
+                            <li><a class="dropdown-item" href="#"><i class="fab fa-python me-2" style="color:#3b82f6;"></i> Python</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-chat-square-text-fill me-2" style="color:#00b4d8;"></i> Prompt Engineering</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-cpu-fill me-2" style="color:#10b981;"></i> Artificial Intelligence</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-brain me-2" style="color:#f59e0b;"></i> Machine Learning</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-bar-chart-fill me-2" style="color:#ef4444;"></i> Data Science</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'blog' %}">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <a href="{% url 'login' %}" class="btn-login">Log In</a>
+                    <a href="{% url 'register' %}" class="btn-signup">Join Free</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+
+        <!-- ── PAGE HERO ── -->
+        <div class="page-hero" id="pageHeroSection">
+            <canvas id="pageHeroCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-9 col-lg-10">
+                        <div class="ph-badge"><span class="live-dot"></span>AI A TO Z Academy</div>
+                        <h1>AI <span>Insights</span> &amp; <span id="blogTyped">News</span><span class="blog-cursor"></span></h1>
+                        <p class="ph-sub">Latest articles, tutorials and updates from the world of Artificial Intelligence.</p>
+                        <div class="ph-bc">
+                            <a href="{% url 'index' %}">Home</a>
+                            <span class="sep">›</span>
+                            <span class="cur">Blog</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── BLOG SECTION ── -->
+        <section class="blog-section">
+            <div class="container">
+                <div class="row g-5">
+
+                    <!-- LEFT: POSTS -->
+                    <div class="col-lg-8">
+
+                        <!-- Editor's Pick -->
+                        <div class="editor-strip reveal">
+                            <div class="ed-icon">🤖</div>
+                            <div>
+                                <span class="ed-label">Editor's Pick</span>
+                                <h3>Why 2026 is the Year of Applied AI</h3>
+                                <p>From autonomous agents to multimodal models — explore why practitioners say this is AI's most transformative year yet, and what it means for every learner out there.</p>
+                            </div>
+                        </div>
+
+                        <!-- PAGE 1 POSTS -->
+                        <div class="blog-page" id="blog-page-1">
+                            <div class="post-card reveal rd1">
+                                <div class="post-img">
+                                    <img src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=900&q=80" alt="Generative AI in Education">
+                                    <div class="post-overlay"></div>
+                                    <span class="post-cat"><i class="bi bi-cpu-fill"></i> AI Trends</span>
+                                    <div class="post-date"><span class="day">25</span><span class="mon">Jan</span></div>
+                                </div>
+                                <div class="post-body">
+                                    <a href="{% url 'blog_details' %}"><h2>The Future of Generative AI in Education</h2></a>
+                                    <p>Discover how LLMs and Generative AI are transforming the way we learn — from personalized AI tutors to automated content generation for students across the globe.</p>
+                                    <div class="post-meta">
+                                        <a href="#"><i class="bi bi-person-fill"></i> AI Trends</a>
+                                        <a href="#"><i class="bi bi-chat-dots-fill"></i> 12 Comments</a>
+                                        <a href="#"><i class="bi bi-clock-fill"></i> 6 min read</a>
+                                    </div>
+                                    <!-- <a href="{% url 'blog_details' %}" class="read-link">Read Full Article <i class="bi bi-arrow-right"></i></a> -->
+                                </div>
+                            </div>
+                            <div class="post-card reveal rd2">
+                                <div class="post-img">
+                                    <img src="https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=900&q=80" alt="Python for Data Science">
+                                    <div class="post-overlay"></div>
+                                    <span class="post-cat"><i class="bi bi-code-slash"></i> Programming</span>
+                                    <div class="post-date"><span class="day">20</span><span class="mon">Jan</span></div>
+                                </div>
+                                <div class="post-body">
+                                    <a href="{% url 'blog_details' %}"><h2>Mastering Python for Data Science in 2026</h2></a>
+                                    <p>Python remains the undisputed king of data science. We break down the essential libraries and frameworks you need to master this year to stay ahead of the curve.</p>
+                                    <div class="post-meta">
+                                        <a href="#"><i class="bi bi-person-fill"></i> Programming</a>
+                                        <a href="#"><i class="bi bi-chat-dots-fill"></i> 08 Comments</a>
+                                        <a href="#"><i class="bi bi-clock-fill"></i> 8 min read</a>
+                                    </div>
+                                    <!-- <a href="{% url 'blog_details' %}" class="read-link">Read Full Article <i class="bi bi-arrow-right"></i></a> -->
+                                </div>
+                            </div>
+                            <div class="post-card reveal rd3">
+                                <div class="post-img">
+                                    <img src="https://images.unsplash.com/photo-1655720828018-edd2daec9349?w=900&q=80" alt="Prompt Engineering">
+                                    <div class="post-overlay"></div>
+                                    <span class="post-cat"><i class="bi bi-chat-square-text-fill"></i> Prompt Engineering</span>
+                                    <div class="post-date"><span class="day">15</span><span class="mon">Jan</span></div>
+                                </div>
+                                <div class="post-body">
+                                    <a href="{% url 'blog_details' %}"><h2>Top 10 Prompt Engineering Techniques for 2026</h2></a>
+                                    <p>Prompt engineering has become one of the most in-demand skills across industries. Here are the top 10 advanced prompting strategies every developer and business leader needs to know.</p>
+                                    <div class="post-meta">
+                                        <a href="#"><i class="bi bi-person-fill"></i> Generative AI</a>
+                                        <a href="#"><i class="bi bi-chat-dots-fill"></i> 18 Comments</a>
+                                        <a href="#"><i class="bi bi-clock-fill"></i> 5 min read</a>
+                                    </div>
+                                    <!-- <a href="{% url 'blog_details' %}" class="read-link">Read Full Article <i class="bi bi-arrow-right"></i></a> -->
+                                </div>
+                            </div>
+                            <div class="post-card reveal rd4">
+                                <div class="post-img">
+                                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&q=80" alt="Machine Learning Trends">
+                                    <div class="post-overlay"></div>
+                                    <span class="post-cat"><i class="bi bi-gear-wide-connected"></i> Machine Learning</span>
+                                    <div class="post-date"><span class="day">10</span><span class="mon">Jan</span></div>
+                                </div>
+                                <div class="post-body">
+                                    <a href="{% url 'blog_details' %}"><h2>Machine Learning Trends Reshaping Industries in 2026</h2></a>
+                                    <p>From healthcare to finance, ML models are disrupting every major industry. This deep-dive explores the biggest ML trends of 2026 and what skills learners should focus on.</p>
+                                    <div class="post-meta">
+                                        <a href="#"><i class="bi bi-person-fill"></i> Machine Learning</a>
+                                        <a href="#"><i class="bi bi-chat-dots-fill"></i> 22 Comments</a>
+                                        <a href="#"><i class="bi bi-clock-fill"></i> 7 min read</a>
+                                    </div>
+                                    <!-- <a href="{% url 'blog_details' %}" class="read-link">Read Full Article <i class="bi bi-arrow-right"></i></a> -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PAGE 2 POSTS -->
+                        <div class="blog-page" id="blog-page-2" style="display:none;">
+                            <div class="post-card">
+                                <div class="post-img">
+                                    <img src="https://images.unsplash.com/photo-1509228468518-180dd4864904?w=900&q=80" alt="Mathematics for AI">
+                                    <div class="post-overlay"></div>
+                                    <span class="post-cat"><i class="bi bi-calculator-fill"></i> Mathematics</span>
+                                    <div class="post-date"><span class="day">05</span><span class="mon">Jan</span></div>
+                                </div>
+                                <div class="post-body">
+                                    <a href="{% url 'blog_details' %}"><h2>Mathematics Behind AI: What You Really Need to Know</h2></a>
+                                    <p>Linear algebra, calculus, and probability form the backbone of every AI system. This article breaks down the essential maths concepts every AI learner must master — explained clearly without jargon.</p>
+                                    <div class="post-meta">
+                                        <a href="#"><i class="bi bi-person-fill"></i> Mathematics</a>
+                                        <a href="#"><i class="bi bi-chat-dots-fill"></i> 14 Comments</a>
+                                        <a href="#"><i class="bi bi-clock-fill"></i> 9 min read</a>
+                                    </div>
+                                    <!-- <a href="{% url 'blog_details' %}" class="read-link">Read Full Article <i class="bi bi-arrow-right"></i></a> -->
+                                </div>
+                            </div>
+                            <div class="post-card">
+                                <div class="post-img">
+                                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=900&q=80" alt="Data Science Career">
+                                    <div class="post-overlay"></div>
+                                    <span class="post-cat"><i class="bi bi-bar-chart-fill"></i> Data Science</span>
+                                    <div class="post-date"><span class="day">02</span><span class="mon">Jan</span></div>
+                                </div>
+                                <div class="post-body">
+                                    <a href="{% url 'blog_details' %}"><h2>Data Science in 2026: Skills, Tools &amp; Career Path</h2></a>
+                                    <p>The data science landscape is evolving fast. From AutoML to real-time pipelines, discover the exact skills, tools, and learning path that top companies look for in data science candidates this year.</p>
+                                    <div class="post-meta">
+                                        <a href="#"><i class="bi bi-person-fill"></i> Data Science</a>
+                                        <a href="#"><i class="bi bi-chat-dots-fill"></i> 19 Comments</a>
+                                        <a href="#"><i class="bi bi-clock-fill"></i> 7 min read</a>
+                                    </div>
+                                    <!-- <a href="{% url 'blog_details' %}" class="read-link">Read Full Article <i class="bi bi-arrow-right"></i></a> -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PAGE 3 POSTS -->
+                        <div class="blog-page" id="blog-page-3" style="display:none;">
+                            <div class="post-card">
+                                <div class="post-img">
+                                    <img src="https://images.unsplash.com/photo-1607706189992-eae578626c86?w=900&q=80" alt="Vibe Coding">
+                                    <div class="post-overlay"></div>
+                                    <span class="post-cat"><i class="bi bi-lightning-fill"></i> Vibe Coding</span>
+                                    <div class="post-date"><span class="day">28</span><span class="mon">Dec</span></div>
+                                </div>
+                                <div class="post-body">
+                                    <a href="{% url 'blog_details' %}"><h2>Vibe Coding: Build Real Projects with AI-Assisted Development</h2></a>
+                                    <p>Vibe Coding is the new way developers are building — using AI co-pilots, intuition, and rapid iteration to ship real projects faster than ever. Discover how this creative-first approach is reshaping how the next generation codes.</p>
+                                    <div class="post-meta">
+                                        <a href="#"><i class="bi bi-person-fill"></i> Vibe Coding</a>
+                                        <a href="#"><i class="bi bi-chat-dots-fill"></i> 31 Comments</a>
+                                        <a href="#"><i class="bi bi-clock-fill"></i> 6 min read</a>
+                                    </div>
+                                    <!-- <a href="{% url 'blog_details' %}" class="read-link">Read Full Article <i class="bi bi-arrow-right"></i></a> -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PAGINATION -->
+                        <nav class="d-flex justify-content-center mt-2">
+                            <ul class="pagination" id="blogPagination">
+                                <li class="page-item" id="pg-prev"><a class="page-link" href="#"><i class="bi bi-chevron-left"></i></a></li>
+                                <li class="page-item active" data-page="1"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item" data-page="2"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item" data-page="3"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item" id="pg-next"><a class="page-link" href="#"><i class="bi bi-chevron-right"></i></a></li>
+                            </ul>
+                        </nav>
+
+                    </div>
+
+                    <!-- RIGHT: SIDEBAR -->
+                    <div class="col-lg-4">
+                        <div class="sidebar">
+
+                            <div class="s-widget reveal">
+                                <h4 class="s-title">Search</h4>
+                                <div class="s-search">
+                                    <input type="text" placeholder="Search AI topics...">
+                                    <button><i class="bi bi-search"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="s-widget reveal rd1">
+                                <h4 class="s-title">Course Categories</h4>
+                                <ul class="s-cats">
+                                    <li><a href="#"><span class="cn">Machine Learning</span><span class="cc">15</span></a></li>
+                                    <li><a href="#"><span class="cn">Python Programming</span><span class="cc">10</span></a></li>
+                                    <li><a href="#"><span class="cn">Natural Language Processing</span><span class="cc">08</span></a></li>
+                                    <li><a href="#"><span class="cn">Computer Vision</span><span class="cc">05</span></a></li>
+                                    <li><a href="#"><span class="cn">Prompt Engineering</span><span class="cc">12</span></a></li>
+                                    <li><a href="#"><span class="cn">Deep Learning</span><span class="cc">09</span></a></li>
+                                </ul>
+                            </div>
+
+                            <div class="s-widget reveal rd2">
+                                <h4 class="s-title">Recent Posts</h4>
+                                <div class="rp-item">
+                                    <div class="rp-thumb"><img src="https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=120&q=80" alt=""></div>
+                                    <div class="rp-info"><a href="{% url 'blog_details' %}"><h5>How to Build Your First AI Chatbot</h5></a><span><i class="bi bi-calendar3"></i> Jan 12, 2026</span></div>
+                                </div>
+                                <div class="rp-item">
+                                    <div class="rp-thumb"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=120&q=80" alt=""></div>
+                                    <div class="rp-info"><a href="{% url 'blog_details' %}"><h5>Linear Algebra for AI Beginners</h5></a><span><i class="bi bi-calendar3"></i> Jan 05, 2026</span></div>
+                                </div>
+                                <div class="rp-item">
+                                    <div class="rp-thumb"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&q=80" alt=""></div>
+                                    <div class="rp-info"><a href="{% url 'blog_details' %}"><h5>Deep Learning vs Machine Learning Explained</h5></a><span><i class="bi bi-calendar3"></i> Dec 28, 2025</span></div>
+                                </div>
+                                <div class="rp-item">
+                                    <div class="rp-thumb"><img src="https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=120&q=80" alt=""></div>
+                                    <div class="rp-info"><a href="{% url 'blog_details' %}"><h5>Python Libraries Every Data Scientist Needs</h5></a><span><i class="bi bi-calendar3"></i> Dec 20, 2025</span></div>
+                                </div>
+                            </div>
+
+                            <div class="s-widget reveal rd3">
+                                <h4 class="s-title">Popular Tags</h4>
+                                <div class="tag-wrap">
+                                    <a href="#">Python</a><a href="#">Machine Learning</a><a href="#">ChatGPT</a>
+                                    <a href="#">NLP</a><a href="#">Deep Learning</a><a href="#">Data Science</a>
+                                    <a href="#">LLMs</a><a href="#">AI Tools</a><a href="#">Prompt Engineering</a>
+                                    <a href="#">Neural Networks</a><a href="#">Computer Vision</a>
+                                </div>
+                            </div>
+
+                            <div class="s-widget reveal rd4">
+                                <h4 class="s-title">Newsletter</h4>
+                                <p class="nl-desc">Get the latest AI insights delivered to your inbox every week. No spam, unsubscribe anytime.</p>
+                                <form id="subscribeForm">
+                                    {% csrf_token %}
+                                    <input type="email" id="subEmail" class="nl-inp" placeholder="Your email address" required>
+                                    <button type="submit" id="subBtn" class="nl-btn">Subscribe Now</button>
+                                </form>
+                            </div>
+
+                            <div class="s-widget reveal rd5">
+                                <h4 class="s-title">Follow Us</h4>
+                                <div class="follow-grid">
+                                    <a href="https://x.com/learn_aiatoz" target="_blank" class="follow-btn tw"><i class="fab fa-twitter"></i> Twitter</a>
+                                    <a href="https://www.linkedin.com/in/aiatoz" target="_blank" class="follow-btn li"><i class="fab fa-linkedin-in"></i> LinkedIn</a>
+                                    <a href="https://youtube.com/@learn_aiatoz?si=JABSRnfreVzqYTY7" target="_blank" class="follow-btn yt"><i class="fab fa-youtube"></i> YouTube</a>
+                                    <a href="https://www.instagram.com/learn_aiatoz?igsh=Ymo5YjdtbjN1eDlq" target="_blank" class="follow-btn ig" style="--hover:#e1306c;"><i class="fab fa-instagram"></i> Instagram</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ════════════════════════════════════════
+         FOOTER — light theme (identical to index/courses/about)
+    ════════════════════════════════════════ -->
+    <footer>
+        <div class="container">
+            <div class="row g-5">
+                <!-- Brand -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand">
+                        <img src="{% static 'img/gallery/aiatoz_logo.png' %}" alt="AI A TO Z">
+                    </div>
+                    <p class="footer-tagline">AI Courses provide structured learning to understand, build, and apply intelligent systems using data, algorithms, and real-world problem-solving techniques.</p>
+                    <div class="footer-social">
+                        <a href="https://wa.me/919989051238" target="_blank" rel="noopener" class="wa" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.linkedin.com/in/aiatoz" target="_blank" rel="noopener" class="li" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.instagram.com/learn_aiatoz?igsh=Ymo5YjdtbjN1eDlq" target="_blank" rel="noopener" class="ig" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://youtube.com/@learn_aiatoz?si=JABSRnfreVzqYTY7" target="_blank" rel="noopener" class="yt" title="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="https://x.com/learn_aiatoz" target="_blank" rel="noopener" class="tw" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-3 col-6">
+                    <h6 class="footer-heading">Quick Links</h6>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'index' %}">Home</a></li>
+                        <li><a href="{% url 'about' %}">About Us</a></li>
+                        <li><a href="{% url 'courses' %}">All Courses</a></li>
+                        <li><a href="{% url 'contact' %}">Contact</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                <!-- Courses -->
+                <div class="col-lg-2 col-md-3 col-6">
+                    <h6 class="footer-heading">Courses</h6>
+                    <ul class="footer-links">
+                        <li><a href="#">Python</a></li>
+                        <li><a href="#">Artificial Intelligence</a></li>
+                        <li><a href="#">Data Science</a></li>
+                        <li><a href="#">Machine Learning</a></li>
+                        <li><a href="#">Prompt Engineering</a></li>
+                        <li><a href="#">AI Chatbots</a></li>
+                    </ul>
+                </div>
+                <!-- Company -->
+                <div class="col-lg-2 col-md-3 col-6">
+                    <h6 class="footer-heading">Company</h6>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'portfolio' %}">Privacy Policy</a></li>
+                        <li><a href="{% url 'portfolio' %}">Terms & Conditions</a></li>
+                        <li><a href="{% url 'portfolio' %}">Careers</a></li>
+                        <li><a href="{% url 'portfolio' %}">Support</a></li>
+                    </ul>
+                </div>
+                <!-- Contact -->
+                <div class="col-lg-2 col-md-3 col-6">
+                    <h6 class="footer-heading">Contact</h6>
+                    <ul class="footer-links">
+                        <li><a href="mailto:aiatozofficial@gmail.com"><i class="bi bi-envelope-fill me-1" style="color:#0077a3;"></i> aiatozofficial@gmail.com</a></li>
+                        <li><a href="https://wa.me/919989051238"><i class="bi bi-whatsapp me-1" style="color:#25d366;"></i> WhatsApp Us</a></li>
+                        <li><a href="#"><i class="bi bi-geo-alt-fill me-1" style="color:#ef4444;"></i>Hyderabad, India</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom mt-5">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-12 text-center">
+                        <p>&copy; 2026 AI A to Z | Excellence in AI Training | All Rights Reserved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="back-top"><a title="Go to Top" href="#"><i class="fas fa-chevron-up"></i></a></div>
+
+    <!-- Bootstrap 5 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /* Blog hero typewriter */
+        (function() {
+            const el = document.getElementById('blogTyped');
+            if (!el) return;
+            const words = ['News', 'Trends', 'Research', 'Updates', 'Tutorials', 'Breakthroughs', 'Stories'];
+            let wi = 0, ci = words[0].length, deleting = true;
+            function tick() {
+                const word = words[wi];
+                if (!deleting) {
+                    el.textContent = word.substring(0, ci + 1);
+                    ci++;
+                    if (ci === word.length) { deleting = true; setTimeout(tick, 1800); return; }
+                    setTimeout(tick, 90);
+                } else {
+                    el.textContent = word.substring(0, ci - 1);
+                    ci--;
+                    if (ci === 0) { deleting = false; wi = (wi + 1) % words.length; setTimeout(tick, 350); return; }
+                    setTimeout(tick, 50);
+                }
+            }
+            setTimeout(tick, 1200);
+        })();
+
+        /* Navbar scroll effect */
+        const nav = document.getElementById('mainNav');
+        window.addEventListener('scroll', () => {
+            nav && (window.scrollY > 60 ? nav.classList.add('scrolled') : nav.classList.remove('scrolled'));
+        });
+
+        /* Scroll reveal */
+        const ro = new IntersectionObserver((entries) => {
+            entries.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); });
+        }, { threshold: .1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+    </script>
+    <script>
+    document.getElementById('subscribeForm').addEventListener('submit', function(e) {
+        e.preventDefault(); 
+
+        const email = document.getElementById('subEmail').value;
+        const btn = document.getElementById('subBtn');
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        // Show a loading state
+        btn.innerHTML = 'Processing...';
+
+        fetch("{% url 'blog' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `email=${encodeURIComponent(email)}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // SUCCESS: Change button to Green and update text
+                btn.innerHTML = 'Subscription Added! <i class="bi bi-check-circle-fill"></i>';
+                btn.style.background = '#10b981'; // Success Green
+                btn.style.boxShadow = '0 10px 28px rgba(16, 185, 129, 0.4)';
+                btn.disabled = true; 
+                
+                // Clear the input field
+                document.getElementById('subEmail').value = '';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            btn.innerHTML = 'Try Again';
+        });
+    });
+</script>
+
+<!-- ── FLOATING WHATSAPP BUTTON ── -->
+<style>
+    .wa-float-btn{position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;align-items:center;gap:0;background:#25d366;color:#fff;text-decoration:none;width:58px;height:58px;border-radius:50px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;box-shadow:0 8px 28px rgba(37,211,102,0.5),0 4px 16px rgba(0,0,0,0.22);transition:all 0.4s cubic-bezier(0.16,1,0.3,1);overflow:hidden;animation:waPop 0.6s cubic-bezier(0.16,1,0.3,1) 1.2s both,waPulse 2.5s ease-in-out 2s infinite;}
+    @keyframes waPop{from{opacity:0;transform:scale(0.4) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+    @keyframes waPulse{0%,100%{box-shadow:0 8px 28px rgba(37,211,102,0.5),0 4px 16px rgba(0,0,0,0.22)}50%{box-shadow:0 8px 40px rgba(37,211,102,0.75),0 4px 20px rgba(0,0,0,0.28)}}
+    .wa-float-btn:hover{width:178px;background:#1db954;box-shadow:0 14px 40px rgba(37,211,102,0.65),0 6px 20px rgba(0,0,0,0.28);transform:translateY(-5px);color:#fff;animation:none;}
+    .wa-float-icon{font-size:28px;line-height:1;flex-shrink:0;width:58px;height:58px;display:flex;align-items:center;justify-content:center;}
+    .wa-float-label{white-space:nowrap;overflow:hidden;max-width:0;opacity:0;transition:max-width 0.35s ease,opacity 0.25s ease 0.1s;}
+    .wa-float-btn:hover .wa-float-label{max-width:130px;opacity:1;padding-right:18px;}
+    .wa-float-ping{position:absolute;top:4px;right:4px;width:13px;height:13px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px #25d366;animation:waPing 1.8s ease-in-out infinite;}
+    @keyframes waPing{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:0.6}}
+</style>
+<a href="https://wa.me/919989051238" target="_blank" rel="noopener" class="wa-float-btn" title="Chat with us on WhatsApp" aria-label="WhatsApp Chat">
+    <span class="wa-float-icon"><i class="fab fa-whatsapp"></i></span>
+    <span class="wa-float-label">Chat with us</span>
+    <span class="wa-float-ping"></span>
+</a>
+
+<script>
+/* ── Blog Pagination ── */
+(function() {
+    let current = 1;
+    const total  = 3;
+
+    function showPage(n) {
+        current = Math.max(1, Math.min(n, total));
+        document.querySelectorAll('.blog-page').forEach(function(p) { p.style.display = 'none'; });
+        const pg = document.getElementById('blog-page-' + current);
+        if (pg) pg.style.display = '';
+        document.querySelectorAll('#blogPagination [data-page]').forEach(function(li) {
+            li.classList.toggle('active', parseInt(li.dataset.page) === current);
+        });
+        window.scrollTo({ top: document.getElementById('blog-page-' + current).offsetTop - 120, behavior: 'smooth' });
+    }
+
+    document.querySelectorAll('#blogPagination [data-page]').forEach(function(li) {
+        li.querySelector('a').addEventListener('click', function(e) {
+            e.preventDefault();
+            showPage(parseInt(li.dataset.page));
+        });
+    });
+    document.getElementById('pg-prev').querySelector('a').addEventListener('click', function(e) {
+        e.preventDefault(); showPage(current - 1);
+    });
+    document.getElementById('pg-next').querySelector('a').addEventListener('click', function(e) {
+        e.preventDefault(); showPage(current + 1);
+    });
+})();
+</script>
+
+<script>
+(function initPageHeroCanvas() {
+    const section = document.getElementById('pageHeroSection');
+    const canvas  = document.getElementById('pageHeroCanvas');
+    if (!section || !canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W, H, particles = [];
+
+    function resize() {
+        W = canvas.width  = section.offsetWidth;
+        H = canvas.height = section.offsetHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const COUNT  = 55;
+    const COLORS = ['rgba(255,255,255,', 'rgba(180,230,255,', 'rgba(120,200,255,'];
+    for (let i = 0; i < COUNT; i++) {
+        particles.push({
+            x: Math.random() * W, y: Math.random() * H,
+            r: Math.random() * 2.5 + 0.8,
+            vx: (Math.random() - 0.5) * 0.7,
+            vy: (Math.random() - 0.5) * 0.7,
+            col: COLORS[Math.floor(Math.random() * COLORS.length)],
+            alpha: Math.random() * 0.45 + 0.2,
+            pulse: Math.random() * Math.PI * 2
+        });
+    }
+
+    const LINK = 115;
+    function draw() {
+        ctx.clearRect(0, 0, W, H);
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const d1 = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
+                if (d1 > LINK) continue;
+                for (let k = j + 1; k < particles.length; k++) {
+                    const d2 = Math.hypot(particles[i].x - particles[k].x, particles[i].y - particles[k].y);
+                    if (d2 > LINK) continue;
+                    const d3 = Math.hypot(particles[j].x - particles[k].x, particles[j].y - particles[k].y);
+                    if (d3 > LINK) continue;
+                    const a = 0.05 * (1 - (d1 + d2 + d3) / (3 * LINK));
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.lineTo(particles[k].x, particles[k].y);
+                    ctx.closePath();
+                    ctx.fillStyle = 'rgba(0,180,216,' + a + ')';
+                    ctx.fill();
+                }
+            }
+        }
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const d = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
+                if (d < LINK) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = 'rgba(255,255,255,' + (0.18 * (1 - d / LINK)) + ')';
+                    ctx.lineWidth = 0.65;
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.stroke();
+                }
+            }
+        }
+        particles.forEach(p => {
+            p.pulse += 0.025;
+            const a = p.alpha * (0.7 + 0.3 * Math.sin(p.pulse));
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = p.col + a + ')';
+            ctx.fill();
+            p.x += p.vx; p.y += p.vy;
+            if (p.x < 0 || p.x > W) p.vx *= -1;
+            if (p.y < 0 || p.y > H) p.vy *= -1;
+        });
+        requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>

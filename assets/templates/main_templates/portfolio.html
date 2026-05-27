@@ -1,0 +1,233 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Legal & Information | AI A to Z Academy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/gallery/aiatoz_logo.png' %}">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #060e1c;
+            --card-surface: #0a1929;
+            --cse-teal: #00b4d8;
+            --text-main: #ffffff;
+            --text-dim: #94a3b8;
+            --grad-teal: linear-gradient(135deg,#023e6d 0%,#0077a3 60%,#00b4d8 100%);
+        }
+        body { 
+            font-family:'Plus Jakarta Sans',sans-serif; 
+            background: var(--bg-deep); 
+            color: var(--text-main); 
+            overflow-x:hidden;
+        }
+
+        /* Reusing your Orb Animations */
+        @keyframes floatOrb { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
+        .reg-bg-dots { position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,.03) 1.5px,transparent 1.5px); background-size:36px 36px; z-index:0; }
+        .orb { position:absolute; border-radius:50%; filter:blur(90px); pointer-events:none; z-index:0; animation:floatOrb 8s ease-in-out infinite; }
+        .orb-1 { width:600px; height:600px; top:-100px; right:-100px; background:radial-gradient(circle,rgba(0,119,163,.15) 0%,transparent 65%); }
+
+        /* NAVBAR (Matches your Register page exactly) */
+         .navbar {
+            background: linear-gradient(90deg, #f0f5fa 0%, #e8f1f8 50%, #f0f5fa 100%);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 2px solid rgba(0,119,163,0.18);
+            padding: 5px 0;
+            transition: all 0.4s ease;
+            box-shadow: 0 2px 16px rgba(0,100,160,0.1), 0 1px 0 rgba(0,180,216,0.1);
+        }
+        .navbar.scrolled {
+            padding: 3px 0;
+            background: linear-gradient(90deg, #e8f1f8 0%, #ddeef7 50%, #e8f1f8 100%);
+            box-shadow: 0 6px 32px rgba(0,100,160,0.18), 0 1px 0 rgba(0,180,216,0.15);
+        }
+        .navbar-brand { font-weight: 900; font-size: 28px; color: #1e1b4b; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .navbar-brand img { height: 60px; width: auto; object-fit: contain; transition: 0.4s; }
+        .navbar-brand:hover img { transform: scale(1.05); filter: drop-shadow(0 4px 12px rgba(0,180,216,0.4)); }
+        .navbar-brand:hover { color: #1e1b4b; }
+
+        .nav-link {
+            font-weight: 700; font-size: 15px; margin: 0 6px;
+            color: #1a3d5c !important; transition: 0.3s;
+            position: relative; padding-bottom: 6px !important;
+        }
+        .nav-link::after {
+            content: "";
+            position: absolute; bottom: 0; left: 50%;
+            width: 0%; height: 2px;
+            background: linear-gradient(90deg, #0077a3, #00b4d8);
+            transition: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        .nav-link:hover { color: #0077a3 !important; }
+        .nav-link:hover::after { width: 100%; }
+
+        /* Courses Dropdown */
+        .dropdown-menu {
+            background: #ffffff;
+            border: 1px solid rgba(0,180,216,0.15);
+            border-top: 3px solid #00b4d8;
+            border-radius: 0 0 18px 18px;
+            box-shadow: 0 20px 50px rgba(0,180,216,0.15), 0 4px 20px rgba(0,0,0,0.08);
+            min-width: 220px;
+            padding: 8px 0;
+            animation: fadeInUp 0.2s ease both;
+        }
+        .dropdown-item {
+            color: #374151 !important;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 600;
+            font-size: 13.5px;
+            padding: 10px 22px;
+            transition: 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .dropdown-item:hover {
+            color: #0077a3 !important;
+            background: rgba(0,180,216,0.06);
+            border-left-color: #00b4d8;
+            padding-left: 28px;
+        }
+        .dropdown-toggle::after { vertical-align: 2px; }
+
+        .btn-login {
+            color: #1e4e72; font-weight: 800; text-decoration: none; margin-right: 16px;
+            border: 1.5px solid rgba(0,119,163,0.35); padding: 8px 20px; border-radius: 10px;
+            transition: 0.3s; opacity: 1;
+        }
+        .btn-login:hover { color: #0077a3; border-color: #00b4d8; background: rgba(0,180,216,0.08); }
+
+        .btn-signup {
+            background: linear-gradient(135deg, #023e6d 0%, #0077a3 50%, #00b4d8 100%); color: #fff !important;
+            padding: 12px 32px; border-radius: 12px; font-weight: 800;
+            box-shadow: 0 8px 25px rgba(0, 180, 216, 0.35);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: none; position: relative; overflow: hidden;
+            text-decoration: none; display: inline-block;
+        }
+        .btn-signup::before {
+            content: "";
+            position: absolute; width: 200%; height: 200%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.25), transparent);
+            top: -50%; left: -200%;
+            transform: rotate(25deg);
+            transition: 0.6s;
+        }
+        .btn-signup:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 16px 40px rgba(0, 180, 216, 0.55);
+        }
+        .btn-signup:hover::before { left: 150%; }
+
+        /* CONTENT STYLING */
+        .content-section { position: relative; z-index: 1; padding: 80px 0; }
+        .legal-card { background: var(--card-surface); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 40px; margin-bottom: 30px; }
+        .legal-card h2 { color: var(--cse-teal); font-weight: 800; margin-bottom: 20px; border-left: 4px solid var(--cse-teal); padding-left: 15px; }
+        .legal-card p, .legal-card li { color: var(--text-dim); line-height: 1.8; }
+        
+        .accept-box { 
+            background: rgba(0, 180, 216, 0.1); 
+            border: 1px solid var(--cse-teal); 
+            border-radius: 16px; 
+            padding: 25px; 
+            text-align: center; 
+            margin-top: 40px;
+        }
+        .btn-accept {
+            background: var(--grad-teal);
+            border: none;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 12px;
+            font-weight: 800;
+            transition: 0.3s;
+        }
+        .btn-accept:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,180,216,0.3); }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg sticky-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <img src="{% static 'img/gallery/aiatoz_logo.png' %}" alt="AI A TO Z Logo">
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-label="Toggle navigation">
+                <i class="fas fa-bars" style="color:#0077a3;font-size:22px;"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'portfolio' %}">Terms & Conditions</a></li>
+                
+                    <li class="nav-item"><a class="nav-link" href="{% url 'portfolio' %}">Privacy Policy</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'portfolio' %}">Careers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'portfolio' %}">Support</a></li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <a href="{% url 'login' %}" class="btn-login">Log In</a>
+                    <a href="{% url 'register' %}" class="btn-signup">Join Free</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="content-section">
+        <div class="reg-bg-dots"></div>
+        <div class="orb orb-1"></div>
+
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    
+                    <h1 class="mb-5 font-weight-bold">Policy <span>Portfolio</span></h1>
+
+                    <div class="legal-card" id="terms">
+                        <h2>Terms of Service</h2>
+                        <p>Welcome to AI A TO Z Academy. By accessing our website, you agree to follow our rules regarding course consumption and community conduct. Our content is for educational purposes only.</p>
+                    </div>
+
+                    <div class="legal-card" id="privacy">
+                        <h2>Privacy Policy</h2>
+                        <p>We value your privacy. We only collect data necessary for your learning journey, such as your email and quiz responses, to provide a personalized experience.</p>
+                    </div>
+
+                    <div class="legal-card" id="refund">
+                        <h2>Refund Policy</h2>
+                        <p>Since we provide digital content and many free courses, refunds for premium certifications are handled on a case-by-case basis within 7 days of purchase.</p>
+                    </div>
+
+                    <div class="legal-card" id="careers">
+                        <h2>Careers</h2>
+                        <p>Want to join the AI revolution? We are always looking for passionate AI mentors and Fullstack developers. Send your CV to aiatozofficial@gmail.com.</p>
+                    </div>
+
+                    <div class="legal-card" id="support">
+                        <h2>Support</h2>
+                        <p>Need help? Our support team is available Mon-Fri. You can reach us via the Contact page or WhatsApp for technical issues.</p>
+                    </div>
+
+                    <div class="accept-box">
+                        <h4 class="mb-3">Do you agree to these terms?</h4>
+                        <p class="mb-4">By clicking the button below, you acknowledge that you have read and understood all policies listed above.</p>
+                        <button class="btn-accept" onclick="window.location.href='{% url 'register' %}'">
+                            I Accept the Terms & Conditions
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

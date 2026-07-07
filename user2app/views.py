@@ -1,7 +1,8 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from indexapp.models import UserProfile, Feedback, Course 
 from django.contrib import messages
-
+import razorpay
+from decouple import config
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from functools import wraps
@@ -14,7 +15,7 @@ except ImportError:
 def user_login_required(f):
     @wraps(f)
     def wrap(request, *args, **kwargs):
-        if 'user_email' not in request.session:
+        if 'user_email' not in request.session or not request.user.is_authenticated:
             return redirect('login')
         return f(request, *args, **kwargs)
     return wrap
@@ -45,18 +46,16 @@ from  indexapp.models import Course, Enrollment
 
 @user_login_required
 def courses_dashboard(request, course_id):
-    # Get the specific course or return 404 if not found
     course = get_object_or_404(Course, id=course_id)
-    
-    # Optional: Check if user is actually enrolled
-    # is_enrolled = Enrollment.objects.filter(user__user=request.user.username, course=course).exists()
-    
+
     return render(request, 'user_templates/courses_dashboard.html', {
         'course': course
     })
 
-# userapp/views.py
 from indexapp.models import Enrollment, Course
+from decouple import config
+
+
 
 @user_login_required
 def user_courses_list(request):
@@ -67,22 +66,52 @@ def user_courses_list(request):
     selected_course_id = request.GET.get('id')
     selected_course = None
     has_paid = False
+    razorpay_order_id = None
     
-    if selected_course_id and selected_course_id != "None" and selected_course_id != "":
+    razorpay_key_id = settings.RAZORPAY_KEY_ID
+    amount_in_paise = 0
 
+    if selected_course_id and selected_course_id != "None" and selected_course_id != "":
         try:
             selected_course = get_object_or_404(Course, id=selected_course_id)
+            
+            # 1. Check user existing enrollment statuses matching database context
+            existing_enrollment = Enrollment.objects.filter(user=user_profile, course=selected_course).first()
+            if existing_enrollment and existing_enrollment.order_id:
+                has_paid = True
+            else:
+                razorpay_client = razorpay.Client(
+                    auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET)
+                )
+
+                amount_in_paise = 49900 
+                notes_data = {
+                    "user_profile_id": str(user_profile.id),
+                    "course_id": str(selected_course.id)
+                }
+                
+                order_payload = {
+                    "amount": amount_in_paise,
+                    "currency": "INR",
+                    "payment_capture": "1",
+                    "notes": notes_data
+                } 
+                
+                # Create Order on Razorpay Server Instance
+                razorpay_order = razorpay_client.order.create(data=order_payload)
+                razorpay_order_id = razorpay_order['id']
+                
         except (ValueError, Course.DoesNotExist):
             selected_course = None
-        
-      
 
     return render(request, 'user_templates/user_courses_list.html', {
         'all_courses': all_courses,
         'selected_course': selected_course,
-        'has_paid': has_paid ,
-        'user_profile': UserProfile.objects.filter(email=request.session.get('user_email')).first()
-
+        'has_paid': has_paid,
+        'razorpay_order_id': razorpay_order_id,
+        'razorpay_key_id': razorpay_key_id,
+        'amount': amount_in_paise,
+        'user_profile': user_profile
     })
 
 
@@ -91,8 +120,9 @@ def certificates(request):
 
 @user_login_required
 def feedback(request):
-    feed_id  = request.session.get('user_email')
-    user = UserProfile.objects.get(email = feed_id)
+    user_email = request.session.get('user_email')
+    user_profile = get_object_or_404(UserProfile, email=user_email)
+
     if request.method ==  "POST":
         user_msg = request.POST.get('feedback')
         rating = request.POST.get('rating')
@@ -112,8 +142,11 @@ def feedback(request):
         else :
             sentiment='neutral'
         print(sentiment)
-        user.save()
-        Feedback.objects.create(user_details=user, star_feedback=user_msg, star_rating=rating)
+
+        user_profile.save()
+
+        Feedback.objects.create(user_details=user_profile, star_feedback=user_msg, star_rating=rating)
         messages.success(request, "Thank you for your feedback!")
         return redirect('feedback')
-    return render(request, 'user_templates/feedback.html', {'user_profile': user})
+    
+    return render(request, 'user_templates/feedback.html', {'user_profile': user_profile})

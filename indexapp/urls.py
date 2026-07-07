@@ -24,5 +24,6 @@ urlpatterns = [
     path('feedback/', user_views.feedback, name='feedback'),
     path('download-sample/', views.download_sample_lead, name='download_sample_lead'),
     path('register-quiz/',views.register_quiz,name='register_quiz'),
+    path('payment-success/', views.payment_success_callback, name='payment_success_callback'),
 
 ]

@@ -478,9 +478,10 @@
                     <p>&copy; 2026 AI A to Z | Excellence in AI Training | All Rights Reserved</p>
                 </div>
             </div>
-        </div>
+        </div> 
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <div id="back-top"><a title="Go to Top" href="#"><i class="fas fa-chevron-up"></i></a></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -496,5 +497,47 @@
             else { inp.type = 'password'; icon.className = 'bi bi-eye-slash'; }
         }
     </script>
+
+    {% if messages %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            {% for message in messages %}
+                let msgType = "{{ message.tags }}";
+                let msgText = "{{ message }}";
+                
+                if (msgText === "This email is already registered") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Registration Blocked!',
+                        text: 'This email is already registered. Please login or use a different email address.',
+                        confirmButtonColor: '#0077a3'
+                    });
+                } else if (msgText === "This mobile number is already registered") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Duplicate Contact!',
+                        text: 'This mobile number is already registered. Please check or use a different number.',
+                        confirmButtonColor: '#0077a3'
+                    });
+                } else if (msgType === "success") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: msgText,
+                        timer: 2200,
+                        showConfirmButton: false
+                    });
+                } else if (msgType === "error") {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Input Alert',
+                        text: msgText,
+                        confirmButtonColor: '#0077a3'
+                    });
+                }
+            {% endfor %}
+        });
+    </script>
+    {% endif %}
 </body>
 </html>

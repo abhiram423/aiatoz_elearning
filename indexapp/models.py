@@ -4,9 +4,10 @@ from django.utils import timezone
 
 
 class UserProfile(models.Model):
-    user = models.CharField(max_length=50,default='')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    name = models.CharField(max_length=100, default='')
     mobile = models.CharField(max_length=15)
-    email = models.EmailField(unique=True,default='')
+    email = models.EmailField(unique=True)
     password_reset_token = models.CharField(max_length=100, unique=True, blank=True, null=True)
 
 

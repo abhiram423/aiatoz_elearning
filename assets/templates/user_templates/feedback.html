@@ -418,7 +418,7 @@
         <nav class="sb-nav">
             <span class="sb-label">Menu</span>
 
-            <a href="{% url 'dashboard' %}" class="sb-link active">
+            <a href="{% url 'dashboard' %}" class="sb-link">
                 <i class="bi bi-grid-fill"></i>
                 Dashboard
                 <span class="sb-dot"></span>
@@ -434,7 +434,7 @@
                 Certifications
             </a>
 
-            <a href="{% url 'feedback' %}" class="sb-link">
+            <a href="{% url 'feedback' %}" class="sb-link active">
                 <i class="bi bi-chat-heart-fill"></i>
                 Feedback
             </a>
@@ -466,7 +466,9 @@
                 </div>
                 <div class="topbar-user">
                     <div class="topbar-user-info">
-                        <div class="topbar-user-name">Hello, {{ user_profile.user|default:"Learner"|upper }}</div>
+                        <div class="topbar-user-name">                        
+                            Hello, {% if user_profile.name %}{{ user_profile.name|upper }}{% else %}LEARNER{% endif %}                    
+                        </div>
                         <span class="topbar-user-role">STUDENT</span>
                     </div>
                     <img src="https://ui-avatars.com/api/?name={{ user_profile.user }}&background=0077a3&color=fff&bold=true&format=svg" class="topbar-avatar" alt="User">

@@ -537,7 +537,7 @@
                 <div class="topbar-user">
                 <div class="topbar-user-info">
                     <div class="topbar-user-name">
-                        Hello, {{ user_profile.user|default:"Learner"|upper }}
+                        Hello, {% if user_profile.name %}{{ user_profile.name|upper }}{% else %}LEARNER{% endif %}                    
                     </div>
                     <span class="topbar-user-role">STUDENT</span>
                 </div>
@@ -643,8 +643,33 @@
                     <div class="col-lg-4">
                         <div class="status-card">
                             <h5>Enrollment Status</h5>
-                            <div class="status-badge-free">
-                                <i class="bi bi-unlock-fill"></i> Free Access
+                            {% if has_paid %}
+                                <div class="status-badge-free">
+                                    <i class="bi bi-patch-check-fill" style="color:#4ade80;"></i> Enrolled & Paid
+                                </div>
+                            {% else %}
+                                <div class="status-badge-free" style="background:rgba(239,68,68,0.1); color:#f87171; border-color:rgba(239,68,68,0.25);">
+                                    <i class="bi bi-lock-fill"></i> Locked (Requires Pay)
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="content-card mt-4" style="background:var(--card-surface); border:1px solid rgba(0,180,216,0.2);">
+                            <div class="card-section-title">
+                                <i class="bi bi-credit-card-2-front-fill"></i> Course Access
+                            </div>
+                            <div class="ai-material text-center py-2">
+                                <h4 class="mb-3" style="color:#fff; font-weight:800;">{{ selected_course.title }}</h4>
+                                {% if has_paid %}
+                                    <a href="{% url 'courses_dashboard' selected_course.id %}" class="lib-btn w-100" style="background:var(--grad-teal);">
+                                        Start Learning Now <i class="bi bi-play-circle-fill ms-1"></i>
+                                    </a>
+                                {% else %}
+                                    <p class="small mb-3" style="color:var(--text-dim);">Get lifetime premium access to videos, study materials and validation quizzes.</p>
+                                    <button id="pay-btn" class="rf-submit w-100" style="background:var(--grad-teal); border:none; border-radius:12px; padding:12px; color:#fff; font-weight:800; font-size:14px; box-shadow:0 6px 20px rgba(0,180,216,0.35);">
+                                        Pay Securely ₹499 via Razorpay <i class="bi bi-shield-lock-fill ms-1"></i>
+                                    </button>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -732,6 +757,40 @@
         }
         window.addEventListener('resize', () => {
             if (window.innerWidth > 991) closeSidebar();
+        });
+    </script>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        document.getElementById('pay-btn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            var options = {
+                "key": "{{ razorpay_key_id }}", 
+                "amount": "{{ amount }}", 
+                "currency": "INR",
+                "name": "AI A to Z Academy",
+                "description": "Course Purchase - {{ selected_course.title }}",
+                "image": "{% static 'img/gallery/aiatoz_logo.png' %}",
+                "order_id": "{{ razorpay_order_id }}",
+                "handler": function (response) {
+                    // Successful parameter validation response mapping redirection safe framework layout
+                    window.location.href = "/payment-success/?payment_id=" + response.razorpay_payment_id + 
+                                           "&order_id=" + response.razorpay_order_id + 
+                                           "&course_id={{ selected_course.id }}";
+                },
+                "prefill": {
+                    "name": "{{ user_profile.name|default:'' }}",
+                    "email": "{{ user_profile.email|default:'' }}",
+                    "contact": "{{ user_profile.mobile|default:'' }}"
+                },
+                "theme": {
+                    "color": "#0077a3"
+                }
+            };
+            
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
         });
     </script>
 </body>

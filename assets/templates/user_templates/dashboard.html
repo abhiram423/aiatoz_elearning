@@ -650,11 +650,11 @@
                 <div class="topbar-user">
                 <div class="topbar-user-info">
                     <div class="topbar-user-name">
-                        Hello, {{ user_profile.user|default:"Learner"|upper }}
+                        Hello, {% if user_profile.name %}{{ user_profile.name|upper }}{% else %}LEARNER{% endif %}                    
                     </div>
                     <span class="topbar-user-role">STUDENT</span>
                 </div>
-                <img src="https://ui-avatars.com/api/?name={{ user_profile.user }}&background=0077a3&color=fff&bold=true&format=svg" class="topbar-avatar" alt="User">
+                <img src="https://ui-avatars.com/api/?name={{ user_profile.name|default:user_profile.user }}&background=0077a3&color=fff&bold=true&format=svg" class="topbar-avatar" alt="User">
             </div>
             </div>
         </header>
@@ -787,18 +787,18 @@
                 </div>
             </div>
             <div class="row g-4">
-                <!-- Vibe Coding -->
+                <!-- Automations -->
                 <div class="col-12 col-sm-6 col-xl-4">
                     <div class="course-card" style="opacity:0.7;pointer-events:none;">
                         <div class="cc-thumb">
                             <div class="cc-thumb-orb"></div>
-                            <i class="bi bi-code-slash cc-thumb-icon" style="color:rgba(0,180,216,0.75);"></i>
+                            <i class="bi bi-gear-wide-connected cc-thumb-icon" style="color:rgba(0,180,216,0.75);"></i>
                             <span class="cc-badge" style="background:linear-gradient(135deg,#6366f1,#4338ca);">Upcoming</span>
                             <span class="cc-level-tag">Course</span>
                         </div>
                         <div class="cc-body">
-                            <h3>Vibe Coding</h3>
-                            <p>Build creative, interactive projects using AI-powered coding tools and modern development techniques.</p>
+                            <h3>Automations</h3>
+                            <p>Design and build intelligent automation workflows using AI tools, APIs, and no-code/low-code platforms.</p>
                             <div class="cc-meta">
                                 <span class="cc-meta-item"><i class="bi bi-clock-fill"></i> Self-Paced</span>
                                 <span class="cc-meta-item"><i class="bi bi-file-earmark-pdf-fill"></i> PDF Modules</span>

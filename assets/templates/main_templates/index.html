@@ -1539,7 +1539,7 @@
                             Download Sample PDF
                         </button>
                     </div>
-                    <div class="hero-trust">
+                    <div class="hero-trust"> 
                         <div class="hero-trust-item">
                             <i class="bi bi-patch-check-fill"></i>
                             <span>Verified Curriculum</span>
@@ -2260,7 +2260,7 @@
 
         const submitBtn = document.getElementById('leadSubmitBtn');
         const alertBox = document.getElementById('leadSuccessAlert');
-        const pdfUrl = "https://docs.google.com/document/d/1DSFD9Ba3fa3ckgwz9gL7xgezhEDBB8nFGVzgkY3PYBY/export?format=pdf";
+        const pdfUrl = "/media/course_pdfs/AI_Skills_Handbook_Sample.pdf";
 
         submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Storing...';
         submitBtn.disabled = true;
@@ -2281,7 +2281,12 @@
             if(data.status === 'success') {
                 alertBox.classList.remove('d-none');
                 submitBtn.innerText = "Downloaded!";
-                window.location.href = pdfUrl;
+                const downloadLink = document.createElement('a');
+                downloadLink.href = pdfUrl;
+                downloadLink.setAttribute('download', 'AI_Skills_Handbook_Sample.pdf');
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
                 setTimeout(() => {
                     var modalInstance = bootstrap.Modal.getInstance(document.getElementById('downloadModal'));
                     modalInstance.hide();

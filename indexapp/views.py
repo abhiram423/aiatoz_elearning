@@ -39,10 +39,8 @@ def courses(request):
 
 @user_login_required
 def enroll_course(request, course_id):
-    course = Course.objects.get(id=course_id)
-    user_email =request.session.get('user_email')
-    profile = UserProfile.objects.get(email=user_email)
-
+    course = get_object_or_404(Course, id=course_id)
+    profile = get_object_or_404(UserProfile, email=request.session.get('user_email'))
     Enrollment.objects.get_or_create(user=profile, course=course)
     return redirect('courses_dashboard', course_id=course.id)
 
@@ -63,11 +61,9 @@ def elements(request):
 
 @csrf_exempt
 def register(request):
-    next_course = request.GET.get('next_course')
+    next_course = request.GET.get('next_course') or request.POST.get('next_course_id')
 
     if request.method == "POST":
-        reg_next_course = request.POST.get('next_course_id')
-
         username = request.POST.get("username")
         email = request.POST.get("email")
         mobile = request.POST.get("mobile")
@@ -76,21 +72,19 @@ def register(request):
 
         print(username,email,mobile,password,confirm_password)
 
-        # Basic validation
         if password != confirm_password:
             messages.error(request, "Passwords do not match")
-            return redirect(f"/register/?next_course={reg_next_course}")
+            return redirect(f"/register/?next_course={next_course}" if next_course else 'register')
 
         if User.objects.filter(email=email).exists():
             messages.error(request, "Email already exists")
-            return redirect('register')
-        
+            return redirect(f"/register/?next_course={next_course}" if next_course else 'register') 
+               
         django_user = User.objects.create_user(username=email, email=email, password=password)
-        user = UserProfile.objects.create(user=username, mobile=mobile, email=email)
-        user.save()
+        UserProfile.objects.create(user=django_user, name=username, mobile=mobile, email=email)
 
 
-        request.session['quiz_next_course'] = reg_next_course
+        request.session['quiz_next_course'] = next_course
         request.session['quiz_user_email'] = email
 
         messages.success(request, "Registration successful!")
@@ -106,61 +100,46 @@ def register_quiz(request):
         
         try:
             user_profile = UserProfile.objects.get(email=email)
-            
             data = request.POST
-            QuizResponse.objects.create(user_profile=user_profile, question="Experience", answer=data.get('experience'))
-            QuizResponse.objects.create(user_profile=user_profile, question="Interest", answer=data.get('interest'))
-            QuizResponse.objects.create(user_profile=user_profile, question="Time", answer=data.get('time_commitment'))
-            QuizResponse.objects.create(user_profile=user_profile, question="Math", answer=data.get('math_level'))
-            QuizResponse.objects.create(user_profile=user_profile, question="GPU", answer=data.get('has_gpu'))
-            QuizResponse.objects.create(user_profile=user_profile, question="Profession", answer=data.get('profession'))
-            QuizResponse.objects.create(user_profile=user_profile, question="Industry", answer=data.get('industry'))
-            QuizResponse.objects.create(user_profile=user_profile, question="Style", answer=data.get('learning_style'))
-            QuizResponse.objects.create(user_profile=user_profile, question="Timeline", answer=data.get('timeline'))
-            QuizResponse.objects.create(user_profile=user_profile, question="Goal", answer=data.get('final_goal'))
+            
+            questions = ["Experience", "Interest", "Time", "Math", "GPU", "Profession", "Industry", "Style", "Timeline", "Goal"]
+            fields = ['experience', 'interest', 'time_commitment', 'math_level', 'has_gpu', 'profession', 'industry', 'learning_style', 'timeline', 'final_goal']
+            
+            for q, f in zip(questions, fields):
+                QuizResponse.objects.create(user_profile=user_profile, question=q, answer=data.get(f, ''))
 
-            if 'quiz_user_email' in request.session:
-                del request.session['quiz_user_email']
-            if 'quiz_next_course' in request.session:
-                del request.session['quiz_next_course']
+            if 'quiz_user_email' in request.session: del request.session['quiz_user_email']
+            if 'quiz_next_course' in request.session: del request.session['quiz_next_course']
 
-            if course_id:
-                return redirect(f"/login/?next_course={course_id}")
-            else:
-                return redirect('login') 
-
-        except:
-            if course_id:
-                return redirect(f"/login/?next_course={course_id}")
-            return redirect('login') 
+            return redirect(f"/login/?next_course={course_id}" if course_id else 'login')
+        except UserProfile.DoesNotExist:
+            return redirect('login')
 
     return render(request, 'main_templates/register_quiz.html')
 
 @csrf_exempt
 def login(request):
-    next_course = request.GET.get('next_course')
+    next_course = request.GET.get('next_course') or request.POST.get('next_course_id')
+
 
     if request.method == "POST":
         email = request.POST.get("email") 
         password = request.POST.get("password")
         
-        next_course_id = request.POST.get("next_course_id")
-
         user = authenticate(request, username=email, password=password)
 
         if user is not None:
-
+            auth_login(request, user)
             request.session['user_email'] = user.email
             
-            if next_course_id and next_course_id != "None" and next_course_id != "":
-                return redirect(f"/my-learning/?id={next_course_id}")
-            else:
-                return redirect("dashboard")
+            if next_course and next_course != "None":
+                return redirect(f"/my-learning/?id={next_course}")
+            return redirect("dashboard")
 
         else:
             messages.error(request, "Invalid Email or Password.")
-            return redirect("login")
-
+            return redirect(f"/login/?next_course={next_course}" if next_course else 'login')
+        
     return render(request, "main_templates/login.html", {'next_course': next_course})
 
 
@@ -208,8 +187,7 @@ def reset_pw(request, token):
         confirm_password = request.POST.get("confirm_password")
 
         if new_password == confirm_password:
-           django_user = User.objects.get(email=user_profile.email)
-
+           django_user = user_profile.user
            django_user.set_password(new_password)
            django_user.save()
 
@@ -261,4 +239,23 @@ def download_sample_lead(request):
 
 def portfolio(request):
     return render(request, 'main_templates/portfolio.html')
+
+def payment_success_callback(request):
+    payment_id =  request.GET.get('payment_id')
+    order_id = request.GET.get('order_id')
+    course_id = request.GET.get('course_id')
+
+    user_email = request.session.get('user_email')
+    user_profile = UserProfile.objects.filter(email=user_email).first()
+    course = get_object_or_404(Course, id=course_id)
+
+    Enrollment.objects.get_or_create(
+        user=user_profile,
+        course=course,
+        defaults={'order_id': order_id}
+    )
+
+    messages.success(request, f"Payment successful! You are now enrolled in {course.title} Successfully.")
+    return redirect('courses_dashboard', course_id=course.id)
+
 

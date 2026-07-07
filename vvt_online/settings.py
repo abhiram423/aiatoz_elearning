@@ -170,3 +170,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 RAZORPAY_KEY_ID = config('AIATOZ_RAZORPAY_KEY')
 RAZORPAY_KEY_SECRET = config('AIATOZ_RAZORPAY_SECRET')
 
+# settings.py file lo ekkadyna kinda add cheyandi
+CSRF_TRUSTED_ORIGINS = [
+    'https://aiatoz.org',
+    'https://www.aiatoz.org',
+]

@@ -2260,7 +2260,7 @@
 
         const submitBtn = document.getElementById('leadSubmitBtn');
         const alertBox = document.getElementById('leadSuccessAlert');
-        const pdfUrl = "/media/course_pdfs/AI_Skills_Handbook_Sample.pdf";
+        const pdfUrl = "{% static 'pdfs/AI_Skills_Handbook_Sample.pdf' %}";
 
         submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Storing...';
         submitBtn.disabled = true;

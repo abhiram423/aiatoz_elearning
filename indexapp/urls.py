@@ -25,5 +25,8 @@ urlpatterns = [
     path('download-sample/', views.download_sample_lead, name='download_sample_lead'),
     path('register-quiz/',views.register_quiz,name='register_quiz'),
     path('payment-success/', views.payment_success_callback, name='payment_success_callback'),
+    path('privacy/', views.privacy, name='privacy'),
+    path('support/', views.support, name='support'),
+    path('terms/', views.terms, name='terms'),
 
 ]

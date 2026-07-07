@@ -259,3 +259,11 @@ def payment_success_callback(request):
     return redirect('courses_dashboard', course_id=course.id)
 
 
+def privacy(request):
+    return render(request, 'main_templates/privacy.html')
+
+def support(request):
+    return render(request, 'main_templates/support.html')
+
+def terms(request):
+    return render(request, 'main_templates/terms.html')

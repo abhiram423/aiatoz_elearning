@@ -145,22 +145,22 @@
            PAGE HERO — teal gradient (matches index/courses/about)
         ════════════════════════════════════════ */
         .page-hero {
-            background:linear-gradient(135deg,#023e6d 0%,#025d94 35%,#0077a3 65%,#00b4d8 100%);
+            background:#ffffff;
             padding:70px 0 60px; position:relative; overflow:hidden;
         }
         .page-hero::before { content:''; position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px); background-size:40px 40px; pointer-events:none; z-index:0; }
         .page-hero::after { content:''; position:absolute; width:500px; height:500px; top:-150px; right:-80px; background:radial-gradient(circle,rgba(255,255,255,.12) 0%,transparent 70%); filter:blur(80px); border-radius:50%; pointer-events:none; }
         .page-hero .container { position:relative; z-index:1; }
-        .ph-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:#fff; padding:6px 18px; border-radius:100px; font-size:11px; font-weight:800; letter-spacing:1.8px; text-transform:uppercase; margin-bottom:14px; animation:fadeInUp .5s ease both; }
-        .live-dot { width:6px; height:6px; border-radius:50%; background:#fff; display:inline-block; animation:pulseDot 1.8s ease-in-out infinite; }
-        .page-hero h1 { font-size:52px; font-weight:900; letter-spacing:-2.5px; line-height:1.06; color:#fff; margin-bottom:12px; animation:fadeInUp .55s .06s ease both; }
-        .page-hero h1 span { color:rgba(255,255,255,0.75); }
-        .ph-sub { color:rgba(255,255,255,0.7); font-size:15px; font-weight:500; margin-bottom:16px; animation:fadeInUp .6s .12s ease both; }
+        .ph-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(0,180,216,0.12); border:1px solid rgba(0,180,216,0.4); color:#023e6d; padding:6px 18px; border-radius:100px; font-size:11px; font-weight:800; letter-spacing:1.8px; text-transform:uppercase; margin-bottom:14px; animation:fadeInUp .5s ease both; }
+        .live-dot { width:6px; height:6px; border-radius:50%; background:#0077a3; display:inline-block; animation:pulseDot 1.8s ease-in-out infinite; }
+        .page-hero h1 { font-size:52px; font-weight:900; letter-spacing:-2.5px; line-height:1.06; color:#023e6d; margin-bottom:12px; animation:fadeInUp .55s .06s ease both; }
+        .page-hero h1 span { color:#0077a3; }
+        .ph-sub { color:#3d5064; font-size:15px; font-weight:500; margin-bottom:16px; animation:fadeInUp .6s .12s ease both; }
         .ph-bc { display:flex; align-items:center; gap:8px; animation:fadeInUp .6s .18s ease both; }
-        .ph-bc a { color:rgba(255,255,255,0.55); font-size:13px; font-weight:600; text-decoration:none; transition:.2s; }
-        .ph-bc a:hover { color:#fff; }
-        .ph-bc .sep { color:rgba(255,255,255,0.3); font-size:12px; }
-        .ph-bc .cur { color:rgba(255,255,255,0.85); font-size:13px; font-weight:700; }
+        .ph-bc a { color:#3d5064; font-size:13px; font-weight:600; text-decoration:none; transition:.2s; }
+        .ph-bc a:hover { color:#023e6d; }
+        .ph-bc .sep { color:rgba(2,62,109,0.35); font-size:12px; }
+        .ph-bc .cur { color:#023e6d; font-size:13px; font-weight:700; }
 
         /* Blog typewriter cursor */
         .blog-cursor {
@@ -860,7 +860,7 @@
     resize();
 
     const COUNT  = 55;
-    const COLORS = ['rgba(255,255,255,', 'rgba(180,230,255,', 'rgba(120,200,255,'];
+    const COLORS = ['rgba(2,62,109,', 'rgba(0,119,163,', 'rgba(0,180,216,'];
     for (let i = 0; i < COUNT; i++) {
         particles.push({
             x: Math.random() * W, y: Math.random() * H,
@@ -901,7 +901,7 @@
                 const d = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
                 if (d < LINK) {
                     ctx.beginPath();
-                    ctx.strokeStyle = 'rgba(255,255,255,' + (0.18 * (1 - d / LINK)) + ')';
+                    ctx.strokeStyle = 'rgba(0,119,163,' + (0.28 * (1 - d / LINK)) + ')';
                     ctx.lineWidth = 0.65;
                     ctx.moveTo(particles[i].x, particles[i].y);
                     ctx.lineTo(particles[j].x, particles[j].y);

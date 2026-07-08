@@ -15,13 +15,13 @@
     <style>
         /* ── VARIABLES (matches index.html) ── */
         :root {
-            --bg-deep:      #060e1c;
-            --card-surface: #0a1929;
+            --bg-deep:      #ffffff;
+            --card-surface: #ffffff;
             --cse-purple:   #8b5cf6;
             --cse-teal:     #00b4d8;
-            --cse-border:   rgba(255,255,255,0.09);
-            --text-main:    #ffffff;
-            --text-dim:     #94a3b8;
+            --cse-border:   rgba(2,62,109,0.14);
+            --text-main:    #023e6d;
+            --text-dim:     #5b6b7c;
             --grad-purple:  linear-gradient(135deg,#7c3aed 0%,#a78bfa 100%);
             --grad-teal:    linear-gradient(135deg,#023e6d 0%,#0077a3 60%,#00b4d8 100%);
         }
@@ -30,7 +30,7 @@
         html { scroll-behavior:smooth; }
         body {
             font-family:'Plus Jakarta Sans',sans-serif;
-            background: linear-gradient(135deg,#060e1c 0%,#08162a 40%,#0a2040 70%,#083348 100%) fixed;
+            background: #ffffff fixed;
             background-attachment:fixed;
             color:var(--text-main);
             overflow-x:hidden; margin:0; padding:0;
@@ -123,11 +123,11 @@
         .btn-login:hover { color: #0077a3; border-color: #00b4d8; background: rgba(0,180,216,0.08); }
 
         .btn-signup {
-            background: linear-gradient(135deg, #023e6d 0%, #0077a3 50%, #00b4d8 100%); color: #fff !important;
+            background: #ffffff; color: #023e6d !important;
             padding: 12px 32px; border-radius: 12px; font-weight: 800;
             box-shadow: 0 8px 25px rgba(0, 180, 216, 0.35);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            border: none; position: relative; overflow: hidden;
+            border: 1.5px solid #023e6d; position: relative; overflow: hidden;
             text-decoration: none; display: inline-block;
         }
         .btn-signup::before {
@@ -214,7 +214,7 @@
            FILTER BAR
         ════════════════════════════════════════ */
         .filter-bar {
-            background:rgba(10,25,41,0.98);
+            background:#ffffff;
             border-bottom:1px solid var(--cse-border);
             position:sticky; top:64px; z-index:100;
             backdrop-filter:blur(20px);
@@ -230,9 +230,9 @@
             padding:7px 18px; border-radius:100px; cursor:pointer; transition:.3s; white-space:nowrap;
         }
         .filter-btn:hover,.filter-btn.active {
-            background:linear-gradient(135deg,#0077a3,#00b4d8);
-            border-color:transparent; color:#fff;
-            box-shadow:0 6px 18px rgba(0,119,163,0.4); transform:translateY(-2px);
+            background:#ffffff;
+            border-color:#023e6d; color:#023e6d;
+            box-shadow:0 6px 18px rgba(0,119,163,0.15); transform:translateY(-2px);
         }
 
         /* ════════════════════════════════════════
@@ -248,7 +248,7 @@
         .sec-eyebrow::before { content:''; display:inline-block; width:22px; height:2px; background:linear-gradient(90deg,#0077a3,#00b4d8); border-radius:2px; }
         .sec-title {
             font-size:42px; font-weight:900; letter-spacing:-2px;
-            background:linear-gradient(180deg,#ffffff 0%,#c8d0e0 100%);
+            background:linear-gradient(180deg,#04263f 0%,#0b3a5c 100%);
             -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
             margin-bottom:14px;
         }
@@ -289,7 +289,7 @@
         .cc-level { position:absolute; top:14px; right:14px; z-index:3; background:linear-gradient(135deg,#0077a3,#00b4d8); color:#fff; font-size:10px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; padding:4px 13px; border-radius:100px; box-shadow:0 4px 12px rgba(0,119,163,0.5); }
 
         .cc-body { padding:24px 26px 26px; flex:1; display:flex; flex-direction:column; }
-        .cc-body h3 { font-size:18px; font-weight:800; color:#fff; margin-bottom:10px; line-height:1.35; transition:.25s; }
+        .cc-body h3 { font-size:18px; font-weight:800; color:#023e6d; margin-bottom:10px; line-height:1.35; transition:.25s; }
         .course-card:hover .cc-body h3 { color:var(--cse-teal); }
         .cc-body p { color:var(--text-dim); font-size:13.5px; line-height:1.65; margin-bottom:18px; flex:1; }
         .cc-meta { display:flex; align-items:center; gap:14px; margin-bottom:20px; padding-bottom:18px; border-bottom:1px solid var(--cse-border); flex-wrap:wrap; }
@@ -305,7 +305,7 @@
             transition:all .3s cubic-bezier(.16,1,.3,1);
         }
         .cc-btn i { font-size:11px; transition:transform .3s; }
-        .cc-btn:hover { background:linear-gradient(135deg,#0077a3,#00b4d8); color:#fff; border-color:transparent; transform:translateY(-2px); box-shadow:0 8px 22px rgba(0,119,163,0.4); }
+        .cc-btn:hover { background:#ffffff; color:#023e6d; border-color:#023e6d; transform:translateY(-2px); box-shadow:0 8px 22px rgba(0,119,163,0.2); }
         .cc-btn:hover i { transform:translateX(5px); }
 
         .cc-students { display:flex; align-items:center; }
@@ -317,7 +317,7 @@
            TRUST STRIP
         ════════════════════════════════════════ */
         .trust-strip {
-            background:linear-gradient(135deg,#0a1929 0%,#0d2137 100%);
+            background:#ffffff;
             padding:60px 0; position:relative; overflow:hidden;
             border-top:1px solid var(--cse-border);
             border-bottom:1px solid var(--cse-border);
@@ -326,7 +326,7 @@
         .trust-strip::after { content:''; position:absolute; width:500px; height:500px; top:-200px; right:-80px; background:radial-gradient(circle,rgba(0,180,216,.1) 0%,transparent 70%); filter:blur(80px); border-radius:50%; pointer-events:none; }
         .trust-strip .container { position:relative; z-index:1; }
         .trust-item { text-align:center; }
-        .trust-num { font-size:46px; font-weight:900; color:#fff; line-height:1; margin-bottom:6px; letter-spacing:-2px; }
+        .trust-num { font-size:46px; font-weight:900; color:#023e6d; line-height:1; margin-bottom:6px; letter-spacing:-2px; }
         .trust-num span { color:var(--cse-teal); }
         .trust-lbl { font-size:12px; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.8px; }
         .trust-divider { width:1px; background:var(--cse-border); align-self:stretch; min-height:60px; }
@@ -342,15 +342,15 @@
             transition:all .4s cubic-bezier(.16,1,.3,1);
             text-align:center; position:relative; overflow:hidden; height:100%;
         }
-        .feat-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,#0077a3,#00b4d8); opacity:0; transition:.4s; z-index:0; }
+        .feat-card::before { content:''; position:absolute; inset:0; background:#ffffff; opacity:0; transition:.4s; z-index:0; }
         .feat-card:hover { border-color:rgba(0,180,216,0.4); transform:translateY(-10px); box-shadow:0 24px 60px rgba(0,119,163,0.2); }
         .feat-card:hover::before { opacity:1; }
         .feat-card>* { position:relative; z-index:1; }
         .feat-icon { width:72px; height:72px; background:rgba(0,180,216,0.1); border:1.5px solid rgba(0,180,216,0.25); border-radius:20px; display:flex; align-items:center; justify-content:center; margin:0 auto 22px; transition:.4s; font-size:28px; color:var(--cse-teal); }
-        .feat-card:hover .feat-icon { background:rgba(255,255,255,.2); border-color:rgba(255,255,255,.3); color:#fff; transform:scale(1.08) rotate(5deg); }
-        .feat-card h3 { font-size:18px; font-weight:800; color:#fff; margin-bottom:10px; transition:.3s; }
+        .feat-card:hover .feat-icon { background:rgba(0,180,216,.15); border-color:rgba(0,180,216,.4); color:#023e6d; transform:scale(1.08) rotate(5deg); }
+        .feat-card h3 { font-size:18px; font-weight:800; color:#023e6d; margin-bottom:10px; transition:.3s; }
         .feat-card p { color:var(--text-dim); font-size:14px; line-height:1.65; margin:0; transition:.3s; }
-        .feat-card:hover h3,.feat-card:hover p { color:#fff; }
+        .feat-card:hover h3,.feat-card:hover p { color:#023e6d; }
         .feat-num { position:absolute; top:16px; right:20px; font-size:52px; font-weight:900; color:rgba(255,255,255,.04); line-height:1; z-index:0; pointer-events:none; }
 
         /* ════════════════════════════════════════
@@ -575,8 +575,8 @@
                             <span class="cc-level" style="background:linear-gradient(135deg,#6366f1,#4338ca);box-shadow:0 4px 12px rgba(99,102,241,0.5);">Upcoming</span>
                         </div>
                         <div class="cc-body">
-                            <h3>Automations</h3>
-                            <p>Design and build intelligent automation workflows using AI tools, APIs, and no-code/low-code platforms to streamline real-world business processes.</p>
+                            <h3>Python</h3>
+                            <p>Python is a high-level, interpreted programming language renowned for its clear, English-like syntax and emphasis on code readability. It operates as a general-purpose language, meaning it can create an incredibly diverse range of programs rather than being specialized for a single type of problem.</p>
                             <div class="cc-meta">
                                 <span class="cc-meta-item"><i class="bi bi-clock-fill"></i> Self-paced</span>
                                 <span class="cc-meta-item"><i class="bi bi-hourglass-split" style="color:#6366f1;"></i> Coming Soon</span>

@@ -15,7 +15,7 @@ except ImportError:
 def user_login_required(f):
     @wraps(f)
     def wrap(request, *args, **kwargs):
-        if 'user_email' not in request.session or not request.user.is_authenticated:
+        if 'user_email' not in request.session:
             return redirect('login')
         return f(request, *args, **kwargs)
     return wrap
@@ -25,8 +25,13 @@ def dashboard(request):
     user_email = request.session.get('user_email')
     user_profile = UserProfile.objects.filter(email=user_email).first()
     
-    all_courses_list = Course.objects.all()
     
+    if not user_profile:
+        messages.error(request, "Profile session invalid. Please re-register or log in.")
+        request.session.flush() # Clears corrupted session
+        return redirect('login')
+        
+    all_courses_list = Course.objects.all()
     query = request.GET.get('q')
     
     if query:
@@ -62,6 +67,10 @@ def user_courses_list(request):
     user_email = request.session.get('user_email')
     user_profile = UserProfile.objects.filter(email=user_email).first()
 
+    if not user_profile:
+        messages.error(request, "Session expired.")
+        return redirect('login')
+
     all_courses = Course.objects.all()
     selected_course_id = request.GET.get('id')
     selected_course = None
@@ -74,9 +83,8 @@ def user_courses_list(request):
     if selected_course_id and selected_course_id != "None" and selected_course_id != "":
         try:
             selected_course = get_object_or_404(Course, id=selected_course_id)
-            
-            # 1. Check user existing enrollment statuses matching database context
             existing_enrollment = Enrollment.objects.filter(user=user_profile, course=selected_course).first()
+            
             if existing_enrollment and existing_enrollment.order_id:
                 has_paid = True
             else:
@@ -97,7 +105,6 @@ def user_courses_list(request):
                     "notes": notes_data
                 } 
                 
-                # Create Order on Razorpay Server Instance
                 razorpay_order = razorpay_client.order.create(data=order_payload)
                 razorpay_order_id = razorpay_order['id']
                 
@@ -113,7 +120,6 @@ def user_courses_list(request):
         'amount': amount_in_paise,
         'user_profile': user_profile
     })
-
 
 def certificates(request):
     return render(request, 'user_templates/certificates.html')

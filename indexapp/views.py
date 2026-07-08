@@ -2,16 +2,17 @@ from django.shortcuts import render,redirect, get_object_or_404
 from django.conf import settings
 from .models import *
 from django.contrib import messages
-import random
+import random, uuid
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login, logout
-from .models import UserProfile
+from .models import UserProfile, QuizResponse, Course
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .models import PDFLead, ContactMessage
 from functools import wraps
 from django.shortcuts import redirect
+from django.core.mail import send_mail
 
 def user_login_required(f):
     @wraps(f)
@@ -40,7 +41,13 @@ def courses(request):
 @user_login_required
 def enroll_course(request, course_id):
     course = get_object_or_404(Course, id=course_id)
-    profile = get_object_or_404(UserProfile, email=request.session.get('user_email'))
+    user_email = request.session.get('user_email')
+    profile = UserProfile.objects.filter(email=user_email).first()
+    
+    if not profile:
+        messages.error(request, "Profile not found. Please log in again.")
+        return redirect('login')
+        
     Enrollment.objects.get_or_create(user=profile, course=course)
     return redirect('courses_dashboard', course_id=course.id)
 
@@ -76,7 +83,7 @@ def register(request):
             messages.error(request, "Passwords do not match")
             return redirect(f"/register/?next_course={next_course}" if next_course else 'register')
 
-        if User.objects.filter(email=email).exists():
+        if User.objects.filter(email=email).exists() or UserProfile.objects.filter(email=email).exists():
             messages.error(request, "Email already exists")
             return redirect(f"/register/?next_course={next_course}" if next_course else 'register') 
                
@@ -89,38 +96,41 @@ def register(request):
 
         messages.success(request, "Registration successful!")
         return redirect("register_quiz")
+    
     return render(request, "main_templates/register.html", {'next_course': next_course})
 
 
 @csrf_exempt
 def register_quiz(request):
+    email = request.session.get('quiz_user_email')
+    course_id = request.session.get('quiz_next_course')
+    
+    if not email:
+        return redirect('login')
+
     if request.method == "POST":
-        email = request.session.get('quiz_user_email')
-        course_id = request.session.get('quiz_next_course')
+        user_profile = UserProfile.objects.filter(email=email).first()
         
-        try:
-            user_profile = UserProfile.objects.get(email=email)
+        if user_profile:
             data = request.POST
-            
             questions = ["Experience", "Interest", "Time", "Math", "GPU", "Profession", "Industry", "Style", "Timeline", "Goal"]
             fields = ['experience', 'interest', 'time_commitment', 'math_level', 'has_gpu', 'profession', 'industry', 'learning_style', 'timeline', 'final_goal']
             
             for q, f in zip(questions, fields):
                 QuizResponse.objects.create(user_profile=user_profile, question=q, answer=data.get(f, ''))
 
-            if 'quiz_user_email' in request.session: del request.session['quiz_user_email']
-            if 'quiz_next_course' in request.session: del request.session['quiz_next_course']
+        # Clean session storage safely
+        request.session.pop('quiz_user_email', None)
+        request.session.pop('quiz_next_course', None)
 
-            return redirect(f"/login/?next_course={course_id}" if course_id else 'login')
-        except UserProfile.DoesNotExist:
-            return redirect('login')
+        messages.success(request, "Account fully setup! Welcome aboard.")
+        return redirect(f"/login/?next_course={course_id}" if course_id else 'login')
 
     return render(request, 'main_templates/register_quiz.html')
 
 @csrf_exempt
 def login(request):
     next_course = request.GET.get('next_course') or request.POST.get('next_course_id')
-
 
     if request.method == "POST":
         email = request.POST.get("email") 
@@ -129,19 +139,23 @@ def login(request):
         user = authenticate(request, username=email, password=password)
 
         if user is not None:
+            # Check if their custom user profile actually exists in the database
+            profile_exists = UserProfile.objects.filter(email=user.email).exists()
+            if not profile_exists:
+                # Re-create profile on the fly if it's an orphaned account
+                UserProfile.objects.create(user=user, name=user.username, mobile="N/A", email=user.email)
+
             auth_login(request, user)
             request.session['user_email'] = user.email
             
             if next_course and next_course != "None":
                 return redirect(f"/my-learning/?id={next_course}")
             return redirect("dashboard")
-
         else:
             messages.error(request, "Invalid Email or Password.")
             return redirect(f"/login/?next_course={next_course}" if next_course else 'login')
         
     return render(request, "main_templates/login.html", {'next_course': next_course})
-
 
 
 def otp(request):
@@ -150,30 +164,27 @@ def otp(request):
 from django.core.mail import send_mail
 from django.urls import reverse
 import uuid
-
 def forget_pw(request):
     if request.method == "POST":
         email = request.POST.get("email")
-        try:
-            user_profile = UserProfile.objects.get(email=email)
-            
-            # Generate a unique token
+        user_profile = UserProfile.objects.filter(email=email).first()
+        
+        if user_profile:
             token = str(uuid.uuid4())
             user_profile.password_reset_token = token
             user_profile.save()
 
-            # Create the reset link (Adjust domain for production)
             reset_link = request.build_absolute_uri(f"/reset-pw/{token}/")
             
-            # Send Email
             subject = "Password Reset Request - AI A TO Z"
             message = f"Click the link below to reset your password:\n{reset_link}"
-            send_mail(subject, message, settings.EMAIL_HOST_USER, [email])
-            
-            messages.success(request, "Reset link sent to your email!")
-            return redirect('login')
-            
-        except UserProfile.DoesNotExist:
+            try:
+                send_mail(subject, message, settings.EMAIL_HOST_USER, [email])
+                messages.success(request, "Reset link sent to your email!")
+                return redirect('login')
+            except Exception:
+                messages.error(request, "Failed to send email. Please check your SMTP connection.")
+        else:
             messages.error(request, "Email not registered.")
             
     return render(request, 'main_templates/forget_pw.html')

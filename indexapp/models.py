@@ -18,6 +18,7 @@ class Course(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
     course_content = models.TextField(default='', blank=True)
+    image = models.FileField(upload_to='course_images/', null=True, blank=True)
     course_pdf = models.FileField(upload_to='course_pdfs/', null=True, blank=True)
     video_url = models.CharField(max_length=200, default="https://www.youtube.com/embed/up68UAfH0d0")
 

@@ -23,54 +23,54 @@
            NAVBAR — identical to index.html / about.html
         ════════════════════════════════════════ */
         .navbar {
-            background: linear-gradient(90deg, #f0f5fa 0%, #e8f1f8 50%, #f0f5fa 100%);
+            background: linear-gradient(90deg, #f0faf3 0%, #e8f5ec 50%, #f0faf3 100%);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border-bottom: 2px solid rgba(0,119,163,0.18);
+            border-bottom: 2px solid rgba(22,163,74,0.18);
             padding: 5px 0;
             transition: all 0.4s ease;
-            box-shadow: 0 2px 16px rgba(0,100,160,0.1), 0 1px 0 rgba(0,180,216,0.1);
+            box-shadow: 0 2px 16px rgba(22,140,74,0.1), 0 1px 0 rgba(34,197,94,0.1);
         }
         .navbar.scrolled {
             padding: 3px 0;
-            background: linear-gradient(90deg, #e8f1f8 0%, #ddeef7 50%, #e8f1f8 100%);
-            box-shadow: 0 6px 32px rgba(0,100,160,0.18), 0 1px 0 rgba(0,180,216,0.15);
+            background: linear-gradient(90deg, #e8f5ec 0%, #ddf3e3 50%, #e8f5ec 100%);
+            box-shadow: 0 6px 32px rgba(22,140,74,0.18), 0 1px 0 rgba(34,197,94,0.15);
         }
         .navbar-brand { font-weight: 900; font-size: 28px; color: #1e1b4b; display: flex; align-items: center; gap: 10px; text-decoration: none; }
         .navbar-brand img { height: 60px; width: auto; object-fit: contain; transition: 0.4s; }
-        .navbar-brand:hover img { transform: scale(1.05); filter: drop-shadow(0 4px 12px rgba(0,180,216,0.4)); }
+        .navbar-brand:hover img { transform: scale(1.05); filter: drop-shadow(0 4px 12px rgba(34,197,94,0.4)); }
         .navbar-brand:hover { color: #1e1b4b; }
 
         .nav-link {
             font-weight: 700; font-size: 15px; margin: 0 6px;
-            color: #1a3d5c !important; transition: 0.3s;
+            color: #14532d !important; transition: 0.3s;
             position: relative; padding-bottom: 6px !important;
         }
         .nav-link::after {
             content: "";
             position: absolute; bottom: 0; left: 50%;
             width: 0%; height: 2px;
-            background: linear-gradient(90deg, #0077a3, #00b4d8);
+            background: linear-gradient(90deg, #16a34a, #22c55e);
             transition: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             transform: translateX(-50%);
             border-radius: 2px;
         }
-        .nav-link:hover { color: #0077a3 !important; }
+        .nav-link:hover { color: #16a34a !important; }
         .nav-link:hover::after { width: 100%; }
-        .nav-link.active { color: #0077a3 !important; }
+        .nav-link.active { color: #16a34a !important; }
         .nav-link.active::after { width: 100%; }
 
         .btn-login {
-            color: #1e4e72; font-weight: 800; text-decoration: none; margin-right: 16px;
-            border: 1.5px solid rgba(0,119,163,0.35); padding: 8px 20px; border-radius: 10px;
+            color: #15803d; font-weight: 800; text-decoration: none; margin-right: 16px;
+            border: 1.5px solid rgba(22,163,74,0.35); padding: 8px 20px; border-radius: 10px;
             transition: 0.3s; opacity: 1;
         }
-        .btn-login:hover { color: #0077a3; border-color: #00b4d8; background: rgba(0,180,216,0.08); }
+        .btn-login:hover { color: #16a34a; border-color: #22c55e; background: rgba(34,197,94,0.08); }
 
         .btn-signup {
-            background: linear-gradient(135deg, #023e6d 0%, #0077a3 50%, #00b4d8 100%); color: #fff !important;
+            background: linear-gradient(135deg, #14532d 0%, #16a34a 50%, #22c55e 100%); color: #fff !important;
             padding: 12px 32px; border-radius: 12px; font-weight: 800;
-            box-shadow: 0 8px 25px rgba(0, 180, 216, 0.35);
+            box-shadow: 0 8px 25px rgba(34,197,94, 0.35);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             border: none; position: relative; overflow: hidden;
             text-decoration: none; display: inline-block;
@@ -85,13 +85,13 @@
         }
         .btn-signup:hover {
             transform: translateY(-3px) scale(1.03);
-            box-shadow: 0 16px 40px rgba(0, 180, 216, 0.55);
+            box-shadow: 0 16px 40px rgba(34,197,94, 0.55);
         }
         .btn-signup:hover::before { left: 150%; }
 
         /* ── PAGE HEADER ── */
         .legal-header {
-            background: linear-gradient(135deg,#023e6d 0%,#0077a3 60%,#00b4d8 100%);
+            background: linear-gradient(135deg,#14532d 0%,#16a34a 60%,#22c55e 100%);
             padding: 56px 20px 64px;
             text-align: center;
             color: #fff;
@@ -121,8 +121,8 @@
             <a class="navbar-brand" href="{% url 'index' %}">
                 <img src="{% static 'img/gallery/aiatoz_logo.png' %}" alt="AI A TO Z Logo">
             </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" style="border: 1px solid rgba(0,119,163,0.25) !important; background: rgba(0,119,163,0.06);">
-                <i class="fas fa-bars" style="color:#0077a3;"></i>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" style="border: 1px solid rgba(22,163,74,0.25) !important; background: rgba(22,163,74,0.06);">
+                <i class="fas fa-bars" style="color:#16a34a;"></i>
             </button>
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav mx-auto">

@@ -524,22 +524,13 @@
                 {% for course in courses %}
                 <div class="col-lg-4 col-md-6 reveal">
                     <a href="{% url 'login' %}?next_course={{ course.id }}" class="course-card">
-                        <div class="cc-img">
-                            <img src="
-                                {% if 'Python' in course.title %}
-                                    https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=600&q=80
-                                {% elif 'Intelligence' in course.title %}
-                                    https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&q=80
-                                {% elif 'Machine' in course.title %}
-                                    https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80
-                                {% elif 'Data' in course.title %}
-                                    https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=600&q=80
-                                {% elif 'Prompt' in course.title %}
-                                    https://images.unsplash.com/photo-1655720828018-edd2daec9349?w=600&q=80
-                                {% else %}
-                                    https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=600&q=80
-                                {% endif %}
-                            " alt="{{ course.title }}">
+                       <div class="cc-img">
+                            {% if course.image %}
+                                <img src="{{ course.image.url }}" alt="{{ course.title }}">
+                            {% else %}
+                                <img src="https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=600&q=80" alt="{{ course.title }}">
+                            {% endif %}
+                            
                             <div class="cc-img-overlay"></div>
                             <span class="cc-tag"><i class="bi bi-book"></i> Course</span>
                             <span class="cc-level">Mastery</span>

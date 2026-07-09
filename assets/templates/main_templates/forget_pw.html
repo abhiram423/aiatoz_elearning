@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,17 +11,17 @@
     
     <style>
         :root {
-            --bg-deep:   #060e1c;
-            --card-dark: #0a1929;
-            --cse-teal:  #00b4d8;
-            --cse-blue:  #0077a3;
-            --grad-teal: linear-gradient(135deg,#023e6d 0%,#0077a3 50%,#00b4d8 100%);
+            --bg-deep:   #071a12;
+            --card-dark: #0d2318;
+            --cse-teal:  #22c55e;
+            --cse-blue:  #16a34a;
+            --grad-teal: linear-gradient(135deg,#14532d 0%,#16a34a 50%,#22c55e 100%);
         }
         *,*::before,*::after { box-sizing:border-box; }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(135deg,#060e1c 0%,#08162a 40%,#0a2040 70%,#083348 100%);
+            background: linear-gradient(135deg,#071a12 0%,#0a2418 40%,#0c3220 70%,#0f4a2f 100%);
             background-attachment: fixed;
             min-height: 100vh;
             display: flex;
@@ -40,13 +41,13 @@
         }
         .shape-1 {
             width: 500px; height: 500px;
-            background: radial-gradient(circle,rgba(0,119,163,0.15) 0%,transparent 70%);
+            background: radial-gradient(circle,rgba(22,163,74,0.15) 0%,transparent 70%);
             filter: blur(90px);
             top: -150px; left: -100px;
         }
         .shape-2 {
             width: 400px; height: 400px;
-            background: radial-gradient(circle,rgba(0,180,216,0.1) 0%,transparent 70%);
+            background: radial-gradient(circle,rgba(34,197,94,0.1) 0%,transparent 70%);
             filter: blur(80px);
             bottom: -100px; right: -80px;
         }
@@ -60,10 +61,10 @@
 
         .premium-card {
             background: var(--card-dark);
-            border: 1px solid rgba(0,180,216,0.18);
+            border: 1px solid rgba(34,197,94,0.18);
             border-radius: 28px;
             padding: 52px 44px;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.5), 0 0 40px rgba(0,180,216,0.04);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.5), 0 0 40px rgba(34,197,94,0.04);
             position: relative;
             overflow: hidden;
         }
@@ -73,10 +74,18 @@
             background: var(--grad-teal);
         }
 
+        .brand-logo {
+            display: block;
+            height: 46px;
+            width: auto;
+            margin: 0 auto 26px;
+            object-fit: contain;
+        }
+
         .icon-box {
             width: 68px; height: 68px;
-            background: rgba(0,180,216,0.1);
-            border: 1.5px solid rgba(0,180,216,0.25);
+            background: rgba(34,197,94,0.1);
+            border: 1.5px solid rgba(34,197,94,0.25);
             border-radius: 18px;
             display: flex; align-items: center; justify-content: center;
             margin: 0 auto 22px;
@@ -118,8 +127,8 @@
         }
         .input-group:focus-within {
             border-color: var(--cse-teal);
-            background: rgba(0,180,216,0.05);
-            box-shadow: 0 0 0 3px rgba(0,180,216,0.1);
+            background: rgba(34,197,94,0.05);
+            box-shadow: 0 0 0 3px rgba(34,197,94,0.1);
         }
         .input-group-text {
             background: transparent;
@@ -148,13 +157,13 @@
             width: 100%;
             margin-top: 22px;
             font-size: 15px;
-            box-shadow: 0 8px 24px rgba(0,119,163,0.4);
+            box-shadow: 0 8px 24px rgba(22,163,74,0.4);
             transition: all 0.3s ease;
             cursor: pointer;
         }
         .btn-submit:hover {
             transform: translateY(-3px);
-            box-shadow: 0 14px 36px rgba(0,119,163,0.55);
+            box-shadow: 0 14px 36px rgba(22,163,74,0.55);
         }
 
         .back-link {
@@ -175,8 +184,8 @@
             border-radius: 12px;
             font-size: 0.875rem;
             font-weight: 600;
-            background: rgba(0,180,216,0.08);
-            border: 1px solid rgba(0,180,216,0.25);
+            background: rgba(34,197,94,0.08);
+            border: 1px solid rgba(34,197,94,0.25);
             color: var(--cse-teal);
         }
 
@@ -194,6 +203,7 @@
 
     <div class="forgot-container">
         <div class="premium-card">
+            <img src="{% static 'img/gallery/aiatoz_logo.png' %}" alt="AI A TO Z" class="brand-logo">
             <div class="icon-box">
                 <i class="fa-solid fa-envelope-open-text"></i>
             </div>

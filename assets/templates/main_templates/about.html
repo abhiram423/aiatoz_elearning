@@ -306,6 +306,7 @@
         .footer-social { display:flex; gap:16px; flex-wrap:wrap; margin-top:8px; }
         .footer-social a { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; text-decoration:none; transition:all .3s; border:1.5px solid #dee6f0; color:#475569; background:#fff; }
         .footer-social a:hover { transform:translateY(-4px); }
+        .footer-social a.fb:hover { background:#1877f2; border-color:#1877f2; color:#fff; }
         .footer-social a.wa:hover { background:#25d366; border-color:#25d366; color:#fff; }
         .footer-social a.li:hover { background:#0077b5; border-color:#0077b5; color:#fff; }
         .footer-social a.ig:hover { background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); border-color:#e1306c; color:#fff; }
@@ -315,7 +316,7 @@
         .footer-heading { font-size:15px; font-weight:800; color:#0f172a; margin-bottom:18px; padding-left:10px; border-left:3px solid #16a34a; }
         .footer-links { list-style:none; padding:0; margin:0; }
         .footer-links li { margin-bottom:10px; }
-        .footer-links li a { color:#475569; text-decoration:none; font-size:13.5px; font-weight:500; transition:.25s; display:inline-block; }
+        .footer-links li a { color:#475569; text-decoration:none; font-size:13.5px; font-weight:500; transition:.25s; display:flex; align-items:center; gap:8px; }
         .footer-links li a:hover { color:#16a34a; padding-left:6px; }
 
         .footer-bottom { background:#e2eaf4; border-top:1px solid #d1dce8; padding:20px 0; margin-top:50px; }
@@ -355,8 +356,8 @@
             .d-flex.flex-wrap.gap-3 { flex-direction:column !important; gap:14px !important; }
         }
         /* Hamburger → X */
-        .navbar-toggler-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='%231a3d5c' stroke-linecap='round' stroke-width='2.2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;transition:all .25s ease;}
-        .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='%230077a3' stroke-linecap='round' stroke-width='2.5' d='M6 6l18 18M24 6L6 24'/%3E%3C/svg%3E") !important;}
+        .navbar-toggler-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='%2314532d' stroke-linecap='round' stroke-width='2.2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;transition:all .25s ease;}
+        .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='%2316a34a' stroke-linecap='round' stroke-width='2.5' d='M6 6l18 18M24 6L6 24'/%3E%3C/svg%3E") !important;}
     </style>
 </head>
 <body>
@@ -754,6 +755,7 @@
                     </div>
                     <p class="footer-tagline">AI Courses provide structured learning to understand, build, and apply intelligent systems using data, algorithms, and real-world problem-solving techniques.</p>
                     <div class="footer-social">
+                        <a href="https://www.facebook.com/learnaiatoz/" target="_blank" rel="noopener" class="fb" title="Facebook"><i class="fab fa-facebook-f"></i></a>
                         <a href="https://wa.me/919676125666" target="_blank" rel="noopener" class="wa" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
                         <a href="https://www.linkedin.com/in/aiatoz" target="_blank" rel="noopener" class="li" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                         <a href="https://www.instagram.com/learn_aiatoz?igsh=Ymo5YjdtbjN1eDlq" target="_blank" rel="noopener" class="ig" title="Instagram"><i class="fab fa-instagram"></i></a>
@@ -798,7 +800,7 @@
                 <div class="col-lg-2 col-md-3 col-6">
                     <h6 class="footer-heading">Contact</h6>
                     <ul class="footer-links">
-                        <li><a href="mailto:aiatozofficial@gmail.com"><i class="bi bi-envelope-fill me-1" style="color:#16a34a;"></i> aiatozofficial@gmail.com</a></li>
+                        <li><a href="mailto:official@aiatoz.org"><i class="bi bi-envelope-fill me-1" style="color:#16a34a;"></i> official@aiatoz.org</a></li>
                         <li><a href="https://wa.me/919676125666"><i class="bi bi-whatsapp me-1" style="color:#25d366;"></i> WhatsApp Us</a></li>
                         <li><a href="#"><i class="bi bi-geo-alt-fill me-1" style="color:#ef4444;"></i>Hyderabad, India</a></li>
                     </ul>

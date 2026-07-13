@@ -12,19 +12,19 @@
     
     <style>
         :root {
-            --bg-deep:    #060e1c;
-            --card-dark:  #0a1929;
-            --cse-teal:   #00b4d8;
-            --cse-blue:   #0077a3;
-            --grad-teal:  linear-gradient(135deg,#023e6d 0%,#0077a3 50%,#00b4d8 100%);
-            --text-dim:   rgba(255,255,255,0.5);
+            --bg-deep:    #ffffff;
+            --card-dark:  #ffffff;
+            --cse-teal:   #22c55e;
+            --cse-blue:   #16a34a;
+            --grad-teal:  linear-gradient(135deg,#14532d 0%,#16a34a 50%,#22c55e 100%);
+            --text-dim:   rgba(15,23,42,0.5);
         }
 
         *,*::before,*::after { box-sizing:border-box; }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(135deg,#060e1c 0%,#08162a 40%,#0a2040 70%,#083348 100%);
+            background: linear-gradient(135deg,#f0faf3 0%,#f7fdf9 40%,#ffffff 70%,#ffffff 100%);
             background-attachment: fixed;
             min-height: 100vh;
             display: flex;
@@ -39,18 +39,18 @@
             to   { opacity:1; transform:translateY(0); }
         }
         @keyframes pulseGlow {
-            0%,100% { box-shadow:0 0 12px rgba(0,180,216,0.4); }
-            50%      { box-shadow:0 0 28px rgba(0,180,216,0.7); }
+            0%,100% { box-shadow:0 0 12px rgba(34,197,94,0.4); }
+            50%      { box-shadow:0 0 28px rgba(34,197,94,0.7); }
         }
 
         .quiz-card {
             background: var(--card-dark);
-            border: 1px solid rgba(0,180,216,0.18);
+            border: 1px solid rgba(34,197,94,0.18);
             border-radius: 32px;
             padding: 52px 48px;
             width: 100%;
             max-width: 620px;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 40px rgba(0,180,216,0.05);
+            box-shadow: 0 30px 80px rgba(20,83,45,0.12), 0 0 40px rgba(34,197,94,0.06);
             position: relative;
             overflow: hidden;
         }
@@ -70,13 +70,13 @@
             background: var(--grad-teal);
             display: inline-flex; align-items: center; justify-content: center;
             font-size: 24px; color: #fff;
-            box-shadow: 0 8px 24px rgba(0,180,216,0.4);
+            box-shadow: 0 8px 24px rgba(34,197,94,0.4);
             animation: pulseGlow 3s ease-in-out infinite;
             margin-bottom: 12px;
         }
         .brand-title {
             font-size: 13px; font-weight: 800; letter-spacing: 2px;
-            text-transform: uppercase; color: var(--cse-teal);
+            text-transform: uppercase; color: var(--cse-blue);
         }
 
         .step { display: none; }
@@ -84,7 +84,7 @@
 
         h4 {
             font-weight: 800;
-            color: #fff;
+            color: #14532d;
             margin-bottom: 28px;
             font-size: 22px;
             line-height: 1.3;
@@ -98,26 +98,26 @@
             width: 100%;
             padding: 16px 20px;
             margin-bottom: 12px;
-            border: 1.5px solid rgba(255,255,255,0.08);
+            border: 1.5px solid rgba(20,83,45,0.12);
             border-radius: 14px;
-            background: rgba(255,255,255,0.03);
+            background: rgba(20,83,45,0.02);
             text-align: left;
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-weight: 600;
             font-size: 14px;
-            color: rgba(255,255,255,0.7);
+            color: #334155;
             cursor: pointer;
             transition: all 0.25s ease;
         }
         .btn-option:hover {
             border-color: var(--cse-teal);
-            background: rgba(0,180,216,0.08);
-            color: #fff;
+            background: rgba(34,197,94,0.08);
+            color: #14532d;
             transform: translateX(4px);
         }
         .opt-circle {
             width: 18px; height: 18px; min-width: 18px;
-            border: 2px solid rgba(255,255,255,0.2);
+            border: 2px solid rgba(20,83,45,0.25);
             border-radius: 50%;
             transition: 0.25s;
             flex-shrink: 0;
@@ -125,11 +125,11 @@
         .btn-option:hover .opt-circle {
             border-color: var(--cse-teal);
             background: var(--cse-teal);
-            box-shadow: 0 0 8px rgba(0,180,216,0.5);
+            box-shadow: 0 0 8px rgba(34,197,94,0.5);
         }
 
         .progress-wrapper {
-            background: rgba(255,255,255,0.06);
+            background: rgba(20,83,45,0.08);
             height: 6px;
             border-radius: 10px;
             margin-bottom: 36px;
@@ -143,9 +143,9 @@
         }
 
         .submit-final-btn {
-            background: var(--grad-teal);
-            color: #fff;
-            border: none;
+            background: #ffffff;
+            color: #14532d;
+            border: 1.5px solid #14532d;
             padding: 16px;
             border-radius: 14px;
             width: 100%;
@@ -156,24 +156,24 @@
             margin-top: 20px;
             cursor: pointer;
             transition: 0.3s;
-            box-shadow: 0 8px 24px rgba(0,119,163,0.4);
+            box-shadow: 0 8px 24px rgba(34,197,94,0.2);
         }
         .submit-final-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 14px 36px rgba(0,119,163,0.6);
+            box-shadow: 0 14px 36px rgba(34,197,94,0.35);
         }
 
         select.form-select {
             border-radius: 14px;
-            border: 1.5px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.04);
-            color: rgba(255,255,255,0.7);
+            border: 1.5px solid rgba(20,83,45,0.15);
+            background: #f8fafc;
+            color: #0f172a;
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-weight: 600;
             padding: 14px 18px;
         }
-        select.form-select option { background: #0a1929; color: #fff; }
-        select.form-select:focus { border-color: var(--cse-teal); box-shadow: 0 0 0 3px rgba(0,180,216,0.15); background: rgba(0,180,216,0.05); outline: none; }
+        select.form-select option { background: #ffffff; color: #0f172a; }
+        select.form-select:focus { border-color: var(--cse-teal); box-shadow: 0 0 0 3px rgba(34,197,94,0.15); background: rgba(34,197,94,0.05); outline: none; }
     </style>
 </head>
 <body>

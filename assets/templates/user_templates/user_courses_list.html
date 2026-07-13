@@ -329,7 +329,6 @@
         .course-content-body code { background:rgba(34,197,94,.1); color:var(--cse-teal); border-radius:6px; padding:2px 6px; font-size:13px; }
         .course-content-body img { max-width:100%; border-radius:12px; }
 
-        /* ── FREE ACCESS STATUS CARD ── */
         .status-card {
             background:var(--card-surface);
             border:1px solid rgba(255,255,255,0.07);
@@ -541,7 +540,7 @@
                     </div>
                     <span class="topbar-user-role">STUDENT</span>
                 </div>
-                <img src="https://ui-avatars.com/api/?name={{ user_profile.user }}&background=0077a3&color=fff&bold=true&format=svg" class="topbar-avatar" alt="User">
+                <img src="https://ui-avatars.com/api/?name={{ user_profile.name|default:user_profile.user }}&background=0077a3&color=fff&bold=true&format=svg" class="topbar-avatar" alt="User">
             </div>
             </div>
         </header>
@@ -686,7 +685,7 @@
                     <div class="inner">
                         <div class="ph-badge"><span class="live-dot"></span> AI A TO Z Academy</div>
                         <h1>Your <span>Learning</span> Library</h1>
-                        <p>All your free AI courses in one place — start learning right away.</p>
+                        <p>All your AI courses in one place — start learning right away.</p>
                         <div class="ph-bc">
                             <a href="{% url 'dashboard' %}">Dashboard</a>
                             <span class="sep">›</span>

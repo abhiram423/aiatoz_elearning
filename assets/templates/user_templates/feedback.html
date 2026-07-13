@@ -471,7 +471,7 @@
                         </div>
                         <span class="topbar-user-role">STUDENT</span>
                     </div>
-                    <img src="https://ui-avatars.com/api/?name={{ user_profile.user }}&background=0077a3&color=fff&bold=true&format=svg" class="topbar-avatar" alt="User">
+                    <img src="https://ui-avatars.com/api/?name={{ user_profile.name|default:user_profile.user }}&background=0077a3&color=fff&bold=true&format=svg" class="topbar-avatar" alt="User">
                 </div>
             </div>
         </header>

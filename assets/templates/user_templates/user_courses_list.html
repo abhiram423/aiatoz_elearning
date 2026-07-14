@@ -578,10 +578,8 @@
 
                 <div class="row g-4">
 
-                    <!-- LEFT: main content -->
                     <div class="col-lg-8">
 
-                        <!-- Course Overview -->
                         <div class="content-card">
                             <div class="card-section-title">
                                 <i class="bi bi-info-circle-fill"></i> Course Overview
@@ -596,7 +594,6 @@
                             </div>
                         </div>
 
-                        <!-- Lecture Video — always visible (free access) -->
                         <div class="content-card">
                             <div class="card-section-title">
                                 <i class="bi bi-play-circle-fill" style="color:#ef4444"></i> Lecture Video
@@ -606,7 +603,6 @@
                             </div>
                         </div>
 
-                        <!-- Full Study Material — always visible (free access) -->
                         <div class="content-card">
                             <div class="card-section-title">
                                 <i class="bi bi-book-fill"></i> Full Study Material
@@ -700,15 +696,12 @@
                     <div class="col-12 col-sm-6 col-xl-4" style="animation-delay:{{ forloop.counter0|add:1 }}00ms">
                         <div class="lib-card">
                             
-                            <!-- ఇమేజ్ థంబ్నైల్ సెక్షన్ ఇక్కడ మారుతుంది -->
                             <div class="lib-thumb" style="position: relative; overflow: hidden; height: 180px; display: flex; align-items: center; justify-content: center;">
                                 <div class="lib-thumb-orb"></div>
                                 
-                                <!-- కండిషన్: అడ్మిన్ లో ఇమేజ్ ఇస్తే అది వస్తుంది, లేకపోతే డిఫాల్ట్ ఇమేజ్ వస్తుంది -->
                                 {% if course.image %}
                                     <img src="{{ course.image.url }}" alt="{{ course.title }}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 1;">
                                 {% else %}
-                                    <!-- ఇమేజ్ లేకపోతే పాత బుక్ ఐకాన్ డిఫాల్ట్ గా కనిపిస్తుంది -->
                                     <i class="bi bi-book-fill" style="z-index: 2; font-size: 2rem;"></i>
                                 {% endif %}
                                 

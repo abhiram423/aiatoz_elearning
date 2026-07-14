@@ -164,53 +164,124 @@ def otp(request):
 from django.core.mail import send_mail
 from django.urls import reverse
 import uuid
+from django.utils import timezone
+
 def forget_pw(request):
     if request.method == "POST":
         email = request.POST.get("email")
         user_profile = UserProfile.objects.filter(email=email).first()
-        
+
         if user_profile:
             token = str(uuid.uuid4())
             user_profile.password_reset_token = token
+            user_profile.password_reset_created_at = timezone.now()
             user_profile.save()
 
-            reset_link = request.build_absolute_uri(f"/reset-pw/{token}/")
-            
+            reset_link = request.build_absolute_uri(
+                reverse('reset_pw', args=[token])
+            )
+
             subject = "Password Reset Request - AI A TO Z"
-            message = f"Click the link below to reset your password:\n{reset_link}"
+
+            message = f"""
+            Hello {user_profile.name},
+
+            We received a request to reset the password for your AI A TO Z account.
+
+            To create a new password, please click the secure link below:
+
+            {reset_link}
+
+            Important Security Information:
+            • This password reset link is valid for only 10 minutes.
+            • If the link expires, you can request another password reset email.
+            • If you did not request this password reset, you can safely ignore this email. Your account will remain secure.
+
+            Thank you,
+
+            AI A TO Z Team
+            Empowering Learning Through AI
+            """
+
             try:
-                send_mail(subject, message, settings.EMAIL_HOST_USER, [email])
+                send_mail(
+                    subject,
+                    message,
+                    settings.EMAIL_HOST_USER,
+                    [email],
+                    fail_silently=False
+                )
+
                 messages.success(request, "Reset link sent to your email!")
-                return redirect('login')
+                return redirect("login")
+
             except Exception:
-                messages.error(request, "Failed to send email. Please check your SMTP connection.")
+                messages.error(
+                    request,
+                    "Failed to send email. Please check your SMTP configuration."
+                )
+
         else:
             messages.error(request, "Email not registered.")
-            
-    return render(request, 'main_templates/forget_pw.html')
 
+    return render(request, "main_templates/forget_pw.html")
+
+from datetime import timedelta
 
 def reset_pw(request, token):
-    user_profile = get_object_or_404(UserProfile, password_reset_token=str(token))
+
+    user_profile = get_object_or_404(
+        UserProfile,
+        password_reset_token=token
+    )
+
+    if (
+        user_profile.password_reset_created_at is None or
+        timezone.now() >
+        user_profile.password_reset_created_at + timedelta(minutes=10)
+    ):
+
+        user_profile.password_reset_token = None
+        user_profile.password_reset_created_at = None
+        user_profile.save()
+
+        messages.error(
+            request,
+            "This password reset link has expired. Please request a new one."
+        )
+
+        return redirect("forget_pw")
 
     if request.method == "POST":
+
         new_password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
 
         if new_password == confirm_password:
-           django_user = user_profile.user
-           django_user.set_password(new_password)
-           django_user.save()
 
-           user_profile.password_reset_token = None
-           user_profile.save()
-           
-           messages.success(request, "Password updated successfully!")
-           return redirect('login')
+            django_user = user_profile.user
+            django_user.set_password(new_password)
+            django_user.save()
+
+            user_profile.password_reset_token = None
+            user_profile.password_reset_created_at = None
+            user_profile.save()
+
+            messages.success(
+                request,
+                "Password updated successfully!"
+            )
+
+            return redirect("login")
+
         else:
             messages.error(request, "Passwords do not match.")
 
-    return render(request, 'main_templates/reset_pw.html', {'token': token})
+    return render(
+        request,
+        "main_templates/reset_pw.html",
+        {"token": token}
+    )
 
 @csrf_exempt
 

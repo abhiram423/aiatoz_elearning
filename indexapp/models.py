@@ -9,7 +9,7 @@ class UserProfile(models.Model):
     mobile = models.CharField(max_length=15)
     email = models.EmailField(unique=True)
     password_reset_token = models.CharField(max_length=100, unique=True, blank=True, null=True)
-
+    password_reset_created_at = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return self.email
@@ -24,7 +24,6 @@ class Course(models.Model):
 
     def __str__(self):
         return self.title
-
 
 # models.py
 class Enrollment(models.Model):

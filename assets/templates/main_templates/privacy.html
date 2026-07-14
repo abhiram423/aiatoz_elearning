@@ -68,11 +68,11 @@
         .btn-login:hover { color: #16a34a; border-color: #22c55e; background: rgba(34,197,94,0.08); }
 
         .btn-signup {
-            background: linear-gradient(135deg, #14532d 0%, #16a34a 50%, #22c55e 100%); color: #fff !important;
+            background: #ffffff; color: #14532d !important;
             padding: 12px 32px; border-radius: 12px; font-weight: 800;
             box-shadow: 0 8px 25px rgba(34,197,94, 0.35);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            border: none; position: relative; overflow: hidden;
+            border: 1.5px solid #14532d; position: relative; overflow: hidden;
             text-decoration: none; display: inline-block;
         }
         .btn-signup::before {
@@ -91,24 +91,30 @@
 
         /* ── PAGE HEADER ── */
         .legal-header {
-            background: linear-gradient(135deg,#14532d 0%,#16a34a 60%,#22c55e 100%);
+            background: linear-gradient(135deg,#d7f2e0 0%,#bfe9cf 60%,#a8dfc0 100%);
             padding: 56px 20px 64px;
             text-align: center;
-            color: #fff;
+            color: #14532d;
         }
-        .legal-header h1 { font-weight: 900; font-size: 34px; margin: 0 0 8px; }
-        .legal-header p { margin: 0; opacity: .85; font-size: 14px; }
+        .legal-header h1 { font-weight: 900; font-size: 34px; margin: 0 0 8px; color: #14532d; }
+        .legal-header p { margin: 0; opacity: .8; font-size: 14px; }
 
         /* ── CONTENT ── */
         .legal-container {
-            max-width: 800px; margin: -36px auto 60px; background: #ffffff;
-            padding: 40px; border-radius: 16px;
+            max-width: 850px; margin: -36px auto 60px; background: #ffffff;
+            padding: 44px 48px; border-radius: 16px;
             box-shadow: 0 20px 50px rgba(0,50,90,0.12);
-            border: 1px solid #e2e8f0; line-height: 1.7;
+            border: 1px solid #e2e8f0; line-height: 1.75;
         }
-        h2 { color: #234e52; font-size: 20px; margin-top: 24px; }
+        .legal-container > p:first-child { color: #4a5568; font-size: 15px; margin-bottom: 28px; }
+        h2 { color: #14532d; font-size: 19px; margin-top: 30px; margin-bottom: 12px; font-weight: 800; }
         p, li { font-size: 15px; color: #4a5568; }
-        .last-updated { font-style: italic; color: #718096; font-size: 13px; }
+        li { margin-bottom: 8px; }
+        ul { padding-left: 22px; }
+        strong { color: #234e52; }
+        a.inline-link { color: #16a34a; font-weight: 700; text-decoration: none; }
+        a.inline-link:hover { text-decoration: underline; }
+        .last-updated { font-style: italic; color: #14532d; font-size: 13px; }
     </style>
 </head>
 <body>
@@ -141,25 +147,83 @@
 
     <div class="legal-header">
         <h1>Privacy Policy</h1>
-        <p class="last-updated" style="color:#fff;">Last Updated: July 2026</p>
+        <p class="last-updated">Last Updated: 13 July 2026</p>
     </div>
 
     <main>
     <div class="legal-container">
-        <p>At AI A to Z Academy, protecting user privacy data points is our core foundational baseline. This Privacy Statement governs how we harvest, secure, and manage tracking user metrics.</p>
+        <p>AIATOZ (&ldquo;Company&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;, and &ldquo;our&rdquo;) is committed to protecting the privacy of Users of its online learning marketplace, comprising its website, mobile applications, and related services (collectively, the &ldquo;Platform&rdquo;). This Privacy Policy describes how we collect, use, process, share, and safeguard the personal data of Instructors, Learners, and visitors (&ldquo;you&rdquo;), along with the choices and rights available to you in respect of your personal data.</p>
 
-        <h2>1. Information We Collect</h2>
-        <p>We process data primitives purely optimized to execute software delivery pipelines:</p>
+        <h2>1. Introduction</h2>
+        <p>This Privacy Policy is framed in accordance with the Digital Personal Data Protection Act, 2023 (&ldquo;DPDP Act&rdquo;), the Information Technology Act, 2000, the Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011, and other applicable data protection laws of India. For the purposes of the DPDP Act, AIATOZ acts as the &ldquo;Data Fiduciary&rdquo; in respect of personal data collected through the Platform.</p>
+        <p>By accessing or using the Platform, you consent to the collection, use, and disclosure of your information as described in this Privacy Policy. If you do not agree with this Privacy Policy, please do not use the Platform.</p>
+
+        <h2>2. Personal Data We Collect</h2>
+        <p><strong>2.1 Information You Provide Directly:</strong> Name, email address, phone number, date of birth, password, profile photograph, billing and billing address, government-issued identification (for Instructor payout verification and tax compliance where required), payment and bank account details (processed by our payment partners), Course content, messages, reviews, ratings, and support communications.</p>
+        <p><strong>2.2 Information Collected Automatically:</strong> IP address, device identifiers, browser type, operating system, log data, approximate location, pages visited, time spent, click-stream data, video-viewing and course-progress data, and diagnostic/crash data, collected through cookies, SDKs, and similar tracking technologies.</p>
+        <p><strong>2.3 Information From Third Parties:</strong> Where you register or log in via a third-party service (such as Google or Facebook), we may receive your name, email address, and profile information from that service, as permitted by your settings with that provider. Payment confirmation data may also be received from our payment gateway partners.</p>
+
+        <h2>3. Cookies and Similar Technologies</h2>
+        <p>We use cookies, web beacons, and similar tracking technologies to operate and personalize the Platform, remember your preferences, analyse traffic and usage patterns, and deliver relevant content and advertising. You can control or disable cookies through your browser settings; however, disabling certain cookies may affect the functionality of the Platform. Where required by law, we will obtain your consent prior to placing non-essential cookies.</p>
+
+        <h2>4. Purpose and Legal Basis of Processing</h2>
+        <p>We process your personal data for the following purposes, on the basis of your consent, the performance of a contract with you, compliance with legal obligations, or our legitimate interests in operating and improving the Platform:</p>
         <ul>
-            <li><strong>Identity Metadata:</strong> Usernames, password hashes, and verified Email configurations during user profile registration layers.</li>
-            <li><strong>Performance Metrics:</strong> Quiz tracking timelines, course completion logs, score arrays, and progress parameters.</li>
+            <li>To create and manage your Account and authenticate your identity;</li>
+            <li>To process Course purchases, Instructor payouts, invoicing, and applicable taxes;</li>
+            <li>To deliver, personalize, and improve Platform features, recommendations, and Course content;</li>
+            <li>To communicate with you regarding transactions, updates, and customer support;</li>
+            <li>To send promotional and marketing communications, where you have opted in (or as otherwise permitted by law), with an option to opt out at any time;</li>
+            <li>To detect, investigate, and prevent fraud, unauthorized access, and violations of our Terms and Conditions;</li>
+            <li>To comply with applicable legal, regulatory, tax, and accounting obligations;</li>
+            <li>To enforce our Terms and Conditions and protect the rights, property, and safety of AIATOZ, our Users, and the public.</li>
         </ul>
 
-        <h2>2. How We Use Your Data</h2>
-        <p>We utilize database elements to initialize custom session authentication models, track individual student metrics across modules configurations, and fix dynamic error exception tracebacks inside live hosting systems.</p>
+        <h2>5. How We Share Your Information</h2>
+        <p><strong>5.1 Instructors and Learners:</strong> Where you enrol in a Course, certain profile information (such as your name and profile photograph) and your course-progress, questions, and reviews may be visible to the relevant Instructor and, in discussion forums, to other Learners in that Course.</p>
+        <p><strong>5.2 Service Providers:</strong> We share personal data with third-party vendors who perform services on our behalf, including payment gateways, cloud hosting providers, video-streaming/CDN providers, analytics providers, email/SMS communication providers, and customer support tools, under contractual obligations of confidentiality and security.</p>
+        <p><strong>5.3 Legal and Regulatory Disclosures:</strong> We may disclose personal data where required to comply with applicable law, a court order, or a lawful request from a governmental or regulatory authority, or where necessary to protect the rights, property, or safety of AIATOZ, our Users, or third parties.</p>
+        <p><strong>5.4 Business Transfers:</strong> In the event of a merger, acquisition, restructuring, or sale of assets, personal data may be transferred to the acquiring entity, subject to equivalent privacy protections.</p>
+        <p>We do not sell your personal data to third parties for their independent marketing purposes.</p>
 
-        <h2>3. Data Protection Security</h2>
-        <p>Your passwords strings are fully protected via industry-standard cryptographically secure hashing mechanisms inside our secure cloud host database cluster layouts. We never rent, trade, or distribute user contact parameters to third-party marketing frameworks.</p>
+        <h2>6. Cross-Border Data Transfers</h2>
+        <p>Certain service providers used by AIATOZ (such as cloud hosting or analytics providers) may store or process data outside India. Where personal data is transferred outside India, AIATOZ will take reasonable steps to ensure that such transfers comply with the requirements of the DPDP Act and other applicable law, including through contractual safeguards with the recipient, except where the Central Government has restricted transfer to a particular country or territory.</p>
+
+        <h2>7. Data Retention</h2>
+        <p>We retain personal data for as long as your Account remains active and for such additional period as is necessary to fulfil the purposes described in this Privacy Policy, including to comply with legal, tax, accounting, or reporting obligations, resolve disputes, and enforce our agreements. Upon expiry of the applicable retention period, or upon a valid erasure request (where no overriding legal obligation to retain the data exists), we will delete or anonymize your personal data.</p>
+
+        <h2>8. Data Security</h2>
+        <p>We implement reasonable security practices and procedures, including encryption of data in transit, access controls, network security monitoring, and periodic security assessments, in line with the standards prescribed under the Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011. However, no method of transmission or storage is completely secure, and we cannot guarantee absolute security of your personal data.</p>
+        <p>In the event of a personal data breach that is likely to affect you, AIATOZ will notify the Data Protection Board of India and affected Users in the manner and timeframe required under the DPDP Act.</p>
+
+        <h2>9. Your Rights</h2>
+        <p>Subject to applicable law, you have the following rights in respect of your personal data:</p>
+        <ul>
+            <li>Right to access a summary of the personal data we hold about you and the processing activities undertaken;</li>
+            <li>Right to correction and update of inaccurate or incomplete personal data;</li>
+            <li>Right to erase personal data that is no longer necessary for the purpose it was collected, subject to our legal retention obligations;</li>
+            <li>Right to withdraw consent at any time, without affecting the lawfulness of processing before such withdrawal;</li>
+            <li>Right to nominate another individual to exercise your rights in the event of death or incapacity;</li>
+            <li>Right to grievance redressal through our Grievance Officer, and thereafter to the Data Protection Board of India.</li>
+        </ul>
+        <p>To exercise any of these rights, please contact us using the details in Clause 13 below. We may require you to verify your identity before acting on your request.</p>
+
+        <h2>10. Children's Privacy</h2>
+        <p>The Platform is intended for use by individuals aged 18 and above. Users between 13 and 18 years of age may use the Platform only with consent and under the supervision of a parent or legal guardian. We do not knowingly collect personal data from children under 13 without verifiable parental consent. If we become aware that we have collected personal data from a child under 13 without such consent, we will take steps to delete that data promptly.</p>
+
+        <h2>11. Marketing Communications</h2>
+        <p>We may send you promotional emails, SMS, or push notifications about Courses, offers, and updates. You may opt out of marketing communications at any time by using the &ldquo;unsubscribe&rdquo; link in emails, adjusting your notification settings in the Platform, or contacting us directly. You will continue to receive transactional and service-related communications necessary for your use of the Platform.</p>
+
+        <h2>12. Third-Party Websites and Services</h2>
+        <p>The Platform may contain links to, or integrations with, third-party websites and services, including payment gateways and social media login providers. This Privacy Policy does not apply to such third-party services, and we encourage you to review their respective privacy policies before providing any personal data to them.</p>
+
+        <h2>13. Grievance Officer / Contact Us</h2>
+        <p>If you have any questions, concerns, or complaints regarding this Privacy Policy or our data practices, or wish to exercise any of your rights described above, please contact our Grievance Officer:</p>
+        <p>Email: <a href="mailto:official@aiatoz.org" class="inline-link">official@aiatoz.org</a></p>
+        <p>We will endeavor to acknowledge and address your query within the timelines prescribed under applicable law.</p>
+
+        <h2>14. Changes to this Privacy Policy</h2>
+        <p>We may update this Privacy Policy from time to time to reflect changes in our practices, technology, legal requirements, or other factors. We will notify you of material changes through the Platform or via email and will indicate the date of the most recent revision at the top of this page. Your continued use of the Platform after such changes constitutes your acceptance of the revised Privacy Policy.</p>
     </div>
     </main>
 

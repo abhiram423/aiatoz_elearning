@@ -240,19 +240,96 @@
         .value-card p { font-size:14px; color:var(--text-dim); line-height:1.7; margin:0; }
 
         /* ── TEAM SECTION ── */
-        .team-section { padding:90px 0; }
-        .team-card { background:var(--card-surface); border:1px solid var(--cse-border); border-radius:22px; overflow:hidden; text-align:center; transition:all .4s cubic-bezier(.16,1,.3,1); position:relative; }
-        .team-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#16a34a,#22c55e); transform:scaleX(0); transition:.4s; transform-origin:left; z-index:1; }
-        .team-card:hover { transform:translateY(-12px); box-shadow:0 28px 60px rgba(0,0,0,0.4); border-color:rgba(34,197,94,0.2); }
-        .team-card:hover::before { transform:scaleX(1); }
-        .team-img-wrap { height:260px; overflow:hidden; position:relative; background:#f0f4f8; }
-        .team-img-wrap img { width:100%; height:100%; object-fit:cover; object-position:center 22%; transition:.5s; }
-        .team-card:hover .team-img-wrap img { transform:scale(1.06); }
-        .team-img-overlay { position:absolute; inset:0; background:linear-gradient(to bottom,rgba(0,0,0,0) 50%,rgba(6,14,28,0.6) 100%); }
-        .team-body { padding:22px 24px 26px; }
-        .team-body h4 { font-size:17px; font-weight:800; color:#14532d; margin-bottom:4px; }
-        .team-role { font-size:12.5px; font-weight:700; color:var(--cse-teal); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
-        .team-bio { font-size:13.5px; color:var(--text-dim); line-height:1.65; margin-bottom:16px; }
+       /* ── TEAM SECTION ── */
+        .team-section {
+            padding:90px 0;
+        }
+
+        .team-card {
+            background:var(--card-surface);
+            border:1px solid var(--cse-border);
+            border-radius:22px;
+            overflow:hidden;
+            text-align:center;
+            transition:all .4s cubic-bezier(.16,1,.3,1);
+            position:relative;
+        }
+
+        .team-card::before {
+            content:'';
+            position:absolute;
+            top:0;
+            left:0;
+            right:0;
+            height:3px;
+            background:linear-gradient(90deg,#16a34a,#22c55e);
+            transform:scaleX(0);
+            transition:.4s;
+            transform-origin:left;
+            z-index:1;
+        }
+
+        .team-card:hover {
+            transform:translateY(-12px);
+            box-shadow:0 28px 60px rgba(0,0,0,0.4);
+            border-color:rgba(34,197,94,0.2);
+        }
+
+        .team-card:hover::before {
+            transform:scaleX(1);
+        }
+
+        .team-img-wrap {
+            height:320px; /* image area konchem penchanu */
+            overflow:hidden;
+            position:relative;
+            background:#f0f4f8;
+        }
+
+        .team-img-wrap img {
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            object-position:center top; /* FACE clear ga kanipistundi */
+            transition:.5s;
+        }
+
+        .team-card:hover .team-img-wrap img {
+            transform:scale(1.02);
+        }
+
+        .team-img-overlay {
+            position:absolute;
+            inset:0;
+            background:linear-gradient(to bottom,rgba(0,0,0,0) 60%,rgba(6,14,28,0.35) 100%);
+        }
+
+        .team-body {
+            padding:22px 24px 26px;
+        }
+
+        .team-body h4 {
+            font-size:17px;
+            font-weight:800;
+            color:#14532d;
+            margin-bottom:4px;
+        }
+
+        .team-role {
+            font-size:12.5px;
+            font-weight:700;
+            color:var(--cse-teal);
+            text-transform:uppercase;
+            letter-spacing:1px;
+            margin-bottom:12px;
+        }
+
+        .team-bio {
+            font-size:13.5px;
+            color:var(--text-dim);
+            line-height:1.65;
+            margin-bottom:16px;
+        }
         .team-socials { display:flex; justify-content:center; gap:8px; }
         .team-socials a { width:32px; height:32px; border-radius:8px; background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.18); display:flex; align-items:center; justify-content:center; color:var(--cse-teal); font-size:13px; text-decoration:none; transition:.3s; }
         .team-socials a:hover { background:linear-gradient(135deg,#16a34a,#22c55e); color:#fff; transform:translateY(-2px); box-shadow:0 6px 16px rgba(34,197,94,0.3); }
@@ -376,18 +453,7 @@
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="{% url 'courses' %}" id="coursesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Courses</a>
-                        <ul class="dropdown-menu" aria-labelledby="coursesDropdown">
-                            <li><a class="dropdown-item" href="{% url 'courses' %}"><i class="fas fa-th-list me-2" style="color:#22c55e;"></i> All Courses</a></li>
-                            <li><hr class="dropdown-divider" style="border-color:rgba(34,197,94,0.15);margin:4px 0;"></li>
-                            <li><a class="dropdown-item" href="#"><i class="fab fa-python me-2" style="color:#3b82f6;"></i> Python</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-chat-square-text-fill me-2" style="color:#22c55e;"></i> Prompt Engineering</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-cpu-fill me-2" style="color:#10b981;"></i> Artificial Intelligence</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-brain me-2" style="color:#f59e0b;"></i> Machine Learning</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-bar-chart-fill me-2" style="color:#ef4444;"></i> Data Science</a></li>
-                        </ul>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'courses' %}">Courses</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'blog' %}">Blog</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>

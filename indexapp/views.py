@@ -119,7 +119,6 @@ def register_quiz(request):
             for q, f in zip(questions, fields):
                 QuizResponse.objects.create(user_profile=user_profile, question=q, answer=data.get(f, ''))
 
-        # Clean session storage safely
         request.session.pop('quiz_user_email', None)
         request.session.pop('quiz_next_course', None)
 
@@ -139,10 +138,8 @@ def login(request):
         user = authenticate(request, username=email, password=password)
 
         if user is not None:
-            # Check if their custom user profile actually exists in the database
             profile_exists = UserProfile.objects.filter(email=user.email).exists()
             if not profile_exists:
-                # Re-create profile on the fly if it's an orphaned account
                 UserProfile.objects.create(user=user, name=user.username, mobile="N/A", email=user.email)
 
             auth_login(request, user)

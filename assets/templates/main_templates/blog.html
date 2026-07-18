@@ -344,18 +344,7 @@
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="{% url 'courses' %}" id="coursesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Courses</a>
-                        <ul class="dropdown-menu" aria-labelledby="coursesDropdown">
-                            <li><a class="dropdown-item" href="{% url 'courses' %}"><i class="fas fa-th-list me-2" style="color:#22c55e;"></i> All Courses</a></li>
-                            <li><hr class="dropdown-divider" style="border-color:rgba(34,197,94,0.15);margin:4px 0;"></li>
-                            <li><a class="dropdown-item" href="#"><i class="fab fa-python me-2" style="color:#3b82f6;"></i> Python</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-chat-square-text-fill me-2" style="color:#22c55e;"></i> Prompt Engineering</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-cpu-fill me-2" style="color:#10b981;"></i> Artificial Intelligence</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-brain me-2" style="color:#f59e0b;"></i> Machine Learning</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-bar-chart-fill me-2" style="color:#ef4444;"></i> Data Science</a></li>
-                        </ul>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'courses' %}">Courses</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'blog' %}">Blog</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>

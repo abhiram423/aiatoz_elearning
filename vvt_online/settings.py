@@ -174,3 +174,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://aiatoz.org',
     'https://www.aiatoz.org',
 ]
+
+SESSION_COOKIE_AGE = 2592000
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_SAVE_EVERY_REQUEST = True

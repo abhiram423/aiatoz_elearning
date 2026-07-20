@@ -618,7 +618,7 @@
 
         <!-- Logout — big, visible, at the bottom -->
         <div class="sb-bottom">
-            <a href="{% url 'login' %}" class="sb-logout">
+            <a href="{% url 'logout' %}" class="sb-logout">
                 <i class="bi bi-box-arrow-left"></i>
                 Logout
             </a>
@@ -661,12 +661,12 @@
 
         <!-- Page Content -->
         <div class="page-content">
+            {% if user.is_authenticated %}
+            <h3 style="color:lime;">LOGGED IN</h3>
+            {% else %}
+            <h3 style="color:red;">NOT LOGGED IN</h3>
+            {% endif %}
 
-            <!-- ══════════════════════════════════════
-                 HERO BANNER — two columns
-                 LEFT: welcome text + CTA
-                 RIGHT (inside hero): 4 stat cards
-            ══════════════════════════════════════ -->
             <div class="hero-banner">
                 <div class="hero-orb"></div>
                 <div class="hero-inner">

@@ -13,6 +13,9 @@ from .models import PDFLead, ContactMessage
 from functools import wraps
 from django.shortcuts import redirect
 from django.core.mail import send_mail
+from django.contrib.auth import logout as auth_logout
+from django.contrib import messages
+
 
 def user_login_required(f):
     @wraps(f)
@@ -24,6 +27,9 @@ def user_login_required(f):
 
 @csrf_exempt
 def index(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    
     return render(request, 'main_templates/index.html')
 
 def main(request):
@@ -38,11 +44,11 @@ def courses(request):
     return render(request, 'main_templates/courses.html', {'courses': db_courses})
 
 
-@user_login_required
+@login_required(login_url='login')
 def enroll_course(request, course_id):
     course = get_object_or_404(Course, id=course_id)
-    user_email = request.session.get('user_email')
-    profile = UserProfile.objects.filter(email=user_email).first()
+    # user_email = request.session.get('user_email')
+    profile = UserProfile.objects.filter(user=request.user).first()
     
     if not profile:
         messages.error(request, "Profile not found. Please log in again.")
@@ -143,7 +149,8 @@ def login(request):
                 UserProfile.objects.create(user=user, name=user.username, mobile="N/A", email=user.email)
 
             auth_login(request, user)
-            request.session['user_email'] = user.email
+            request.session.set_expiry(2592000)
+            # request.session['user_email'] = user.email
             
             if next_course and next_course != "None":
                 return redirect(f"/my-learning/?id={next_course}")
@@ -324,8 +331,8 @@ def payment_success_callback(request):
     order_id = request.GET.get('order_id')
     course_id = request.GET.get('course_id')
 
-    user_email = request.session.get('user_email')
-    user_profile = UserProfile.objects.filter(email=user_email).first()
+    # user_email = request.session.get('user_email')
+    user_profile = UserProfile.objects.filter(user=request.user).first()
     course = get_object_or_404(Course, id=course_id)
 
     Enrollment.objects.get_or_create(
@@ -346,3 +353,9 @@ def support(request):
 
 def terms(request):
     return render(request, 'main_templates/terms.html')
+
+
+def logout_view(request):
+    auth_logout(request)
+    messages.success(request, "You have been logged out successfully.")
+    return redirect('index')

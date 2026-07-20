@@ -20,15 +20,15 @@ def user_login_required(f):
         return f(request, *args, **kwargs)
     return wrap
 
-@user_login_required
+@login_required(login_url='login')
 def dashboard(request):
-    user_email = request.session.get('user_email')
-    user_profile = UserProfile.objects.filter(email=user_email).first()
+    # user_email = request.session.get('user_email')
+    user_profile = UserProfile.objects.filter(user=request.user).first()
     
     
     if not user_profile:
         messages.error(request, "Profile session invalid. Please re-register or log in.")
-        request.session.flush() # Clears corrupted session
+        request.session.flush()
         return redirect('login')
         
     all_courses_list = Course.objects.all()
@@ -49,7 +49,7 @@ def dashboard(request):
 from django.shortcuts import render, get_object_or_404
 from  indexapp.models import Course, Enrollment
 
-@user_login_required
+@login_required(login_url='login')
 def courses_dashboard(request, course_id):
     course = get_object_or_404(Course, id=course_id)
 
@@ -62,10 +62,10 @@ from decouple import config
 
 
 
-@user_login_required
+@login_required(login_url='login')
 def user_courses_list(request):
-    user_email = request.session.get('user_email')
-    user_profile = UserProfile.objects.filter(email=user_email).first()
+    # user_email = request.session.get('user_email')
+    user_profile = UserProfile.objects.filter(user=request.user).first()
 
     if not user_profile:
         messages.error(request, "Session expired.")
@@ -124,10 +124,10 @@ def user_courses_list(request):
 def certificates(request):
     return render(request, 'user_templates/certificates.html')
 
-@user_login_required
+@login_required(login_url='login')
 def feedback(request):
-    user_email = request.session.get('user_email')
-    user_profile = get_object_or_404(UserProfile, email=user_email)
+    # user_email = request.session.get('user_email')
+    user_profile = get_object_or_404(UserProfile, user=request.user)
 
     if request.method ==  "POST":
         user_msg = request.POST.get('feedback')

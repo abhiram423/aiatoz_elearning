@@ -25,6 +25,7 @@
             --text-dim:     #94a3b8;
             --grad-teal:    linear-gradient(135deg, #14532d 0%, #16a34a 50%, #22c55e 100%);
             --sidebar-w:    265px;
+            --sidebar-w-collapsed: 84px;
             --transition:   all .35s cubic-bezier(.16,1,.3,1);
             --shadow-sm:    0 4px 24px rgba(0,0,0,.18);
             --shadow-md:    0 8px 32px rgba(0,0,0,.28);
@@ -153,6 +154,18 @@
         .sb-logout i { font-size:17px; }
         .sb-logout:hover { background:rgba(239,68,68,.14); color:#f87171; border-color:rgba(239,68,68,.4); transform:translateX(4px); box-shadow:0 8px 22px rgba(239,68,68,.15); }
 
+        /* Sidebar collapse (desktop) — shrinks to an icon-only rail */
+        .sidebar.collapsed { width:var(--sidebar-w-collapsed); }
+        .main-wrapper.collapsed { margin-left:var(--sidebar-w-collapsed); }
+        .sidebar.collapsed .sb-brand-text,
+        .sidebar.collapsed .sb-brand-sub,
+        .sidebar.collapsed .sb-label,
+        .sidebar.collapsed .sb-dot { display:none; }
+        .sidebar.collapsed .sb-link,
+        .sidebar.collapsed .sb-logout { justify-content:center; gap:0; padding-left:0; padding-right:0; font-size:0; }
+        .sidebar.collapsed .sb-nav,
+        .sidebar.collapsed .sb-bottom { padding-left:10px; padding-right:10px; }
+
         /* ══ MAIN WRAPPER ══ */
         .main-wrapper { margin-left:var(--sidebar-w); min-height:100vh; transition:var(--transition); }
 
@@ -166,7 +179,7 @@
         }
         .topbar::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(34,197,94,.4),transparent); }
         .topbar-left { display:flex; align-items:center; gap:16px; }
-        .sb-toggle { display:none; background:none; border:none; padding:8px; border-radius:10px; color:var(--text-dim); cursor:pointer; font-size:20px; transition:.25s; }
+        .sb-toggle { display:flex; align-items:center; justify-content:center; background:none; border:none; padding:8px; border-radius:10px; color:var(--text-dim); cursor:pointer; font-size:20px; transition:.25s; }
         .sb-toggle:hover { background:rgba(34,197,94,.08); color:var(--cse-teal); }
         .topbar-right { display:flex; align-items:center; gap:14px; }
         .topbar-notif { width:40px; height:40px; border-radius:11px; background:rgba(255,255,255,.04); border:1.5px solid rgba(34,197,94,.15); display:flex; align-items:center; justify-content:center; color:var(--text-dim); font-size:16px; cursor:pointer; transition:.3s; position:relative; }
@@ -367,7 +380,6 @@
             .sidebar { transform:translateX(-100%); box-shadow:none; }
             .sidebar.open { transform:translateX(0); box-shadow:20px 0 60px rgba(0,0,0,.5); }
             .main-wrapper { margin-left:0; }
-            .sb-toggle { display:flex; align-items:center; justify-content:center; }
             .page-content { padding:20px; }
             .topbar { padding:0 16px; }
         }
@@ -454,7 +466,7 @@
 
         <header class="topbar">
             <div class="topbar-left">
-                <button class="sb-toggle" id="sbToggle" onclick="toggleSidebar()">
+                <button class="sb-toggle" id="sbToggle" onclick="toggleSidebarMenu()">
                     <i class="bi bi-list"></i>
                 </button>
                 <img src="{% static 'img/gallery/aiatoz_logo.png' %}" alt="AI A TO Z" style="height:36px;width:auto;object-fit:contain;">
@@ -588,6 +600,26 @@
             document.getElementById('sbOverlay').classList.remove('active');
         }
         window.addEventListener('resize', () => { if (window.innerWidth > 991) closeSidebar(); });
+
+        /* Sidebar collapse/expand (desktop) */
+        function toggleSidebarCollapse() {
+            const collapsed = document.getElementById('sidebar').classList.toggle('collapsed');
+            document.querySelector('.main-wrapper').classList.toggle('collapsed', collapsed);
+            localStorage.setItem('sidebarCollapsed', collapsed);
+        }
+        if (window.innerWidth > 991 && localStorage.getItem('sidebarCollapsed') === 'true') {
+            document.getElementById('sidebar').classList.add('collapsed');
+            document.querySelector('.main-wrapper').classList.add('collapsed');
+        }
+
+        /* Single icon in topbar: toggles collapse on desktop, opens/closes on mobile */
+        function toggleSidebarMenu() {
+            if (window.innerWidth > 991) {
+                toggleSidebarCollapse();
+            } else {
+                toggleSidebar();
+            }
+        }
 
         /* ── Category chips ── */
         document.getElementById('chipGroup').addEventListener('click', function(e) {

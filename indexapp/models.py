@@ -21,6 +21,7 @@ class Course(models.Model):
     image = models.FileField(upload_to='course_images/', null=True, blank=True)
     course_pdf = models.FileField(upload_to='course_pdfs/', null=True, blank=True)
     video_url = models.CharField(max_length=200, default="https://www.youtube.com/embed/up68UAfH0d0")
+    course_url = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.title

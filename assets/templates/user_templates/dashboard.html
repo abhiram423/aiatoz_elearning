@@ -25,6 +25,7 @@
             --text-dim:      #94a3b8;
             --grad-teal:     linear-gradient(135deg, #14532d 0%, #16a34a 50%, #22c55e 100%);
             --sidebar-w:     265px;
+            --sidebar-w-collapsed: 84px;
             --transition:    all .35s cubic-bezier(.16,1,.3,1);
         }
 
@@ -182,6 +183,18 @@
             box-shadow:0 8px 22px rgba(239,68,68,0.15);
         }
 
+        /* Sidebar collapse (desktop) — shrinks to an icon-only rail */
+        .sidebar.collapsed { width:var(--sidebar-w-collapsed); }
+        .main-wrapper.collapsed { margin-left:var(--sidebar-w-collapsed); }
+        .sidebar.collapsed .sb-brand-text,
+        .sidebar.collapsed .sb-brand-sub,
+        .sidebar.collapsed .sb-label,
+        .sidebar.collapsed .sb-dot { display:none; }
+        .sidebar.collapsed .sb-link,
+        .sidebar.collapsed .sb-logout { justify-content:center; gap:0; padding-left:0; padding-right:0; font-size:0; }
+        .sidebar.collapsed .sb-nav,
+        .sidebar.collapsed .sb-bottom { padding-left:10px; padding-right:10px; }
+
         /* ══════════════════════════════════
            MAIN WRAPPER
         ══════════════════════════════════ */
@@ -203,7 +216,8 @@
         }
         .topbar-left { display:flex; align-items:center; gap:16px; }
         .sb-toggle {
-            display:none; background:none; border:none; padding:8px;
+            display:flex; align-items:center; justify-content:center;
+            background:none; border:none; padding:8px;
             border-radius:10px; color:var(--text-dim); cursor:pointer; font-size:20px; transition:.25s;
         }
         .sb-toggle:hover { background:rgba(34,197,94,0.08); color:var(--cse-teal); }
@@ -409,7 +423,7 @@
         .course-card::after {
             content:''; position:absolute; inset:0;
             background:linear-gradient(135deg,rgba(34,197,94,0.05),transparent 60%);
-            opacity:0; transition:.4s; border-radius:28px;
+            opacity:0; transition:.4s; border-radius:28px; pointer-events:none;
         }
         .course-card:hover { border-color:rgba(34,197,94,0.4); transform:translateY(-14px) scale(1.02); box-shadow:0 40px 80px rgba(0,0,0,0.5),0 0 40px rgba(34,197,94,0.1); }
         .course-card:hover::before { transform:scaleX(1); }
@@ -462,13 +476,12 @@
         .cc-meta-item { display:flex; align-items:center; gap:5px; color:var(--text-dim); font-size:11.5px; font-weight:600; }
         .cc-meta-item i { color:var(--cse-teal); font-size:11px; }
 
-        /* View Course CTA — full width teal */
         .cc-btn {
             display:flex; align-items:center; justify-content:center; gap:8px;
             background:var(--grad-teal); color:#fff;
             font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:13.5px;
             padding:12px; border-radius:14px; text-decoration:none;
-            transition:var(--transition); position:relative; overflow:hidden;
+            transition:var(--transition); position:relative; z-index:999; overflow:hidden;
             box-shadow:0 6px 20px rgba(34,197,94,0.3);
             border:none; width:100%; text-align:center;
         }
@@ -537,7 +550,6 @@
             .sidebar { transform:translateX(-100%); }
             .sidebar.open { transform:translateX(0); box-shadow:20px 0 60px rgba(0,0,0,0.5); }
             .main-wrapper { margin-left:0; }
-            .sb-toggle { display:flex; align-items:center; justify-content:center; }
             .topbar-search { width:240px; }
             .hero-inner { flex-direction:column; gap:28px; }
             .hero-stats-col { width:100%; grid-template-columns:repeat(4,1fr); }
@@ -633,7 +645,7 @@
         <!-- Top Bar -->
         <header class="topbar">
             <div class="topbar-left">
-                <button class="sb-toggle" id="sbToggle" onclick="toggleSidebar()">
+                <button class="sb-toggle" id="sbToggle" onclick="toggleSidebarMenu()">
                     <i class="bi bi-list"></i>
                 </button>
                 <img src="{% static 'img/gallery/aiatoz_logo.png' %}" alt="AI A TO Z" style="height:36px;width:auto;object-fit:contain;">
@@ -681,8 +693,11 @@
                         </div>
                         <h1>Master the World of<br><span>Artificial Intelligence</span></h1>
                         <p>Your courses overviews are ready and waiting. Dive into structured PDF modules and interactive quizzes — start building real AI skills today.</p>
-                        <a href="{% url 'user_courses_list' %}" class="hero-cta">
-                            <i class="bi bi-play-circle-fill"></i> Start Learning Now
+                        <a href="https://learn.aiatoz.org/learn"
+                            target="_blank"
+                            class="hero-cta">
+                                <i class="bi bi-play-circle-fill"></i>
+                                Start Learning Now
                         </a>
                     </div>
 
@@ -763,8 +778,13 @@
                             <div class="cc-meta">
                                 <span class="cc-meta-item"><i class="bi bi-clock-fill"></i> Self-Paced</span>
                                 <span class="cc-meta-item"><i class="bi bi-file-earmark-pdf-fill"></i> PDF Modules</span>
-                                <span class="cc-meta-item"><i class="bi bi-star-fill" style="color:#fbbf24;"></i> 4.9</span>
                             </div>
+                            <a href="https://learn.aiatoz.org/learn"
+                                target="_blank"
+                                class="cc-btn">
+                                    <i class="bi bi-play-circle-fill"></i>
+                                    Start Learning
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -859,6 +879,26 @@
         window.addEventListener('resize', () => {
             if (window.innerWidth > 991) closeSidebar();
         });
+
+        /* Sidebar collapse/expand (desktop) */
+        function toggleSidebarCollapse() {
+            const collapsed = document.getElementById('sidebar').classList.toggle('collapsed');
+            document.querySelector('.main-wrapper').classList.toggle('collapsed', collapsed);
+            localStorage.setItem('sidebarCollapsed', collapsed);
+        }
+        if (window.innerWidth > 991 && localStorage.getItem('sidebarCollapsed') === 'true') {
+            document.getElementById('sidebar').classList.add('collapsed');
+            document.querySelector('.main-wrapper').classList.add('collapsed');
+        }
+
+        /* Single icon in topbar: toggles collapse on desktop, opens/closes on mobile */
+        function toggleSidebarMenu() {
+            if (window.innerWidth > 991) {
+                toggleSidebarCollapse();
+            } else {
+                toggleSidebar();
+            }
+        }
     </script>
 </body>
 </html>

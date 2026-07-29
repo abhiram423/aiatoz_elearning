@@ -687,7 +687,7 @@
                                 {% else %}
                                     <p class="small mb-3" style="color:var(--text-dim);">Get lifetime premium access to videos, study materials and validation quizzes.</p>
                                     <button id="pay-btn" class="rf-submit w-100" style="background:var(--grad-teal); border:none; border-radius:12px; padding:12px; color:#fff; font-weight:800; font-size:14px; box-shadow:0 6px 20px rgba(34,197,94,0.35);">
-                                        Pay Securely ₹499 via Razorpay <i class="bi bi-shield-lock-fill ms-1"></i>
+                                        Pay Securely via Razorpay <i class="bi bi-shield-lock-fill ms-1"></i>
                                     </button>
                                 {% endif %}
                             </div>
@@ -828,9 +828,7 @@
                                            "&course_id={{ selected_course.id }}";
                 },
                 "prefill": {
-                    "name": "{{ user_profile.name|default:'' }}",
-                    "email": "{{ user_profile.email|default:'' }}",
-                    "contact": "{{ user_profile.mobile|default:'' }}"
+                    "name": "{{ user_profile.name|default:'' }}"
                 },
                 "theme": {
                     "color": "#16a34a"

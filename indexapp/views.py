@@ -219,10 +219,12 @@ def forget_pw(request):
                 messages.success(request, "Reset link sent to your email!")
                 return redirect("login")
 
-            except Exception:
+            except Exception as e:
+                print("EMAIL_ERROR:", e)
+
                 messages.error(
                     request,
-                    "Failed to send email. Please check your SMTP configuration."
+                    f"Email Error: {e}"
                 )
 
         else:
